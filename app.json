@@ -28,9 +28,6 @@
       "edgeToEdgeEnabled": true,
       "package": "com.theoriginalayaka.dpkg"
     },
-    "web": {
-      "favicon": "./assets/favicon.png"
-    },
     "extra": {
       "eas": {
         "projectId": "71f1320f-8412-4f74-a631-3106bcdd1ba5"

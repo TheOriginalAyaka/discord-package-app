@@ -109,8 +109,9 @@ impl Parser {
                     if let Ok(dt) = chrono::DateTime::parse_from_rfc3339(&message.timestamp) {
                         extracted_data.hours_values[dt.hour() as usize] += 1;
                     }
-                    for word in &message.words {
-                        if word.len() > 5 {
+
+                    if let Some(words) = &message.words {
+                        for word in words.iter().filter(|w| w.len() > 5) {
                             *word_counts.entry(word.clone()).or_insert(0) += 1;
                         }
                     }
@@ -120,11 +121,16 @@ impl Parser {
                     if let Some(dm_id) = dm_user_id {
                         dm_message_counts.push((channel.id.clone(), dm_id.clone(), message_count));
                     }
-                } else if let Some(guild) = &channel.guild {
+                } else {
+                    let guild_name = if let Some(guild) = &channel.guild {
+                        &guild.name
+                    } else {
+                        "Unknown server"
+                    };
                     channel_message_counts.push((
                         name.to_string(),
                         message_count,
-                        guild.name.clone(),
+                        guild_name.into(),
                     ));
                 }
             }
@@ -152,7 +158,7 @@ impl Parser {
                     id: record.id,
                     timestamp: record.timestamp,
                     length: record.contents.len() as u32,
-                    words,
+                    words: Some(words),
                 });
             }
         }
@@ -169,14 +175,13 @@ impl Parser {
         };
         Ok(messages
             .into_iter()
-            .filter(|m| !m.contents.is_empty())
             .map(|m| {
                 let words = Parser::process_words(&m.contents);
                 ParsedMessage {
                     id: m.id,
                     timestamp: m.timestamp,
                     length: m.contents.len() as u32,
-                    words,
+                    words: Some(words),
                 }
             })
             .collect())

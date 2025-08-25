@@ -34,8 +34,6 @@ pub fn start_extraction(path: String, observer: Arc<dyn ExtractObserver>) {
 
                 match ZipArchive::new(file) {
                     Ok(archive) => {
-                        observer.on_progress("Analyzing package structure...".into());
-
                         let mut parser = Parser::new();
 
                         let progress_callback = |msg: String| {
@@ -59,4 +57,59 @@ pub fn start_extraction(path: String, observer: Arc<dyn ExtractObserver>) {
             }
         }
     });
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use std::sync::mpsc;
+
+    struct TestObserver {
+        name: String,
+        sender: mpsc::Sender<()>,
+    }
+
+    impl TestObserver {
+        fn new(name: &str, sender: mpsc::Sender<()>) -> Self {
+            Self {
+                name: name.to_string(),
+                sender,
+            }
+        }
+    }
+
+    impl ExtractObserver for TestObserver {
+        fn on_progress(&self, step: String) {
+            println!("[{}] Progress: {}", self.name, step);
+        }
+
+        fn on_error(&self, message: String) {
+            println!("[{}] Error: {}", self.name, message);
+        }
+
+        fn on_complete(&self, result: ExtractedData) {
+            println!("[{}] Complete! result: {:?}", self.name, result);
+            let _ = self.sender.send(());
+        }
+    }
+    #[test]
+    fn extraction_test() {
+        let args: Vec<String> = std::env::args().collect();
+        if args.len() < 3 {
+            panic!(
+                "Please provide a file path as argument: cargo test extraction_test -- /path/to/file.zip --nocapture"
+            );
+        }
+        let file_path = &args[2];
+
+        let (sender, receiver) = mpsc::channel();
+        let observer = Arc::new(TestObserver::new("TestRun", sender));
+        println!("Starting extraction");
+        start_extraction(file_path.clone(), observer);
+
+        match receiver.recv_timeout(std::time::Duration::from_secs(30)) {
+            Ok(_) => println!("Test completed successfully"),
+            Err(_) => panic!("Test timed out after 30 seconds"),
+        }
+    }
 }

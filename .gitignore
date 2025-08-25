@@ -36,18 +36,42 @@ yarn-error.*
 # typescript
 *.tsbuildinfo
 
-# rust
+# Rust
+generated/
 target/
+**/target/
 
-# native dirs
+# Native platform dirs (Expo managed)
 /ios
 /android
 
-# build
-build
+# Android build artifacts
+.gradle/
+**/android/.gradle/
+**/android/build/
+**/android/app/build/
+**/android/local.properties
+**/android/.cxx/
+**/android/captures/
+**/android/.externalNativeBuild/
 
-# native libraries
-generated
-**/ios/lib
-**/android/**/jniLibs
-**/android/**/uniffi
+# iOS build artifacts
+**/ios/build/
+**/ios/DerivedData/
+**/ios/*.xcworkspace/xcuserdata/
+**/ios/*.xcodeproj/xcuserdata/
+**/ios/Pods/
+
+# Generated native libraries and bindings
+generated/
+**/generated/
+**/ios/lib/
+**/android/**/jniLibs/
+**/android/**/uniffi/
+**/kotlin/
+**/swift/
+
+# Build outputs
+build/
+**/build/
+dist/

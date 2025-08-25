@@ -53,8 +53,7 @@ impl Parser {
             &user_root,
             &mut extracted_data,
             &progress_callback,
-        )
-        .await?;
+        )?;
         self.load_channels(
             &mut archive,
             &messages_root,

@@ -1,0 +1,43 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '22'
+        cache: 'npm'
+
+    - name: Cache cargo registry
+      uses: actions/cache@v4
+      with:
+        path: ~/.cargo/registry
+        key: ${{ runner.os }}-cargo-registry-${{ hashFiles('**/Cargo.lock') }}
+
+    - name: Install npm dependencies
+      run: npm install
+
+    - name: Run JS format check
+      run: npx biome format .
+
+    - name: Run JS lint
+      run: npx biome lint .
+
+    - name: Run Rust format check
+      run: cargo fmt --manifest-path dpkg-rs/Cargo.toml --all -- --check
+
+    - name: Run Rust lint
+      run: cargo clippy --manifest-path dpkg-rs/Cargo.toml -- -D warnings
+
+    - name: Run Rust tests
+      run: cd dpkg-rs && cargo test

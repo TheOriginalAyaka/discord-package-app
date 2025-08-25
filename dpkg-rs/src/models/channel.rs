@@ -24,5 +24,4 @@ pub struct TopDM {
     pub id: String,
     pub dm_user_id: String,
     pub message_count: u32,
-    // pub user_data: Option<super::user::UserData>,
 }

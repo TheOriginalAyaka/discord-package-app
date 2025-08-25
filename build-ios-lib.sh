@@ -1,10 +1,12 @@
 #!/bin/bash
 
+IOS_VERSION="15.1"
+
 echo "Building dpkg-rs for iOS..."
 cd dpkg-rs
 
 echo "Building library for aarch64-apple-ios..."
-cargo build --release --target aarch64-apple-ios --lib
+IPHONEOS_DEPLOYMENT_TARGET=$IOS_VERSION cargo build --release --target aarch64-apple-ios --lib
 
 echo "Generating Swift bindings..."
 cargo run --features=uniffi/cli --bin uniffi-bindgen generate --library target/aarch64-apple-ios/release/libdpkg_rs.dylib --out-dir generated/swift/ --language swift

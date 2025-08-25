@@ -55,10 +55,7 @@ impl Parser {
                         println!("[debug] Successfully parsed with serde_json");
                         Ok(result)
                     }
-                    Err(e2) => Err(anyhow!(
-                        "Both JSON parsers failed. serde_json: {}",
-                        e2
-                    )),
+                    Err(e2) => Err(anyhow!("Both JSON parsers failed. serde_json: {}", e2)),
                 }
             }
         }

@@ -1,6 +1,5 @@
 use super::channel::{TopChannel, TopDM};
 use super::message::FavoriteWord;
-use super::payment::PaymentInfo;
 use super::user::User;
 
 #[derive(Debug, Clone, uniffi::Record)]
@@ -16,7 +15,6 @@ pub struct ExtractedData {
     pub total_spent: f64,
     pub hours_values: Vec<u32>,
     pub favorite_words: Vec<FavoriteWord>,
-    pub payments: PaymentInfo,
     pub open_count: Option<u32>,
     pub average_open_count_per_day: Option<u32>,
     pub notification_count: Option<u32>,
@@ -43,10 +41,6 @@ impl Default for ExtractedData {
             total_spent: 0.0,
             hours_values: vec![0; 24],
             favorite_words: Vec::new(),
-            payments: PaymentInfo {
-                total: std::collections::HashMap::new(),
-                list: String::new(),
-            },
             open_count: None,
             average_open_count_per_day: None,
             notification_count: None,
