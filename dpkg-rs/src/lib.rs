@@ -93,6 +93,7 @@ mod tests {
         }
     }
     #[test]
+    #[ignore = "Just local testing"]
     fn extraction_test() {
         let args: Vec<String> = std::env::args().collect();
         if args.len() < 3 {
