@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import {
   ActivityIndicator,
   Button,
+  Image,
   ScrollView,
   StyleSheet,
   Text,
@@ -127,13 +128,24 @@ export default function App() {
       {data.topDms.length > 0 && (
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Top DMs</Text>
-          {data.topDms.slice(0, 5).map((dm, index) => (
-            <ListItem
-              key={dm.id}
-              title={`DM ${index + 1}`}
-              subtitle={`${dm.messageCount} messages`}
-            />
-          ))}
+          {data.topDms.slice(0, 5).map((dm) => {
+            const user = data.user?.relationships.find(
+              (r) => r.user.id === dm.dmUserId,
+            )?.user;
+            return (
+              <AvatarListItem
+                key={dm.id}
+                title={user?.globalName ?? "DM"}
+                subtitle={`${dm.messageCount} messages`}
+                avatarUrl={
+                  user?.avatar
+                    ? `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png?size=128`
+                    : undefined
+                }
+                userId={user?.id}
+              />
+            );
+          })}
         </View>
       )}
 
@@ -156,7 +168,7 @@ export default function App() {
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Most Used Words</Text>
           {data.favoriteWords.slice(0, 10).map((word) => (
-            <ListItem
+            <EmojiListItem
               key={word.word}
               title={word.word}
               subtitle={`Used ${word.count} times`}
@@ -185,6 +197,113 @@ function StatCard({ title, value }: { title: string; value: string | number }) {
       <Text style={styles.statValue}>{value}</Text>
     </View>
   );
+}
+
+function AvatarListItem({
+  title,
+  subtitle,
+  avatarUrl,
+  userId,
+}: {
+  title: string;
+  subtitle: string;
+  avatarUrl?: string;
+  userId?: string;
+}) {
+  const [imageError, setImageError] = useState(false);
+
+  const getDefaultAvatarUrl = (userId: string) => {
+    const discriminator = (BigInt(userId) >> BigInt(22)) % BigInt(6);
+    return `https://cdn.discordapp.com/embed/avatars/${discriminator}.png`;
+  };
+
+  const defaultAvatarUrl = userId ? getDefaultAvatarUrl(userId) : undefined;
+
+  return (
+    <View style={styles.avatarListItem}>
+      <View style={styles.avatarContainer}>
+        {avatarUrl && !imageError ? (
+          <Image
+            source={{ uri: avatarUrl }}
+            style={styles.avatar}
+            onError={() => setImageError(true)}
+          />
+        ) : defaultAvatarUrl ? (
+          <Image source={{ uri: defaultAvatarUrl }} style={styles.avatar} />
+        ) : (
+          <View style={styles.avatarPlaceholder}>
+            <Text style={styles.avatarText}>
+              {title.charAt(0).toUpperCase()}
+            </Text>
+          </View>
+        )}
+      </View>
+      <View style={styles.avatarListContent}>
+        <Text style={styles.listTitle}>{title}</Text>
+        <Text style={styles.listSubtitle}>{subtitle}</Text>
+      </View>
+    </View>
+  );
+}
+
+function EmojiListItem({
+  title,
+  subtitle,
+}: {
+  title: string;
+  subtitle: string;
+}) {
+  const emojiData = parseDiscordEmoji(title);
+
+  return (
+    <View style={styles.listItem}>
+      <View style={styles.emojiTitleContainer}>
+        {emojiData.isEmoji ? (
+          <>
+            {emojiData.url ? (
+              <Image
+                source={{ uri: emojiData.url }}
+                style={styles.emojiImage}
+              />
+            ) : (
+              <Text style={styles.unicodeEmoji}>{emojiData.unicode}</Text>
+            )}
+            <Text style={styles.emojiName}>:{emojiData.name}:</Text>
+          </>
+        ) : (
+          <Text style={styles.listTitle}>{title}</Text>
+        )}
+      </View>
+      <Text style={styles.listSubtitle}>{subtitle}</Text>
+    </View>
+  );
+}
+
+function parseDiscordEmoji(text: string) {
+  // Check if it's a custom Discord emoji: <:name:id> or <a:name:id>
+  const customEmojiMatch = text.match(/^<(a?):([^:]+):(\d+)>$/);
+  if (customEmojiMatch) {
+    const [, animated, name, id] = customEmojiMatch;
+    const extension = animated ? "gif" : "png";
+    return {
+      isEmoji: true,
+      url: `https://cdn.discordapp.com/emojis/${id}.${extension}?size=32`,
+      name: name,
+    };
+  }
+
+  // Check if it's a Unicode emoji (contains emoji characters)
+  const emojiRegex =
+    /^[\p{Emoji}\p{Emoji_Modifier}\p{Emoji_Component}\p{Emoji_Modifier_Base}\p{Emoji_Presentation}]+$/u;
+  if (emojiRegex.test(text)) {
+    return {
+      isEmoji: true,
+      unicode: text,
+      name: text,
+    };
+  }
+
+  return { isEmoji: false, text };
 }
 
 const styles = StyleSheet.create({
@@ -284,5 +403,54 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: "#666",
     marginTop: 2,
+  },
+  avatarListItem: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingVertical: 12,
+    borderBottomWidth: 1,
+    borderBottomColor: "#f0f0f0",
+  },
+  avatarContainer: {
+    marginRight: 12,
+  },
+  avatar: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+  },
+  avatarPlaceholder: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: "#5865F2",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  avatarText: {
+    color: "black",
+    fontSize: 16,
+    fontWeight: "bold",
+  },
+  avatarListContent: {
+    flex: 1,
+  },
+  emojiTitleContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  emojiImage: {
+    width: 20,
+    height: 20,
+    marginRight: 8,
+  },
+  unicodeEmoji: {
+    fontSize: 18,
+    marginRight: 8,
+  },
+  emojiName: {
+    fontSize: 14,
+    fontWeight: "500",
+    color: "#333",
   },
 });

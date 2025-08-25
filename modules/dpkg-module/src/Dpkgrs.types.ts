@@ -48,6 +48,18 @@ interface User {
   discriminator: number;
   avatarHash: string | null;
   payments: Payment[];
+  flags: string[];
+  relationships: Relationship[];
+}
+
+interface Relationship {
+  user: {
+    id: string;
+    username: string;
+    globalName: string;
+    discriminator: string;
+    avatar?: string;
+  };
 }
 
 interface Payment {
