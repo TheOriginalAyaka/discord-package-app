@@ -1,0 +1,9 @@
+{
+  "platforms": ["apple", "android"],
+  "apple": {
+    "modules": ["DpkgrsModule"]
+  },
+  "android": {
+    "modules": ["com.theoriginalayaka.dpkg.dpkgrs.DpkgrsModule"]
+  }
+}

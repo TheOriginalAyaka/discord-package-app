@@ -1,0 +1,21 @@
+#!/bin/bash
+
+echo "Building dpkg-rs for iOS..."
+cd dpkg-rs
+
+echo "Building library for aarch64-apple-ios..."
+cargo build --release --target aarch64-apple-ios --lib
+
+echo "Generating Swift bindings..."
+cargo run --features=uniffi/cli --bin uniffi-bindgen generate --library target/aarch64-apple-ios/release/libdpkg_rs.dylib --out-dir generated/swift/ --language swift
+
+echo "Creating dirs..."
+mkdir -p ../modules/dpkg-module/ios/lib/
+
+echo "Copying library file..."
+cp target/aarch64-apple-ios/release/libdpkg_rs.a ../modules/dpkg-module/ios/lib/
+
+echo "Copying Swift bindings..."
+cp generated/swift/* ../modules/dpkg-module/ios/lib/
+
+echo "Build and copy completed successfully!"
