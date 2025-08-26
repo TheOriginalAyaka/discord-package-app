@@ -1,4 +1,4 @@
-name: Release iOS
+name: Release Android
 
 on:
   workflow_dispatch:
@@ -36,7 +36,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: dpkg-rs/target
-          key: ${{ runner.os }}-cargo-target-ios-${{ hashFiles('**/Cargo.lock') }}
+          key: ${{ runner.os }}-cargo-target-android-${{ hashFiles('**/Cargo.lock') }}
 
       - name: Setup EAS
         uses: expo/expo-github-action@v8
@@ -44,22 +44,17 @@ jobs:
           eas-version: latest
           token: ${{ secrets.EXPO_TOKEN }}
 
-      - name: Setup Xcode
-        uses: maxim-lobanov/setup-xcode@v1
-        with:
-          xcode-version: latest-stable
-
       - name: Install npm dependencies
         run: npm install
 
-      - name: Add ios target
-        run: rustup target add aarch64-apple-ios
+      - name: Add Android targets
+        run: rustup target add aarch64-linux-android armv7-linux-androideabi i686-linux-android x86_64-linux-android
 
       - name: Build Rust library
-        run: ./build-ios-lib.sh
+        run: ./build-android-lib.sh
 
       - name: Build the app
-        run: eas build --platform ios --non-interactive --local --profile production --output ./build.ipa
+        run: eas build --platform android --non-interactive --local --profile production --output ./build.aab
 
       - name: Submit the build
-        run: eas submit --platform ios --non-interactive --profile ${{ inputs.release_type }} --no-wait --path ./build.ipa
+        run: eas submit --platform android --non-interactive --profile ${{ inputs.release_type }} --no-wait --path ./build.aab

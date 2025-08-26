@@ -13,17 +13,34 @@
     },
     "production": {
       "autoIncrement": true
-    },
-    "prodapk": {
-      "android": {
-        "buildType": "apk"
-      }
     }
   },
   "submit": {
     "production": {
       "ios": {
         "ascAppId": "6751523499"
+      },
+      "android": {
+        "track": "production"
+      }
+    },
+    "beta": {
+      "ios": {
+        "ascAppId": "6751523499",
+        "groups": ["Public"]
+      },
+      "android": {
+        "track": "beta",
+        "releaseStatus": "completed"
+      }
+    },
+    "internal": {
+      "ios": {
+        "ascAppId": "6751523499"
+      },
+      "android": {
+        "track": "internal",
+        "releaseStatus": "completed"
       }
     }
   }
