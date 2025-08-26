@@ -1,9 +1,10 @@
-import { useEffect, useState } from "react";
 import * as DocumentPicker from "expo-document-picker";
+import { useEffect, useState } from "react";
 import dpkgModule, { type ExtractedData } from "../../modules/dpkg-module";
-import mockData from "../../mock.json";
 
-const mock = true;
+// import mockData from "../../mock.json";
+
+const mock = false;
 
 export function useDiscord() {
   const [data, setData] = useState<ExtractedData>();
@@ -44,7 +45,7 @@ export function useDiscord() {
       setData(undefined);
       setProgress("Loading mock data...");
 
-      setData(mockData as ExtractedData);
+      // setData(mockData as ExtractedData);
       setIsLoading(false);
       setProgress("");
     } else {

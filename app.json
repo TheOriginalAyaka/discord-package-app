@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "discord-package-app",
+    "name": "Discord package explorer",
     "slug": "discord-package-app",
     "version": "1.0.0",
     "orientation": "portrait",
