@@ -5,7 +5,7 @@ on:
 
 jobs:
   release:
-    runs-on: macos-latest
+    runs-on: macos-15
     steps:
       - name: Setup repo
         uses: actions/checkout@v4
@@ -33,6 +33,11 @@ jobs:
         with:
           eas-version: latest
           token: ${{ secrets.EXPO_TOKEN }}
+
+      - name: Setup Xcode
+        uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: latest-stable
 
       - name: Install npm dependencies
         run: npm install
