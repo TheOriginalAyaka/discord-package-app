@@ -37,6 +37,9 @@ jobs:
       - name: Install npm dependencies
         run: npm install
 
+      - name: Add ios target
+        run: rustup target add aarch64-apple-ios
+
       - name: Build Rust library
         run: ./build-ios-lib.sh
 
