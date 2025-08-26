@@ -38,9 +38,9 @@ export const darkTheme = {
   border: "rgba(255, 255, 255, 0.1)",
   divider: "rgba(255, 255, 255, 0.1)",
 
-  success: "#32985c",
+  success: "#21763e",
   warning: "#ffa714",
-  error: "#e8483a",
+  error: "#d73034",
 
   card: "#262730",
   cardPressed: "#35363f",

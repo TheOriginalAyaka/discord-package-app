@@ -45,9 +45,11 @@ export function useDiscord() {
       setData(undefined);
       setProgress("Loading mock data...");
 
-      // setData(mockData as ExtractedData);
-      setIsLoading(false);
-      setProgress("");
+      setTimeout(() => {
+        // setData(mockData as ExtractedData);
+        setIsLoading(false);
+        setProgress("");
+      }, 10000);
     } else {
       // Use real file processing
       const file = await DocumentPicker.getDocumentAsync({
