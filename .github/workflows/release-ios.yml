@@ -36,4 +36,7 @@ jobs:
         run: ./build-ios-lib.sh
 
       - name: Build the app
-        run: eas build --platform ios --non-interactive --local --profile production --auto-submit
+        run: eas build --platform ios --non-interactive --local --profile production --output ./build.ipa
+
+      - name: Submit the build
+        run: eas submit --platform ios --non-interactive --profile production --path ./build.ipa
