@@ -21,14 +21,17 @@
     "expo-dev-client": "~5.2.4",
     "expo-document-picker": "~13.1.6",
     "expo-file-system": "~18.1.11",
+    "expo-font": "^13.3.2",
     "expo-status-bar": "~2.2.3",
     "react": "19.0.0",
-    "react-native": "0.79.6"
+    "react-native": "0.79.6",
+    "react-native-vector-icons": "^10.3.0"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",
     "@biomejs/biome": "2.2.2",
     "@types/react": "~19.0.10",
+    "@types/react-native-vector-icons": "^6.4.18",
     "typescript": "~5.8.3"
   }
 }
