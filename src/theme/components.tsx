@@ -4,6 +4,7 @@ import {
   type TextProps as RNTextProps,
   type ViewProps as RNViewProps,
 } from "react-native";
+
 import { useTheme } from "./ThemeProvider";
 import { getFontStyle } from "./fonts";
 
@@ -78,5 +79,17 @@ export function Surface({ children, style, ...props }: RNViewProps) {
     <View variant="surface" style={style} {...props}>
       {children}
     </View>
+  );
+}
+
+// uses the heavy discord branding front
+export function Title({ children, style, ...props }: RNTextProps) {
+  return (
+    <RNText
+      style={[{ fontFamily: "ABCGintoNordUnlicensedTrial-Black" }, style]}
+      {...props}
+    >
+      {children}
+    </RNText>
   );
 }

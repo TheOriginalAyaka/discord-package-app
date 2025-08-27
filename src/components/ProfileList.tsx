@@ -164,7 +164,7 @@ export function ProfileList({ data }: { data: ExtractedData }) {
               Channels
             </TText>
             <TText variant="secondary" style={{ fontSize: 12, lineHeight: 16 }}>
-              The amount of channels you have access to
+              The amount of channels you have interacted with
             </TText>
           </View>
 
@@ -230,8 +230,7 @@ export function ProfileList({ data }: { data: ExtractedData }) {
               DM Channels
             </TText>
             <TText variant="secondary" style={{ fontSize: 12, lineHeight: 16 }}>
-              The amount of direct message (DMs) channels you have created in
-              total
+              The amount of direct messages you have sent
             </TText>
           </View>
 

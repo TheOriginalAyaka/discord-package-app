@@ -2,9 +2,7 @@ import * as DocumentPicker from "expo-document-picker";
 import { useEffect, useState } from "react";
 import dpkgModule, { type ExtractedData } from "../../modules/dpkg-module";
 
-// import mockData from "../../mock.json";
-
-const mock = false;
+import mockData from "../../mock.json";
 
 export function useDiscord() {
   const [data, setData] = useState<ExtractedData>();
@@ -38,30 +36,28 @@ export function useDiscord() {
   }, []);
 
   const pickAndProcessFile = async () => {
-    if (mock) {
-      // mock
-      console.log("using mock data for development");
+    const file = await DocumentPicker.getDocumentAsync({
+      type: "application/zip",
+    });
+    if (!file.canceled && file.assets[0]) {
+      console.log("uri", file.assets[0].uri);
       setIsLoading(true);
       setData(undefined);
-      setProgress("Loading mock data...");
-
-      setTimeout(() => {
-        // setData(mockData as ExtractedData);
-        setIsLoading(false);
-        setProgress("");
-      }, 10000);
-    } else {
-      // Use real file processing
-      const file = await DocumentPicker.getDocumentAsync({
-        type: "application/zip",
-      });
-      if (!file.canceled && file.assets[0]) {
-        console.log("uri", file.assets[0].uri);
-        setIsLoading(true);
-        setData(undefined);
-        dpkgModule.process(file.assets[0].uri.replace("file://", ""));
-      }
+      dpkgModule.process(file.assets[0].uri.replace("file://", ""));
     }
+  };
+
+  const useMockData = async () => {
+    console.log("using mock data");
+    setIsLoading(true);
+    setData(undefined);
+    setProgress("Loading demo...");
+
+    setTimeout(() => {
+      setData(mockData as ExtractedData);
+      setIsLoading(false);
+      setProgress("");
+    }, 3000);
   };
 
   const resetData = () => {
@@ -75,6 +71,7 @@ export function useDiscord() {
     progress,
     isLoading,
     pickAndProcessFile,
+    useMockData,
     resetData,
   };
 }

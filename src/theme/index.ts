@@ -10,4 +10,5 @@ export {
   View as TView,
   Card as TCard,
   Surface as TSurface,
+  Title as TTitle,
 } from "./components";

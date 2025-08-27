@@ -33,6 +33,14 @@
         "projectId": "71f1320f-8412-4f74-a631-3106bcdd1ba5"
       }
     },
-    "owner": "theoriginalayaka"
+    "owner": "theoriginalayaka",
+    "plugins": [
+      [
+        "expo-font",
+        {
+          "fonts": ["./assets/fonts/ABCGintoNordUnlicensedTrial-Black.otf"]
+        }
+      ]
+    ]
   }
 }

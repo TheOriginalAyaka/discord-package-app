@@ -5,7 +5,7 @@ import { ThemeProvider } from "./theme";
 import { useCustomFonts } from "./theme/fonts";
 
 export default function App() {
-  const { data, progress, isLoading, pickAndProcessFile, resetData } =
+  const { data, progress, isLoading, pickAndProcessFile, useMockData, resetData } =
     useDiscord();
   const fontsLoaded = useCustomFonts();
 
@@ -29,7 +29,7 @@ export default function App() {
       {isLoading ? (
         <LoadingScreen progress={progress} />
       ) : !data ? (
-        <WelcomeScreen onPickFile={pickAndProcessFile} progress={progress} />
+        <WelcomeScreen onPickFile={pickAndProcessFile} onMockData={useMockData} progress={progress} />
       ) : (
         <AnalysisScreen data={data} onBack={resetData} />
       )}
