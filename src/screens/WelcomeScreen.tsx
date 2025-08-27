@@ -1,4 +1,4 @@
-import { StyleSheet, View, ImageBackground, Text } from "react-native";
+import { StyleSheet, View, ImageBackground } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { useTheme, TText, TTitle } from "../theme";
 import { Button, ButtonText } from "../components/ui";
@@ -7,15 +7,10 @@ import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 interface WelcomeScreenProps {
   onPickFile: () => void;
   onMockData: () => void;
-  progress: string;
 }
 
-export function WelcomeScreen({
-  onPickFile,
-  onMockData,
-  progress,
-}: WelcomeScreenProps) {
-  const { isDark, theme } = useTheme();
+export function WelcomeScreen({ onPickFile, onMockData }: WelcomeScreenProps) {
+  const { isDark } = useTheme();
 
   return (
     <ImageBackground
