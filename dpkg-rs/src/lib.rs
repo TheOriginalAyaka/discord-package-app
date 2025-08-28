@@ -40,7 +40,7 @@ pub fn start_extraction(path: String, observer: Arc<dyn ExtractObserver>) {
                             }
                             Err(err) => {
                                 callback.error(
-                                    Step::Scaffolding,
+                                    Step::Messages,
                                     format!("{}", err),
                                     "Parsing error".into(),
                                 );
@@ -53,7 +53,7 @@ pub fn start_extraction(path: String, observer: Arc<dyn ExtractObserver>) {
                             }
                             Err(err) => {
                                 callback.error(
-                                    Step::Scaffolding,
+                                    Step::Analytics,
                                     format!("{}", err),
                                     "Parsing error".into(),
                                 );
