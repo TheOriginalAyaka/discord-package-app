@@ -1,37 +1,51 @@
 import * as DocumentPicker from "expo-document-picker";
 import { useEffect, useState } from "react";
-import dpkgModule, { type ExtractedData } from "../../modules/dpkg-module";
-
 import mockData from "../../mock.json";
+import dpkgModule, {
+  type EventCount,
+  type ExtractedData,
+} from "../../modules/dpkg-module";
 
 export function useDiscord() {
   const [data, setData] = useState<ExtractedData>();
+  const [_, setAnalytics] = useState<EventCount>();
   const [progress, setProgress] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    const complete = dpkgModule.addListener("onComplete", (e) => {
+    const dataEvent = dpkgModule.addListener("onComplete", (e) => {
       console.log("complete event:", JSON.stringify(e.result, null, 2));
       setData(e.result);
       setIsLoading(false);
       setProgress("");
     });
 
-    const error = dpkgModule.addListener("onError", (e) => {
-      console.log("error event:", e.message);
+    const analyticsEvent = dpkgModule.addListener(
+      "onAnalyticsComplete",
+      (e) => {
+        console.log("complete event:", JSON.stringify(e.result, null, 2));
+        setAnalytics(e.result);
+        setIsLoading(false);
+        setProgress("");
+      },
+    );
+
+    const errorEvent = dpkgModule.addListener("onError", (e) => {
+      console.log("error event:", e.error.message);
       setIsLoading(false);
-      setProgress(`Error: ${e.message}`);
+      setProgress(`${e.error.title}: ${e.error.message}`);
     });
 
-    const progressListener = dpkgModule.addListener("onProgress", (e) => {
-      console.log("progress event:", e.step);
-      setProgress(e.step);
+    const progressEvent = dpkgModule.addListener("onProgress", (e) => {
+      console.log("progress event:", e.progress.message);
+      setProgress(e.progress.message);
     });
 
     return () => {
-      complete.remove();
-      error.remove();
-      progressListener.remove();
+      dataEvent.remove();
+      errorEvent.remove();
+      progressEvent.remove();
+      analyticsEvent.remove();
     };
   }, []);
 
@@ -43,7 +57,7 @@ export function useDiscord() {
       console.log("uri", file.assets[0].uri);
       setIsLoading(true);
       setData(undefined);
-      dpkgModule.process(file.assets[0].uri.replace("file://", ""));
+      dpkgModule.startExtraction(file.assets[0].uri.replace("file://", ""));
     }
   };
 

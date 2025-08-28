@@ -4,11 +4,10 @@ use serde::{Deserialize, Serialize};
 pub struct User {
     pub id: String,
     pub username: String,
-    pub global_name: String,
+    pub global_name: Option<String>,
     pub discriminator: u16,
     pub avatar_hash: Option<String>,
     pub payments: Vec<Payment>,
-    pub flags: Vec<String>,
     pub relationships: Vec<Relationship>,
 }
 
@@ -21,7 +20,7 @@ pub struct Relationship {
 pub struct DiscordUser {
     pub id: String,
     pub username: String,
-    pub global_name: String,
+    pub global_name: Option<String>,
     pub discriminator: String,
     pub avatar: Option<String>,
 }

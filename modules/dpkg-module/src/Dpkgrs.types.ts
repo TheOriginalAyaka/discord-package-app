@@ -2,19 +2,35 @@ export type DpkgrsModuleEvents = {
   onProgress: (event: OnProgressEvent) => void;
   onError: (event: OnErrorEvent) => void;
   onComplete: (event: OnCompleteEvent) => void;
+  onAnalyticsComplete: (event: OnAnalyticsCompleteEvent) => void;
 };
 
 type OnProgressEvent = {
-  step: string;
+  progress: Progress;
 };
 
 type OnErrorEvent = {
-  message: string;
+  error: IError;
 };
 
 type OnCompleteEvent = {
   result: ExtractedData;
 };
+
+type OnAnalyticsCompleteEvent = {
+  result: EventCount;
+};
+
+interface Progress {
+  step: "messages" | "analytics" | "scaffolding";
+  message: string;
+}
+
+interface IError {
+  step: "messages" | "analytics" | "scaffolding";
+  message: string;
+  title: string;
+}
 
 export interface ExtractedData {
   user: User | null;
@@ -25,30 +41,17 @@ export interface ExtractedData {
   channelCount: number;
   messageCount: number;
   characterCount: number;
-  totalSpent: number;
   hoursValues: number[];
   favoriteWords: FavoriteWord[];
-  payments: PaymentInfo;
-  openCount: number | null;
-  averageOpenCountPerDay: number | null;
-  notificationCount: number | null;
-  joinVoiceChannelCount: number | null;
-  joinCallCount: number | null;
-  addReactionCount: number | null;
-  messageEditedCount: number | null;
-  sentMessageCount: number | null;
-  averageMessageCountPerDay: number | null;
-  slashCommandUsedCount: number | null;
 }
 
 interface User {
   id: string;
   username: string;
-  globalName: string;
+  globalName?: string;
   discriminator: number;
   avatarHash: string | null;
   payments: Payment[];
-  flags: string[];
   relationships: Relationship[];
 }
 
@@ -56,7 +59,7 @@ interface Relationship {
   user: {
     id: string;
     username: string;
-    globalName: string;
+    globalName?: string;
     discriminator: string;
     avatar?: string;
   };
@@ -68,11 +71,6 @@ interface Payment {
   amount: number;
   createdAt: string;
   description: string;
-}
-
-interface PaymentInfo {
-  total: Record<string, number>;
-  list: string;
 }
 
 interface TopDM {
@@ -89,5 +87,38 @@ interface TopChannel {
 
 interface FavoriteWord {
   word: string;
+  count: number;
+}
+
+export interface EventCount {
+  applicationCreated: number;
+  botTokenCompromised: number;
+  emailOpened: number;
+  loginSuccessful: number;
+  userAvatarUpdated: number;
+  appOpened: number;
+  notificationClicked: number;
+  appCrashed: number;
+  appNativeCrash: number;
+  oauth2AuthorizeAccepted: number;
+  remoteAuthLogin: number;
+  captchaServed: number;
+  voiceMessageRecorded: number;
+  messageReported: number;
+  messageEdited: number;
+  premiumUpsellViewed: number;
+  applicationCommandUsed: number;
+  addReaction: number;
+  guildJoined: number;
+  joinVoiceChannel: number;
+  leaveVoiceChannel: number;
+  mostUsedCommands: MostUsedCommand[];
+}
+
+interface MostUsedCommand {
+  commandId: string;
+  applicationId: string;
+  commandName?: string;
+  commandDescription?: string;
   count: number;
 }

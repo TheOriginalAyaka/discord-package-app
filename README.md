@@ -4,9 +4,18 @@
 
 A React Native mobile application for exploring Discord data packages, built with Expo and powered by a custom Rust library for efficient data processing.
 
+<p align="center">
+  <a href="https://testflight.apple.com/join/C4Dqt5QD">
+    <img src="https://assets.ayaka.one/github/download_testflight.png" alt="Download on TestFlight" height="50">
+  </a>
+  <a href="https://play.google.com/store/apps/details?id=com.theoriginalayaka.dpkg">
+    <img src="https://assets.ayaka.one/github/download_play.png" alt="Get it on Google Play" height="50">
+  </a>
+</p>
+
 ## Overview
 
-This app allows users to parse and explore Discord data packages on both iOS and Android devices. The core parsing logic is implemented in Rust ([dpkg-rs/](dpkg-rs/)) by [@Arikatsu](https://github.com/Arikatsu) and exposed to the React Native layer through native modules.
+This app allows users to parse and explore Discord data packages on both iOS and Android devices. The core parsing logic, initially developed by [@Arikatsu](https://github.com/Arikatsu), is implemented in Rust ([dpkg-rs/](dpkg-rs/)) and exposed to the React Native layer through native modules.
 
 ## Architecture
 

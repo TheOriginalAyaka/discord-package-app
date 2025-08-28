@@ -5,26 +5,24 @@ use std::collections::HashMap;
 use std::io::{Read, Seek};
 use zip::ZipArchive;
 
-use crate::models::{
-    Channel, ExtractedData, FavoriteWord, Message, ParsedMessage, TopChannel, TopDM,
-};
-use crate::parser::Parser;
+use crate::models::{Channel, FavoriteWord, Message, ParsedMessage, TopChannel, TopDM, UserData};
+use crate::parser::{Callback, Parser};
 
 impl Parser {
-    pub(super) fn load_channels<R: Read + Seek, F>(
+    pub(super) fn load_channels<R: Read + Seek>(
         &self,
         archive: &mut ZipArchive<R>,
         messages_root: &str,
-        extracted_data: &mut ExtractedData,
-        progress_callback: &F,
-    ) -> Result<()>
-    where
-        F: Fn(String) + Send + Sync,
-    {
+        extracted_data: &mut UserData,
+        callback: &Callback,
+    ) -> Result<()> {
         let messages_index = self.load_messages_index(archive, messages_root)?;
         let channel_ids = self.scan_channel_ids(archive, messages_root)?;
 
-        progress_callback(format!("Found {} channels to process", channel_ids.len()));
+        callback.progress(
+            crate::parser::Step::Messages,
+            format!("Found {} channels to process", channel_ids.len()),
+        );
 
         let (is_old_package, is_old_package_v2) =
             self.detect_package_format(messages_root, &channel_ids);
@@ -39,12 +37,15 @@ impl Parser {
             }
 
             if index % 20 == 0 {
-                progress_callback(format!(
-                    "Processing channel {} of {} (ID: {})",
-                    index + 1,
-                    channel_ids.len(),
-                    channel_id
-                ));
+                callback.progress(
+                    crate::parser::Step::Messages,
+                    format!(
+                        "Processing channel {} of {} (ID: {})",
+                        index + 1,
+                        channel_ids.len(),
+                        channel_id
+                    ),
+                );
             }
 
             let prefix = if is_old_package { "" } else { "c" };
@@ -237,7 +238,7 @@ impl Parser {
 
     fn finalize_channel_stats(
         &self,
-        extracted_data: &mut ExtractedData,
+        extracted_data: &mut UserData,
         word_counts: HashMap<String, u32>,
         mut channel_message_counts: Vec<(String, u32, String)>,
         mut dm_message_counts: Vec<(String, String, u32)>,

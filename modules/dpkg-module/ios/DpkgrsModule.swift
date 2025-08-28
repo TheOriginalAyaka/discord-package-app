@@ -4,9 +4,9 @@ public class DpkgrsModule: Module {
     public func definition() -> ModuleDefinition {
         Name("Dpkgrs")
         
-        Events("onProgress", "onError", "onComplete")
+        Events("onProgress", "onError", "onComplete", "onAnalyticsComplete")
         
-        Function("process") { (path: String) in
+        Function("startExtraction") { (path: String) in
             let observer = ExObserver(emitter: self)
             startExtraction(path: path, observer: observer)
         }
@@ -20,21 +20,36 @@ final class ExObserver: ExtractObserver {
         self.emitter = emitter
     }
     
-    func onProgress(step: String) {
-        emitter?.sendEvent("onProgress", ["step": step])
+    func onProgress(progress: OnProgress) {
+        emitter?.sendEvent("onProgress", ["progress": progress.toDictionary()])
     }
     
-    func onError(message: String) {
-        emitter?.sendEvent("onError", ["message": message])
+    func onError(error: OnError) {
+        emitter?.sendEvent("onError", ["error": error.toDictionary()])
     }
     
-    func onComplete(result: ExtractedData) {
-        print("complete with result \(result)")
+    func onComplete(result: UserData) {
         emitter?.sendEvent("onComplete", ["result": result.toDictionary()])
+    }
+    
+    func onAnalyticsComplete(result: EventCount) {
+        emitter?.sendEvent("onAnalyticsComplete", ["result": result.toDictionary()])
     }
 }
 
-extension ExtractedData {
+extension OnError: DictionaryConvertible {}
+
+extension OnProgress: DictionaryConvertible {}
+
+extension EventCount: DictionaryConvertible {}
+
+extension UserData: DictionaryConvertible {}
+
+protocol DictionaryConvertible {
+    func toDictionary() -> [String: Any]
+}
+
+extension DictionaryConvertible {
     func toDictionary() -> [String: Any] {
         return Self.convertToDict(self) as? [String: Any] ?? [:]
     }

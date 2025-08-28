@@ -1,4 +1,5 @@
 mod analytics;
+mod callback;
 mod channels;
 mod servers;
 mod user;
@@ -9,7 +10,8 @@ use std::collections::HashMap;
 use std::io::Read;
 use zip::ZipArchive;
 
-use crate::models::ExtractedData;
+use crate::models::UserData;
+pub use crate::parser::callback::*;
 
 pub struct Parser {
     pub(crate) file_index: HashMap<String, usize>,
@@ -22,17 +24,14 @@ impl Parser {
         }
     }
 
-    pub async fn extract_data<R: Read + std::io::Seek, F>(
+    pub async fn extract_data<R: Read + std::io::Seek + std::marker::Send>(
         &mut self,
-        mut archive: ZipArchive<R>,
-        progress_callback: F,
-    ) -> Result<ExtractedData>
-    where
-        F: Fn(String) + Send + Sync,
-    {
-        let mut extracted_data = ExtractedData::default();
+        archive: &mut ZipArchive<R>,
+        callback: &Callback,
+    ) -> Result<UserData> {
+        let mut extracted_data = UserData::default();
 
-        progress_callback("Analyzing package structure...".to_string());
+        callback.progress(Step::Messages, "Analyzing package structure...".into());
 
         self.file_index = (0..archive.len())
             .map(|i| (archive.by_index(i).unwrap().name().to_string(), i))
@@ -48,32 +47,11 @@ impl Parser {
         println!("[debug] Found servers root: {}", servers_root);
         println!("[debug] Found user root: {}", user_root);
 
-        self.load_user(
-            &mut archive,
-            &user_root,
-            &mut extracted_data,
-            &progress_callback,
-        )?;
-        self.load_channels(
-            &mut archive,
-            &messages_root,
-            &mut extracted_data,
-            &progress_callback,
-        )?;
-        self.load_servers(
-            &mut archive,
-            &servers_root,
-            &mut extracted_data,
-            &progress_callback,
-        )?;
-        self.load_analytics(
-            &mut archive,
-            &file_names,
-            &mut extracted_data,
-            &progress_callback,
-        )?;
+        self.load_user(archive, &user_root, &mut extracted_data, callback)?;
+        self.load_channels(archive, &messages_root, &mut extracted_data, callback)?;
+        self.load_servers(archive, &servers_root, &mut extracted_data, callback)?;
 
-        progress_callback("Finalizing extraction...".to_string());
+        callback.progress(Step::Messages, "Finalizing extraction...".to_string());
         println!("[debug] Extraction complete");
         Ok(extracted_data)
     }

@@ -1,6 +1,6 @@
 {
   "rust-analyzer.check.command": "clippy",
-  "rust-analyzer.check.extraArgs": ["--", "-D", "warnings"],
+  // "rust-analyzer.check.extraArgs": ["--", "-D", "warnings"],
   "editor.defaultFormatter": "biomejs.biome",
   "editor.formatOnSave": true,
   "[javascript]": {

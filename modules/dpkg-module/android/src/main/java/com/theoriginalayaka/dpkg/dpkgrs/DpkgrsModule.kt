@@ -3,7 +3,10 @@ package com.theoriginalayaka.dpkg.dpkgrs
 import expo.modules.kotlin.modules.Module
 import expo.modules.kotlin.modules.ModuleDefinition
 import uniffi.dpkg_rs.ExtractObserver
-import uniffi.dpkg_rs.ExtractedData
+import uniffi.dpkg_rs.OnProgress
+import uniffi.dpkg_rs.OnError
+import uniffi.dpkg_rs.UserData
+import uniffi.dpkg_rs.EventCount
 import uniffi.dpkg_rs.startExtraction
 import java.lang.reflect.Field
 import java.lang.reflect.Modifier
@@ -13,9 +16,9 @@ class DpkgrsModule : Module() {
   override fun definition() = ModuleDefinition {
     Name("Dpkgrs")
 
-    Events("onProgress", "onError", "onComplete")
+    Events("onProgress", "onError", "onComplete", "onAnalyticsComplete")
 
-    Function("process") { filePath: String ->
+    Function("startExtraction") { filePath: String ->
       val observer = ExObserver(this@DpkgrsModule)
       startExtraction(filePath, observer)
     }
@@ -23,20 +26,36 @@ class DpkgrsModule : Module() {
 }
 
 class ExObserver(private val module: DpkgrsModule) : ExtractObserver {
-  override fun onProgress(step: String) {
-    module.sendEvent("onProgress", mapOf("step" to step))
+  override fun onProgress(progress: OnProgress) {
+    module.sendEvent("onProgress", mapOf("progress" to progress.toDictionary()))
   }
 
-  override fun onError(message: String) {
-    module.sendEvent("onError", mapOf("message" to message))
+  override fun onError(error: OnError) {
+    module.sendEvent("onError", mapOf("error" to error.toDictionary()))
   }
 
-  override fun onComplete(result: ExtractedData) {
+  override fun onComplete(result: UserData) {
     module.sendEvent("onComplete", mapOf("result" to result.toDictionary()))
+  }
+
+  override fun onAnalyticsComplete(result: EventCount) {
+    module.sendEvent("onAnalyticsComplete", mapOf("result" to result.toDictionary()))
   }
 }
 
-fun ExtractedData.toDictionary(): Any? {
+fun OnProgress.toDictionary(): Any? {
+  return convertToDict(this)
+}
+
+fun OnError.toDictionary(): Any? {
+  return convertToDict(this)
+}
+
+fun UserData.toDictionary(): Any? {
+  return convertToDict(this)
+}
+
+fun EventCount.toDictionary(): Any? {
   return convertToDict(this)
 }
 

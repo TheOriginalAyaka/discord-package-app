@@ -3,21 +3,21 @@ use std::collections::HashMap;
 use std::io::Read;
 use zip::ZipArchive;
 
-use crate::models::ExtractedData;
-use crate::parser::Parser;
+use crate::models::UserData;
+use crate::parser::{Callback, Parser};
 
 impl Parser {
-    pub(super) fn load_servers<R: Read + std::io::Seek, F>(
+    pub(super) fn load_servers<R: Read + std::io::Seek>(
         &self,
         archive: &mut ZipArchive<R>,
         servers_root: &str,
-        extracted_data: &mut ExtractedData,
-        progress_callback: &F,
-    ) -> Result<()>
-    where
-        F: Fn(String) + Send + Sync,
-    {
-        progress_callback("Loading guild information...".to_string());
+        extracted_data: &mut UserData,
+        callback: &Callback,
+    ) -> Result<()> {
+        callback.progress(
+            crate::parser::Step::Messages,
+            "Loading guild information...".to_string(),
+        );
 
         let guild_index_path = format!("{}/index.json", servers_root);
 

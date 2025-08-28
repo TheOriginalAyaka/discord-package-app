@@ -7,53 +7,74 @@ use std::sync::Arc;
 use std::thread;
 use zip::ZipArchive;
 
-use crate::models::extracted_data::ExtractedData;
-use crate::parser::Parser;
-
-#[uniffi::export(with_foreign)]
-pub trait ExtractObserver: Send + Sync {
-    fn on_progress(&self, step: String);
-    fn on_error(&self, message: String);
-    fn on_complete(&self, result: ExtractedData);
-}
+use crate::models::ExtractObserver;
+use crate::parser::{Callback, Parser, Step};
 
 #[uniffi::export]
 pub fn start_extraction(path: String, observer: Arc<dyn ExtractObserver>) {
+    let callback = Callback::new(observer);
     thread::spawn(move || {
         let rt = match tokio::runtime::Runtime::new() {
             Ok(rt) => rt,
             Err(err) => {
-                observer.on_error(format!("Failed to create async runtime: {}", err));
+                callback.error(
+                    Step::Scaffolding,
+                    format!("Failed to create async runtime: {}", err),
+                    "Runtime error".into(),
+                );
                 return;
             }
         };
 
         match File::open(&path) {
             Ok(file) => {
-                observer.on_progress("Opened file".into());
+                callback.progress(Step::Scaffolding, "Opened Archive".into());
 
                 match ZipArchive::new(file) {
-                    Ok(archive) => {
+                    Ok(mut archive) => {
                         let mut parser = Parser::new();
 
-                        let progress_callback = |msg: String| {
-                            observer.on_progress(msg);
-                        };
-
-                        match rt.block_on(parser.extract_data(archive, progress_callback)) {
+                        match rt.block_on(parser.extract_data(&mut archive, &callback)) {
                             Ok(data) => {
-                                observer.on_complete(data);
+                                callback.data_complete(data);
                             }
                             Err(err) => {
-                                observer.on_error(format!("Extraction error: {}", err));
+                                callback.error(
+                                    Step::Scaffolding,
+                                    format!("{}", err),
+                                    "Parsing error".into(),
+                                );
+                            }
+                        }
+                        // TODO: implement a way to cancel processing analytics
+                        match rt.block_on(parser.load_analytics(&mut archive, &callback)) {
+                            Ok(data) => {
+                                callback.analytics_complete(data);
+                            }
+                            Err(err) => {
+                                callback.error(
+                                    Step::Scaffolding,
+                                    format!("{}", err),
+                                    "Parsing error".into(),
+                                );
                             }
                         }
                     }
-                    Err(err) => observer.on_error(format!("Failed to open ZIP archive: {}", err)),
+                    Err(err) => {
+                        callback.error(
+                            Step::Scaffolding,
+                            format!("{}", err),
+                            "Archive error".into(),
+                        );
+                    }
                 }
             }
             Err(err) => {
-                observer.on_error(format!("Failed to open file: {}", err));
+                callback.error(
+                    Step::Scaffolding,
+                    format!("{}", err),
+                    "Extraction error".into(),
+                );
             }
         }
     });
@@ -61,6 +82,8 @@ pub fn start_extraction(path: String, observer: Arc<dyn ExtractObserver>) {
 
 #[cfg(test)]
 mod tests {
+    use crate::models::{EventCount, OnError, OnProgress, UserData};
+
     use super::*;
     use std::sync::mpsc;
 
@@ -79,16 +102,20 @@ mod tests {
     }
 
     impl ExtractObserver for TestObserver {
-        fn on_progress(&self, step: String) {
-            println!("[{}] Progress: {}", self.name, step);
+        fn on_progress(&self, progress: OnProgress) {
+            println!("[{}] Progress: {}", self.name, progress.message);
         }
 
-        fn on_error(&self, message: String) {
-            println!("[{}] Error: {}", self.name, message);
+        fn on_error(&self, error: OnError) {
+            println!("[{}] Error: {}", self.name, error.message);
         }
 
-        fn on_complete(&self, result: ExtractedData) {
+        fn on_complete(&self, result: UserData) {
             println!("[{}] Complete! result: {:?}", self.name, result);
+        }
+
+        fn on_analytics_complete(&self, result: EventCount) {
+            println!("[{}] Analytics complete! result: {:?}", self.name, result);
             let _ = self.sender.send(());
         }
     }
@@ -108,7 +135,7 @@ mod tests {
         println!("Starting extraction");
         start_extraction(file_path.clone(), observer);
 
-        match receiver.recv_timeout(std::time::Duration::from_secs(30)) {
+        match receiver.recv_timeout(std::time::Duration::from_secs(300)) {
             Ok(_) => println!("Test completed successfully"),
             Err(_) => panic!("Test timed out after 30 seconds"),
         }
