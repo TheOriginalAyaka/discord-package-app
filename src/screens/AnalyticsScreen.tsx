@@ -1,0 +1,137 @@
+import { useNavigation } from "@react-navigation/native";
+import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { StatusBar } from "expo-status-bar";
+import { ScrollView, StyleSheet, View } from "react-native";
+import {
+  ActivityAnalytics,
+  AdditionalEvents,
+  BotCommands,
+  MessageInteractions,
+  SecurityAnalytics,
+  VoiceAnalytics,
+} from "@/src/components";
+import { Header } from "@/src/components/ui";
+import { useDiscordContext } from "@/src/context/DiscordContext";
+import type { RootStackParamList } from "@/src/navigation/types";
+import { TText, TView, useTheme } from "@/src/theme";
+
+type NavigationProp = NativeStackNavigationProp<
+  RootStackParamList,
+  "Analytics"
+>;
+
+export function AnalyticsScreen() {
+  const { isDark } = useTheme();
+  const navigation = useNavigation<NavigationProp>();
+  const { analytics } = useDiscordContext();
+
+  if (!analytics) {
+    navigation.navigate("Welcome");
+    return null;
+  }
+
+  // Calculate some summary statistics
+  const totalEvents = Object.entries(analytics)
+    .filter(([key]) => key !== "mostUsedCommands")
+    .reduce(
+      (acc, [_, value]) => acc + (typeof value === "number" ? value : 0),
+      0,
+    );
+
+  const topActivities = [
+    { label: "Logins", value: analytics.loginSuccessful },
+    { label: "Messages", value: analytics.messageEdited },
+    { label: "Voice", value: analytics.joinVoiceChannel },
+    { label: "Commands", value: analytics.applicationCommandUsed },
+  ].sort((a, b) => b.value - a.value);
+
+  return (
+    <TView variant="background" style={{ flex: 1 }}>
+      <Header title="Analytics" onBack={() => navigation.goBack()} />
+
+      <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
+        {/* card thingy */}
+        <View style={[styles.summaryCard]}>
+          <TText
+            variant="secondary"
+            weight="medium"
+            style={styles.summaryTitle}
+          >
+            Total Events Tracked
+          </TText>
+          <TText variant="primary" weight="bold" style={styles.summaryValue}>
+            {totalEvents.toLocaleString()}
+          </TText>
+          <TText variant="secondary" style={styles.summaryDescription}>
+            Across all categories since you started using Discord
+          </TText>
+
+          {/* mini stats */}
+          <View style={styles.miniStats}>
+            {topActivities.slice(0, 3).map((activity) => (
+              <View key={activity.label} style={styles.miniStat}>
+                <TText
+                  variant="primary"
+                  weight="semibold"
+                  style={{ fontSize: 18 }}
+                >
+                  {activity.value.toLocaleString()}
+                </TText>
+                <TText variant="secondary" style={{ fontSize: 11 }}>
+                  {activity.label}
+                </TText>
+              </View>
+            ))}
+          </View>
+        </View>
+
+        <ActivityAnalytics analytics={analytics} />
+        <VoiceAnalytics analytics={analytics} />
+        <MessageInteractions analytics={analytics} />
+        <BotCommands analytics={analytics} />
+        <SecurityAnalytics analytics={analytics} />
+        <AdditionalEvents analytics={analytics} />
+
+        <View style={{ height: 24 }} />
+      </ScrollView>
+
+      <StatusBar style={isDark ? "light" : "dark"} />
+    </TView>
+  );
+}
+
+const styles = StyleSheet.create({
+  content: {
+    flex: 1,
+  },
+  summaryCard: {
+    margin: 12,
+    padding: 20,
+    borderRadius: 16,
+    alignItems: "center",
+  },
+  summaryTitle: {
+    fontSize: 13,
+    textTransform: "uppercase",
+    letterSpacing: 0.5,
+  },
+  summaryValue: {
+    fontSize: 36,
+    marginBottom: 6,
+  },
+  summaryDescription: {
+    fontSize: 12,
+    textAlign: "center",
+  },
+  miniStats: {
+    flexDirection: "row",
+    justifyContent: "space-around",
+    width: "100%",
+    paddingTop: 12,
+    borderTopWidth: 1,
+    borderTopColor: "rgba(0,0,0,0.1)",
+  },
+  miniStat: {
+    alignItems: "center",
+  },
+});

@@ -1,12 +1,11 @@
 import {
   Text as RNText,
-  View as RNView,
   type TextProps as RNTextProps,
+  View as RNView,
   type ViewProps as RNViewProps,
 } from "react-native";
-
-import { useTheme } from "./ThemeProvider";
 import { getFontStyle } from "./fonts";
+import { useTheme } from "./ThemeProvider";
 
 type ColorVariant = "primary" | "secondary" | "tertiary" | "muted" | "accent";
 type BackgroundVariant =

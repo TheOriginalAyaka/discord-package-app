@@ -1,47 +1,57 @@
-import { View, Text } from "react-native";
-import { useDiscord } from "./hooks/useDiscord";
-import { AnalysisScreen, LoadingScreen, WelcomeScreen } from "./screens";
-import { ThemeProvider } from "./theme";
+import { NavigationContainer } from "@react-navigation/native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import * as SplashScreen from "expo-splash-screen";
+import { useEffect } from "react";
+import { DiscordProvider } from "./context/DiscordContext";
+import type { RootStackParamList } from "./navigation/types";
+import { AnalyticsScreen, OverviewScreen, WelcomeScreen } from "./screens";
+import { ThemeProvider, useTheme } from "./theme";
 import { useCustomFonts } from "./theme/fonts";
 
+SplashScreen.preventAutoHideAsync();
+
+const Stack = createNativeStackNavigator<RootStackParamList>();
+
+function AppNavigator() {
+  const { isDark } = useTheme();
+
+  return (
+    <Stack.Navigator
+      screenOptions={{
+        headerShown: false,
+        contentStyle: {
+          backgroundColor: isDark ? "#1c1c22" : "#ffffff",
+        },
+      }}
+      initialRouteName="Welcome"
+    >
+      <Stack.Screen name="Welcome" component={WelcomeScreen} />
+      <Stack.Screen name="Overview" component={OverviewScreen} />
+      <Stack.Screen name="Analytics" component={AnalyticsScreen} />
+    </Stack.Navigator>
+  );
+}
+
 export default function App() {
-  const {
-    data,
-    progress,
-    isLoading,
-    pickAndProcessFile,
-    useMockData,
-    resetData,
-  } = useDiscord();
   const fontsLoaded = useCustomFonts();
 
+  useEffect(() => {
+    if (fontsLoaded) {
+      SplashScreen.hideAsync();
+    }
+  }, [fontsLoaded]);
+
   if (!fontsLoaded) {
-    return (
-      <View
-        style={{
-          flex: 1,
-          justifyContent: "center",
-          alignItems: "center",
-          backgroundColor: "#1c1c22",
-        }}
-      >
-        <Text style={{ color: "#ffffff" }}>Loading fonts...</Text>
-      </View>
-    );
+    return null;
   }
 
   return (
     <ThemeProvider defaultMode="dark">
-      {isLoading ? (
-        <LoadingScreen progress={progress} />
-      ) : !data ? (
-        <WelcomeScreen
-          onPickFile={pickAndProcessFile}
-          onMockData={useMockData}
-        />
-      ) : (
-        <AnalysisScreen data={data} onBack={resetData} />
-      )}
+      <DiscordProvider>
+        <NavigationContainer>
+          <AppNavigator />
+        </NavigationContainer>
+      </DiscordProvider>
     </ThemeProvider>
   );
 }

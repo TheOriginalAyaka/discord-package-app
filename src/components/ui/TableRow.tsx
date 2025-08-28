@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import {
   StyleSheet,
+  TouchableWithoutFeedback,
   View,
   type ViewStyle,
-  TouchableWithoutFeedback,
 } from "react-native";
-import { TText, useTheme } from "../../theme";
+import { TText, useTheme } from "@/src/theme";
 
 interface TableRowProps {
   children: React.ReactNode;
@@ -104,9 +104,9 @@ export function TableRowGroup({
     } else if (index === 0) {
       positionStyle = styles.firstRow;
     } else if (index === totalChildren - 1) {
-      positionStyle = styles.lastRow;
+      positionStyle = { ...styles.lastRow, borderTopColor: theme.divider };
     } else {
-      positionStyle = styles.middleRow;
+      positionStyle = { ...styles.middleRow, borderTopColor: theme.divider };
     }
 
     const existingStyle = (child.props as { style?: ViewStyle | ViewStyle[] })
@@ -190,7 +190,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 8,
     paddingLeft: 12,
     borderTopWidth: 1,
-    borderTopColor: "rgba(255, 255, 255, 0.1)",
+    borderTopColor: "rgba(0, 0, 0, 0.05)",
   },
   lastRow: {
     borderTopLeftRadius: 0,
@@ -202,7 +202,7 @@ const styles = StyleSheet.create({
     marginTop: 0,
     paddingLeft: 12,
     borderTopWidth: 1,
-    borderTopColor: "rgba(255, 255, 255, 0.1)",
+    borderTopColor: "rgba(0, 0, 0, 0.05)",
   },
   disabled: {
     opacity: 0.5,

@@ -1,22 +1,22 @@
 import {
+  createContext,
+  type ReactNode,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
+import {
+  Animated,
   type StyleProp,
   StyleSheet,
-  type ViewStyle,
-  Animated,
+  type TextStyle,
   TouchableOpacity,
   View,
-  type TextStyle,
+  type ViewStyle,
 } from "react-native";
-import {
-  type ReactNode,
-  useState,
-  useRef,
-  useEffect,
-  createContext,
-  useContext,
-} from "react";
 
-import { useTheme, TText } from "../../theme";
+import { TText, useTheme } from "@/src/theme";
 
 // context for button text color
 const ButtonContext = createContext<{ textColor: string }>({

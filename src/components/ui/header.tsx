@@ -1,6 +1,6 @@
-import MaterialIcons from "react-native-vector-icons/MaterialIcons";
-import { TText, TView, useTheme } from "../../theme";
 import { StyleSheet } from "react-native";
+import MaterialIcons from "react-native-vector-icons/MaterialIcons";
+import { TText, TView, useTheme } from "@/src/theme";
 
 interface HeaderProps {
   title: string;
@@ -63,7 +63,7 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     fontSize: 16,
-    flex: 1, // Add this
+    flex: 1,
     textAlign: "center",
   },
 });

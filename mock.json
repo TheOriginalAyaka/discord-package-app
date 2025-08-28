@@ -1,278 +1,340 @@
 {
-  "notificationCount": 0,
-  "dmChannelCount": 309,
-  "user": {
-    "payments": [
+  "UserData": {
+    "notificationCount": 0,
+    "dmChannelCount": 309,
+    "user": {
+      "payments": [
+        {
+          "currency": "usd",
+          "createdAt": "2025-08-15T18:30:15.123456+00:00",
+          "amount": 999,
+          "description": "Nitro Monthly",
+          "status": 1
+        },
+        {
+          "currency": "usd",
+          "createdAt": "2025-07-15T18:25:07.068685+00:00",
+          "amount": 999,
+          "description": "Nitro Monthly",
+          "status": 1
+        },
+        {
+          "currency": "usd",
+          "createdAt": "2025-06-20T11:05:42.597799+00:00",
+          "amount": 499,
+          "description": "Server Boost",
+          "status": 1
+        },
+        {
+          "currency": "usd",
+          "createdAt": "2025-06-15T18:20:20.454116+00:00",
+          "amount": 999,
+          "description": "Nitro Monthly",
+          "status": 1
+        },
+        {
+          "currency": "usd",
+          "createdAt": "2025-05-15T18:20:22.925223+00:00",
+          "amount": 999,
+          "description": "Nitro Monthly",
+          "status": 2
+        },
+        {
+          "currency": "usd",
+          "createdAt": "2025-04-10T12:00:00.000000+00:00",
+          "amount": 299,
+          "description": "GIFT - Nitro Basic",
+          "status": 1
+        },
+        {
+          "currency": "usd",
+          "createdAt": "2025-03-05T19:35:26+00:00",
+          "amount": 999,
+          "description": "GIFT - Nitro Monthly",
+          "status": 1
+        },
+        {
+          "currency": "usd",
+          "createdAt": "2025-02-01T13:07:56.149747+00:00",
+          "amount": 999,
+          "description": "GIFT - Nitro",
+          "status": 1
+        },
+        {
+          "currency": "usd",
+          "createdAt": "2024-12-25T16:26:30.350132+00:00",
+          "amount": 599,
+          "description": "Profile Effect: 'Syntax Error'",
+          "status": 1
+        },
+        {
+          "currency": "usd",
+          "createdAt": "2024-11-22T12:39:21.047000+00:00",
+          "amount": 299,
+          "description": "GIFT - Nitro Basic",
+          "status": 1
+        }
+      ],
+      "username": "thereallo",
+      "globalName": "Thereallo",
+      "flags": [
+        "MFA_SMS",
+        "PREMIUM_PROMO_DISMISSED",
+        "IS_HUBSPOT_CONTACT",
+        "USED_DESKTOP_CLIENT",
+        "USED_WEB_CLIENT",
+        "USED_MOBILE_CLIENT",
+        "HAS_SESSION_STARTED",
+        "PREMIUM_ELIGIBLE_FOR_UNIQUE_USERNAME"
+      ],
+      "relationships": [
+        {
+          "user": {
+            "globalName": "advaith",
+            "id": "190916650143318016",
+            "username": "advaith",
+            "avatar": "a_11783a8ed5c52af5895bd1d583895423",
+            "discriminator": "0"
+          }
+        },
+        {
+          "user": {
+            "avatar": "c0319272bbf20f1a211bd5a6d1e48660",
+            "id": "142007603549962240",
+            "globalName": "amia",
+            "username": "aamia",
+            "discriminator": "0"
+          }
+        },
+        {
+          "user": {
+            "globalName": "Magix",
+            "discriminator": "0",
+            "username": "magix.",
+            "avatar": "3e58ad4bbf818685156a5f5e5b70af14",
+            "id": "252090676068614145"
+          }
+        },
+        {
+          "user": {
+            "globalName": "Satou",
+            "discriminator": "0",
+            "username": "cuny.",
+            "avatar": "e23995730bb01949e82f6d067f0e1d82",
+            "id": "675108484341301275"
+          }
+        },
+        {
+          "user": {
+            "globalName": "lo",
+            "discriminator": "0",
+            "username": "cnuy.",
+            "avatar": "038f8ff97881ea5a1ab55dc0dc9f68d3",
+            "id": "454920881177624576"
+          }
+        }
+      ],
+      "id": "896388612764090448",
+      "avatarHash": "b670bcf8bc2898df6d15bcaf7d5f9975",
+      "discriminator": 0
+    },
+    "openCount": 0,
+    "guildCount": 48,
+    "channelCount": 541,
+    "hoursValues": [
+      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+    ],
+    "averageMessageCountPerDay": null,
+    "totalSpent": 6292,
+    "joinCallCount": 0,
+    "slashCommandUsedCount": 0,
+    "messageCount": 688332,
+    "topChannels": [
       {
-        "currency": "usd",
-        "createdAt": "2025-08-15T18:30:15.123456+00:00",
-        "amount": 999,
-        "description": "Nitro Monthly",
-        "status": 1
+        "name": "help-v15",
+        "guildName": "Discord.js",
+        "messageCount": 85231
       },
       {
-        "currency": "usd",
-        "createdAt": "2025-07-15T18:25:07.068685+00:00",
-        "amount": 999,
-        "description": "Nitro Monthly",
-        "status": 1
+        "name": "discussions",
+        "guildName": "Next.js",
+        "messageCount": 67450
       },
       {
-        "currency": "usd",
-        "createdAt": "2025-06-20T11:05:42.597799+00:00",
-        "amount": 499,
-        "description": "Server Boost",
-        "status": 1
+        "name": "discord-bots",
+        "guildName": "Python",
+        "messageCount": 45123
       },
       {
-        "currency": "usd",
-        "createdAt": "2025-06-15T18:20:20.454116+00:00",
-        "amount": 999,
-        "description": "Nitro Monthly",
-        "status": 1
+        "name": "off-topic",
+        "guildName": "Cloudflare Developers",
+        "messageCount": 39876
       },
       {
-        "currency": "usd",
-        "createdAt": "2025-05-15T18:20:22.925223+00:00",
-        "amount": 999,
-        "description": "Nitro Monthly",
-        "status": 2
+        "messageCount": 25010,
+        "guildName": "Node.js",
+        "name": "nodejs-help"
       },
       {
-        "currency": "usd",
-        "createdAt": "2025-04-10T12:00:00.000000+00:00",
-        "amount": 299,
-        "description": "GIFT - Nitro Basic",
-        "status": 1
+        "guildName": "TypeScript Community",
+        "name": "typescript-discussion",
+        "messageCount": 19854
       },
       {
-        "currency": "usd",
-        "createdAt": "2025-03-05T19:35:26+00:00",
-        "amount": 999,
-        "description": "GIFT - Nitro Monthly",
-        "status": 1
+        "guildName": "Next.js",
+        "messageCount": 15332,
+        "name": "general"
       },
       {
-        "currency": "usd",
-        "createdAt": "2025-02-01T13:07:56.149747+00:00",
-        "amount": 999,
-        "description": "GIFT - Nitro",
-        "status": 1
+        "messageCount": 12109,
+        "guildName": "Svelte Land",
+        "name": "support"
       },
       {
-        "currency": "usd",
-        "createdAt": "2024-12-25T16:26:30.350132+00:00",
-        "amount": 599,
-        "description": "Profile Effect: 'Syntax Error'",
-        "status": 1
+        "guildName": "Rust Programming Language",
+        "messageCount": 9876,
+        "name": "beginners"
       },
       {
-        "currency": "usd",
-        "createdAt": "2024-11-22T12:39:21.047000+00:00",
-        "amount": 299,
-        "description": "GIFT - Nitro Basic",
-        "status": 1
+        "name": "vue-general",
+        "messageCount": 8543,
+        "guildName": "Vue Land"
       }
     ],
-    "username": "thereallo",
-    "globalName": "Thereallo",
-    "flags": [
-      "MFA_SMS",
-      "PREMIUM_PROMO_DISMISSED",
-      "IS_HUBSPOT_CONTACT",
-      "USED_DESKTOP_CLIENT",
-      "USED_WEB_CLIENT",
-      "USED_MOBILE_CLIENT",
-      "HAS_SESSION_STARTED",
-      "PREMIUM_ELIGIBLE_FOR_UNIQUE_USERNAME"
-    ],
-    "relationships": [
+    "topDms": [
       {
-        "user": {
-          "globalName": "advaith",
-          "id": "190916650143318016",
-          "username": "advaith",
-          "avatar": "a_11783a8ed5c52af5895bd1d583895423",
-          "discriminator": "0"
-        }
+        "messageCount": 265059,
+        "id": "190916650143318016",
+        "dmUserId": "190916650143318016"
       },
       {
-        "user": {
-          "avatar": "c0319272bbf20f1a211bd5a6d1e48660",
-          "id": "142007603549962240",
-          "globalName": "amia",
-          "username": "aamia",
-          "discriminator": "0"
-        }
+        "messageCount": 60381,
+        "id": "142007603549962240",
+        "dmUserId": "142007603549962240"
       },
       {
-        "user": {
-          "globalName": "Magix",
-          "discriminator": "0",
-          "username": "magix.",
-          "avatar": "3e58ad4bbf818685156a5f5e5b70af14",
-          "id": "252090676068614145"
-        }
+        "id": "252090676068614145",
+        "messageCount": 57070,
+        "dmUserId": "252090676068614145"
       },
       {
-        "user": {
-          "globalName": "Satou",
-          "discriminator": "0",
-          "username": "cuny.",
-          "avatar": "e23995730bb01949e82f6d067f0e1d82",
-          "id": "675108484341301275"
-        }
+        "id": "675108484341301275",
+        "messageCount": 11252,
+        "dmUserId": "675108484341301275"
       },
       {
-        "user": {
-          "globalName": "lo",
-          "discriminator": "0",
-          "username": "cnuy.",
-          "avatar": "038f8ff97881ea5a1ab55dc0dc9f68d3",
-          "id": "454920881177624576"
-        }
+        "id": "454920881177624576",
+        "messageCount": 8783,
+        "dmUserId": "454920881177624576"
       }
     ],
-    "id": "896388612764090448",
-    "avatarHash": "b670bcf8bc2898df6d15bcaf7d5f9975",
-    "discriminator": 0
+    "characterCount": 19011263,
+    "averageOpenCountPerDay": null,
+    "joinVoiceChannelCount": 0,
+    "addReactionCount": 0,
+    "messageEditedCount": 0,
+    "favoriteWords": [
+      {
+        "word": "<a:bocchi_glitching:1101309043500384322>",
+        "count": 75312
+      },
+      {
+        "word": "const",
+        "count": 38531
+      },
+      {
+        "word": "async",
+        "count": 9876
+      },
+      {
+        "word": "await",
+        "count": 9543
+      },
+      {
+        "word": "useEffect",
+        "count": 7890
+      },
+      {
+        "word": "console.log",
+        "count": 6543
+      },
+      {
+        "word": "TypeError",
+        "count": 5432
+      },
+      {
+        "word": "undefined",
+        "count": 4321
+      },
+      {
+        "count": 3210,
+        "word": "null"
+      },
+      {
+        "count": 2109,
+        "word": "Promise"
+      }
+    ],
+    "sentMessageCount": 0
   },
-  "openCount": 0,
-  "guildCount": 48,
-  "channelCount": 541,
-  "hoursValues": [
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-  ],
-  "averageMessageCountPerDay": null,
-  "totalSpent": 6292,
-  "joinCallCount": 0,
-  "slashCommandUsedCount": 0,
-  "messageCount": 688332,
-  "topChannels": [
-    {
-      "name": "help-v15",
-      "guildName": "Discord.js",
-      "messageCount": 85231
-    },
-    {
-      "name": "discussions",
-      "guildName": "Next.js",
-      "messageCount": 67450
-    },
-    {
-      "name": "discord-bots",
-      "guildName": "Python",
-      "messageCount": 45123
-    },
-    {
-      "name": "off-topic",
-      "guildName": "Cloudflare Developers",
-      "messageCount": 39876
-    },
-    {
-      "messageCount": 25010,
-      "guildName": "Node.js",
-      "name": "nodejs-help"
-    },
-    {
-      "guildName": "TypeScript Community",
-      "name": "typescript-discussion",
-      "messageCount": 19854
-    },
-    {
-      "guildName": "Next.js",
-      "messageCount": 15332,
-      "name": "general"
-    },
-    {
-      "messageCount": 12109,
-      "guildName": "Svelte Land",
-      "name": "support"
-    },
-    {
-      "guildName": "Rust Programming Language",
-      "messageCount": 9876,
-      "name": "beginners"
-    },
-    {
-      "name": "vue-general",
-      "messageCount": 8543,
-      "guildName": "Vue Land"
-    }
-  ],
-  "topDms": [
-    {
-      "messageCount": 265059,
-      "id": "190916650143318016",
-      "dmUserId": "190916650143318016"
-    },
-    {
-      "messageCount": 60381,
-      "id": "142007603549962240",
-      "dmUserId": "142007603549962240"
-    },
-    {
-      "id": "252090676068614145",
-      "messageCount": 57070,
-      "dmUserId": "252090676068614145"
-    },
-    {
-      "id": "675108484341301275",
-      "messageCount": 11252,
-      "dmUserId": "675108484341301275"
-    },
-    {
-      "id": "454920881177624576",
-      "messageCount": 8783,
-      "dmUserId": "454920881177624576"
-    }
-  ],
-  "characterCount": 19011263,
-  "averageOpenCountPerDay": null,
-  "joinVoiceChannelCount": 0,
-  "addReactionCount": 0,
-  "messageEditedCount": 0,
-  "favoriteWords": [
-    {
-      "word": "<a:bocchi_glitching:1101309043500384322>",
-      "count": 75312
-    },
-    {
-      "word": "const",
-      "count": 38531
-    },
-    {
-      "word": "async",
-      "count": 9876
-    },
-    {
-      "word": "await",
-      "count": 9543
-    },
-    {
-      "word": "useEffect",
-      "count": 7890
-    },
-    {
-      "word": "console.log",
-      "count": 6543
-    },
-    {
-      "word": "TypeError",
-      "count": 5432
-    },
-    {
-      "word": "undefined",
-      "count": 4321
-    },
-    {
-      "count": 3210,
-      "word": "null"
-    },
-    {
-      "count": 2109,
-      "word": "Promise"
-    }
-  ],
-  "sentMessageCount": 0
+  "EventCount": {
+    "userAvatarUpdated": 167,
+    "notificationClicked": 42927,
+    "appCrashed": 638,
+    "leaveVoiceChannel": 1449,
+    "remoteAuthLogin": 82,
+    "botTokenCompromised": 0,
+    "premiumUpsellViewed": 4457,
+    "applicationCommandUsed": 3974,
+    "voiceMessageRecorded": 25,
+    "emailOpened": 535,
+    "guildJoined": 518,
+    "messageReported": 17,
+    "loginSuccessful": 344,
+    "appOpened": 93527,
+    "captchaServed": 494,
+    "applicationCreated": 67,
+    "messageEdited": 9570,
+    "addReaction": 23233,
+    "oauth2AuthorizeAccepted": 1121,
+    "mostUsedCommands": [
+      {
+        "commandDescription": "Create a new sticker ✨",
+        "count": 230,
+        "commandName": "create",
+        "commandId": "1093329151949295646",
+        "applicationId": "1092869678499631197"
+      },
+      {
+        "commandName": null,
+        "commandId": "1092875431805464728",
+        "applicationId": "1092869678499631197",
+        "count": 192,
+        "commandDescription": null
+      },
+      {
+        "count": 112,
+        "commandName": "characters",
+        "applicationId": "1092869678499631197",
+        "commandId": "1093623813276700672",
+        "commandDescription": "Display a list of available characters"
+      },
+      {
+        "count": 79,
+        "commandDescription": "Perform a WHOIS lookup for a domain, IP or ASN",
+        "commandId": "800095327444795422",
+        "commandName": "whois",
+        "applicationId": "613324904795996163"
+      },
+      {
+        "commandDescription": "View your or someone else's customizable personal global profile card.",
+        "count": 65,
+        "applicationId": "282859044593598464",
+        "commandId": "971443830870126633",
+        "commandName": "profile"
+      }
+    ],
+    "appNativeCrash": 11550,
+    "joinVoiceChannel": 1772
+  }
 }
