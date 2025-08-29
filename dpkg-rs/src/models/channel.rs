@@ -9,14 +9,17 @@ pub struct Channel {
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Guild {
+    pub id: String,
     pub name: String,
 }
 
 #[derive(Debug, Clone, uniffi::Record)]
 pub struct TopChannel {
+    pub id: String,
     pub name: String,
     pub message_count: u32,
     pub guild_name: Option<String>,
+    pub guild_id: Option<String>,
 }
 
 #[derive(Debug, Clone, uniffi::Record)]

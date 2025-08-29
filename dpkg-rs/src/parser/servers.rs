@@ -6,7 +6,7 @@ use zip::ZipArchive;
 use crate::models::UserData;
 use crate::parser::{Callback, Parser};
 
-impl Parser {
+impl<'a> Parser<'a> {
     pub(super) fn load_servers<R: Read + std::io::Seek>(
         &self,
         archive: &mut ZipArchive<R>,

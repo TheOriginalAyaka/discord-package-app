@@ -7,6 +7,7 @@ import uniffi.dpkg_rs.OnProgress
 import uniffi.dpkg_rs.OnError
 import uniffi.dpkg_rs.UserData
 import uniffi.dpkg_rs.EventCount
+import uniffi.dpkg_rs.cancelExtraction
 import uniffi.dpkg_rs.startExtraction
 import java.lang.reflect.Field
 import java.lang.reflect.Modifier
@@ -20,7 +21,11 @@ class DpkgrsModule : Module() {
 
     Function("startExtraction") { filePath: String ->
       val observer = ExObserver(this@DpkgrsModule)
-      startExtraction(filePath, observer)
+      return@Function startExtraction(filePath, observer)
+    }
+
+    Function("cancelExtraction") { id: String ->
+      return@Function cancelExtraction(id)
     }
   }
 }

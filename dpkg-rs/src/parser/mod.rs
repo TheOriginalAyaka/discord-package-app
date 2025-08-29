@@ -5,26 +5,30 @@ mod servers;
 mod user;
 mod utils;
 
-use anyhow::Result;
+use anyhow::{Result, anyhow};
 use std::collections::HashMap;
 use std::io::Read;
+use std::sync::Arc;
+use std::sync::atomic::{AtomicBool, Ordering};
 use zip::ZipArchive;
 
 use crate::models::UserData;
 pub use crate::parser::callback::*;
 
-pub struct Parser {
+pub struct Parser<'a> {
     pub(crate) file_index: HashMap<String, usize>,
+    pub(crate) cancellation_token: &'a Arc<AtomicBool>,
 }
 
-impl Parser {
-    pub fn new() -> Self {
+impl<'a> Parser<'a> {
+    pub fn new(cancellation_token: &'a Arc<AtomicBool>) -> Self {
         Self {
             file_index: HashMap::new(),
+            cancellation_token,
         }
     }
 
-    pub async fn extract_data<R: Read + std::io::Seek + std::marker::Send>(
+    pub fn process_data<R: Read + std::io::Seek + std::marker::Send>(
         &mut self,
         archive: &mut ZipArchive<R>,
         callback: &Callback,
@@ -54,5 +58,13 @@ impl Parser {
         callback.progress(Step::Messages, "Finalizing extraction...".to_string());
         println!("[debug] Extraction complete");
         Ok(extracted_data)
+    }
+
+    pub(super) fn check_cancellation_token(&self) -> Result<()> {
+        if self.cancellation_token.load(Ordering::Relaxed) {
+            Err(anyhow!("Processing cancelled"))
+        } else {
+            Ok(())
+        }
     }
 }

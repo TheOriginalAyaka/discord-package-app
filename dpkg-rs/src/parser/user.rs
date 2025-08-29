@@ -5,7 +5,7 @@ use zip::ZipArchive;
 use crate::models::{User, UserData};
 use crate::parser::{Callback, Parser};
 
-impl Parser {
+impl<'a> Parser<'a> {
     pub(super) fn load_user<R: Read + std::io::Seek>(
         &self,
         archive: &mut ZipArchive<R>,

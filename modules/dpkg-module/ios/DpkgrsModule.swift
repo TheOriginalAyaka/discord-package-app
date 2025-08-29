@@ -6,9 +6,13 @@ public class DpkgrsModule: Module {
         
         Events("onProgress", "onError", "onComplete", "onAnalyticsComplete")
         
-        Function("startExtraction") { (path: String) in
+        Function("startExtraction") { (path: String) -> String in
             let observer = ExObserver(emitter: self)
-            startExtraction(path: path, observer: observer)
+            return startExtraction(path: path, observer: observer)
+        }
+        
+        Function("cancelExtraction") { (id: String) -> Bool in
+            return cancelExtraction(extractionId: id)
         }
     }
 }

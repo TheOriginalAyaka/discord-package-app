@@ -2,82 +2,119 @@ mod models;
 mod parser;
 
 uniffi::setup_scaffolding!();
+use std::collections::HashMap;
+// use jsonwebtoken::{EncodingKey, Header, encode};
+// use serde::Serialize;
+use lazy_static::lazy_static;
 use std::fs::File;
-use std::sync::Arc;
+use std::sync::atomic::{AtomicBool, Ordering};
+use std::sync::{Arc, Mutex};
 use std::thread;
+use uuid::Uuid;
+// use std::time::{SystemTime, UNIX_EPOCH};
 use zip::ZipArchive;
 
 use crate::models::ExtractObserver;
 use crate::parser::{Callback, Parser, Step};
 
+lazy_static! {
+    static ref EXTRACTIONS: Mutex<HashMap<String, Arc<AtomicBool>>> = Mutex::new(HashMap::new());
+}
+
+fn cleanup_extraction(extraction_id: &str) {
+    let mut extractions = EXTRACTIONS.lock().unwrap();
+    extractions.remove(extraction_id);
+}
+
 #[uniffi::export]
-pub fn start_extraction(path: String, observer: Arc<dyn ExtractObserver>) {
+fn start_extraction(path: String, observer: Arc<dyn ExtractObserver>) -> String {
     let callback = Callback::new(observer);
+    let extraction_id = Uuid::new_v4().to_string();
+    let cancellation_token = Arc::new(AtomicBool::new(false));
+
+    {
+        let mut extractions = EXTRACTIONS.lock().unwrap();
+        extractions.insert(extraction_id.clone(), cancellation_token.clone());
+    }
+
+    let return_id = extraction_id.clone();
+
     thread::spawn(move || {
-        let rt = match tokio::runtime::Runtime::new() {
-            Ok(rt) => rt,
+        let file = match File::open(&path) {
+            Ok(f) => f,
             Err(err) => {
                 callback.error(
                     Step::Scaffolding,
-                    format!("Failed to create async runtime: {}", err),
-                    "Runtime error".into(),
+                    format!("Failed to open file: {}", err),
+                    "File access error".into(),
                 );
+                cleanup_extraction(&extraction_id);
                 return;
             }
         };
 
-        match File::open(&path) {
-            Ok(file) => {
-                callback.progress(Step::Scaffolding, "Opened Archive".into());
+        callback.progress(Step::Scaffolding, "Opened Archive".into());
 
-                match ZipArchive::new(file) {
-                    Ok(mut archive) => {
-                        let mut parser = Parser::new();
-
-                        match rt.block_on(parser.extract_data(&mut archive, &callback)) {
-                            Ok(data) => {
-                                callback.data_complete(data);
-                            }
-                            Err(err) => {
-                                callback.error(
-                                    Step::Messages,
-                                    format!("{}", err),
-                                    "Parsing error".into(),
-                                );
-                            }
-                        }
-                        // TODO: implement a way to cancel processing analytics
-                        match rt.block_on(parser.load_analytics(&mut archive, &callback)) {
-                            Ok(data) => {
-                                callback.analytics_complete(data);
-                            }
-                            Err(err) => {
-                                callback.error(
-                                    Step::Analytics,
-                                    format!("{}", err),
-                                    "Parsing error".into(),
-                                );
-                            }
-                        }
-                    }
-                    Err(err) => {
-                        callback.error(
-                            Step::Scaffolding,
-                            format!("{}", err),
-                            "Archive error".into(),
-                        );
-                    }
-                }
-            }
+        let mut archive = match ZipArchive::new(file) {
+            Ok(archive) => archive,
             Err(err) => {
                 callback.error(
                     Step::Scaffolding,
-                    format!("{}", err),
-                    "Extraction error".into(),
+                    format!("Failed to read archive: {}", err),
+                    "Archive error".into(),
                 );
+                cleanup_extraction(&extraction_id);
+                return;
+            }
+        };
+
+        let mut parser = Parser::new(&cancellation_token);
+
+        match parser.process_data(&mut archive, &callback) {
+            Ok(data) => {
+                callback.data_complete(data);
+            }
+            Err(err) => {
+                callback.error(
+                    Step::Messages,
+                    format!("{}", err),
+                    "Data extraction error".into(),
+                );
+                cleanup_extraction(&extraction_id);
+                return;
             }
         }
+
+        match parser.process_analytics(&mut archive, &callback) {
+            Ok(data) => {
+                callback.analytics_complete(data);
+            }
+            Err(err) => {
+                callback.error(
+                    Step::Analytics,
+                    format!("{}", err),
+                    "Analytics processing error".into(),
+                );
+                cleanup_extraction(&extraction_id);
+                return;
+            }
+        }
+
+        cleanup_extraction(&extraction_id);
     });
+
+    return_id
+}
+
+#[uniffi::export]
+fn cancel_extraction(extraction_id: String) -> bool {
+    let extractions = EXTRACTIONS.lock().unwrap();
+    if let Some(token) = extractions.get(&extraction_id) {
+        token.store(true, Ordering::Relaxed);
+        true
+    } else {
+        false
+    }
 }
 
 #[cfg(test)]
@@ -107,7 +144,7 @@ mod tests {
         }
 
         fn on_error(&self, error: OnError) {
-            println!("[{}] Error: {}", self.name, error.message);
+            println!("[{}] Error({}): {}", self.name, error.title, error.message);
         }
 
         fn on_complete(&self, result: UserData) {
@@ -133,11 +170,14 @@ mod tests {
         let (sender, receiver) = mpsc::channel();
         let observer = Arc::new(TestObserver::new("TestRun", sender));
         println!("Starting extraction");
-        start_extraction(file_path.clone(), observer);
+        let id = start_extraction(file_path.clone(), observer);
+        thread::sleep(std::time::Duration::from_secs(3));
+        let cancelled = cancel_extraction(id);
+        println!("Cancellation result: {}", cancelled);
 
         match receiver.recv_timeout(std::time::Duration::from_secs(300)) {
             Ok(_) => println!("Test completed successfully"),
-            Err(_) => panic!("Test timed out after 30 seconds"),
+            Err(_) => panic!("Test timed out after 300 seconds"),
         }
     }
 }

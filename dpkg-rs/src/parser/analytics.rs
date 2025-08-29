@@ -1,4 +1,4 @@
-use anyhow::{Context, Result};
+use anyhow::Result;
 use rayon::prelude::*;
 use std::io::{BufRead, BufReader, Read};
 use std::sync::Mutex;
@@ -9,8 +9,8 @@ use zip::ZipArchive;
 use crate::models::{ApplicationCommandUsed, Event, EventCount, MostUsedCommand};
 use crate::parser::{Callback, Parser};
 
-impl Parser {
-    pub async fn load_analytics<R: Read + std::io::Seek>(
+impl<'a> Parser<'a> {
+    pub fn process_analytics<R: Read + std::io::Seek>(
         &self,
         archive: &mut ZipArchive<R>,
         callback: &Callback,
@@ -21,30 +21,24 @@ impl Parser {
         );
         let time = Instant::now();
 
-        let analytics_regex =
-            regex::Regex::new(r"analytics/events-[0-9]{4}-[0-9]{5}-of-[0-9]{5}\.json$")?;
-
         let file_names: Vec<&String> = self.file_index.keys().collect();
+        let analytics_file_name = Parser::get_analytics_root(&file_names)?;
 
-        let analytics_file_name = file_names
-            .iter()
-            .find(|f| analytics_regex.is_match(f.as_str()))
-            .context("Analytics file not found in the archive")?;
-
-        let file = archive.by_name(analytics_file_name)?;
+        let file = archive.by_name(&analytics_file_name)?;
 
         let (buffer_capacity, batch_size) = self.determine_resources();
 
         let reader = BufReader::with_capacity(buffer_capacity, file);
 
-        let result = self.process_analytics(reader, callback, batch_size)?;
+        let result = self.analytics_handler(reader, callback, batch_size)?;
 
         let finished = time.elapsed();
-        println!("me shit took: {:?}", finished);
+        println!("Process analytics took: {:?}", finished);
+
         Ok(result)
     }
 
-    fn process_analytics<R: Read>(
+    fn analytics_handler<R: Read>(
         &self,
         reader: R,
         callback: &Callback,
@@ -63,6 +57,8 @@ impl Parser {
         let mut batch_number = 0;
 
         loop {
+            self.check_cancellation_token()?;
+
             let mut batch = Vec::with_capacity(batch_size);
             for line in line_iter.by_ref().take(batch_size).flatten() {
                 batch.push(line.into_bytes());
@@ -89,6 +85,7 @@ impl Parser {
             batch.into_par_iter().for_each(|mut line| {
                 if let Ok(event) = simd_json::from_slice::<Event>(&mut line.clone()) {
                     let mut counts = counts.lock().unwrap();
+                    counts.all_events += 1;
                     match event.event_type.as_str() {
                         "application_created" => counts.application_created += 1,
                         "bot_token_compromised" => counts.bot_token_compromised += 1,

@@ -29,6 +29,7 @@ pub struct EventCount {
     pub join_voice_channel: u32,
     pub leave_voice_channel: u32,
     pub most_used_commands: Vec<MostUsedCommand>,
+    pub all_events: u32,
 }
 
 #[derive(Debug, Deserialize, Clone, Default)]

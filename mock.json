@@ -1,7 +1,5 @@
 {
   "UserData": {
-    "notificationCount": 0,
-    "dmChannelCount": 309,
     "user": {
       "payments": [
         {
@@ -77,16 +75,6 @@
       ],
       "username": "thereallo",
       "globalName": "Thereallo",
-      "flags": [
-        "MFA_SMS",
-        "PREMIUM_PROMO_DISMISSED",
-        "IS_HUBSPOT_CONTACT",
-        "USED_DESKTOP_CLIENT",
-        "USED_WEB_CLIENT",
-        "USED_MOBILE_CLIENT",
-        "HAS_SESSION_STARTED",
-        "PREMIUM_ELIGIBLE_FOR_UNIQUE_USERNAME"
-      ],
       "relationships": [
         {
           "user": {
@@ -138,16 +126,14 @@
       "avatarHash": "b670bcf8bc2898df6d15bcaf7d5f9975",
       "discriminator": 0
     },
-    "openCount": 0,
+    "dmChannelCount": 309,
     "guildCount": 48,
     "channelCount": 541,
     "hoursValues": [
-      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+      34955, 27380, 20071, 15456, 12357, 9615, 9447, 10363, 12104, 16873, 19841,
+      25812, 28599, 32392, 33363, 34719, 37034, 41587, 42363, 43997, 45175,
+      46661, 44227, 43941
     ],
-    "averageMessageCountPerDay": null,
-    "totalSpent": 6292,
-    "joinCallCount": 0,
-    "slashCommandUsedCount": 0,
     "messageCount": 688332,
     "topChannels": [
       {
@@ -229,41 +215,37 @@
       }
     ],
     "characterCount": 19011263,
-    "averageOpenCountPerDay": null,
-    "joinVoiceChannelCount": 0,
-    "addReactionCount": 0,
-    "messageEditedCount": 0,
     "favoriteWords": [
       {
         "word": "<a:bocchi_glitching:1101309043500384322>",
         "count": 75312
       },
       {
-        "word": "const",
+        "word": "bocchi",
         "count": 38531
       },
       {
-        "word": "async",
+        "word": "aaaa",
         "count": 9876
       },
       {
-        "word": "await",
+        "word": "🤌🏻",
         "count": 9543
       },
       {
-        "word": "useEffect",
+        "word": "skill",
         "count": 7890
       },
       {
-        "word": "console.log",
+        "word": "issue",
         "count": 6543
       },
       {
-        "word": "TypeError",
+        "word": "<:HigoIDK:612873956608835601>",
         "count": 5432
       },
       {
-        "word": "undefined",
+        "word": "migu",
         "count": 4321
       },
       {
@@ -272,10 +254,9 @@
       },
       {
         "count": 2109,
-        "word": "Promise"
+        "word": "cat"
       }
-    ],
-    "sentMessageCount": 0
+    ]
   },
   "EventCount": {
     "userAvatarUpdated": 167,
@@ -335,6 +316,7 @@
       }
     ],
     "appNativeCrash": 11550,
-    "joinVoiceChannel": 1772
+    "joinVoiceChannel": 1772,
+    "allEvents": 4765038
   }
 }

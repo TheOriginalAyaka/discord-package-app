@@ -4,6 +4,7 @@ import type { DpkgrsModuleEvents } from "./Dpkgrs.types";
 
 declare class DpkgrsModule extends NativeModule<DpkgrsModuleEvents> {
   startExtraction: (path: string) => string;
+  cancelExtraction: (id: string) => boolean;
 }
 
 // This call loads the native module object from the JSI.

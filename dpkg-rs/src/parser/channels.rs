@@ -8,7 +8,7 @@ use zip::ZipArchive;
 use crate::models::{Channel, FavoriteWord, Message, ParsedMessage, TopChannel, TopDM, UserData};
 use crate::parser::{Callback, Parser};
 
-impl Parser {
+impl<'a> Parser<'a> {
     pub(super) fn load_channels<R: Read + Seek>(
         &self,
         archive: &mut ZipArchive<R>,
@@ -28,10 +28,11 @@ impl Parser {
             self.detect_package_format(messages_root, &channel_ids);
 
         let mut word_counts: HashMap<String, u32> = HashMap::new();
-        let mut channel_message_counts: Vec<(String, u32, String)> = Vec::new();
-        let mut dm_message_counts: Vec<(String, String, u32)> = Vec::new();
+        let mut channel_message_counts: Vec<TopChannel> = Vec::new();
+        let mut dm_message_counts: Vec<TopDM> = Vec::new();
 
         for (index, channel_id) in channel_ids.iter().enumerate() {
+            self.check_cancellation_token()?;
             if channel_ids.is_empty() {
                 break;
             }
@@ -87,7 +88,7 @@ impl Parser {
                     }
                 };
 
-                let name = messages_index
+                let name: &str = messages_index
                     .get(&channel.id)
                     .map(|s| s.as_str())
                     .unwrap_or(&channel.id);
@@ -105,9 +106,13 @@ impl Parser {
 
                 let mut message_count = 0;
                 for message in &messages {
+                    self.check_cancellation_token()?;
                     message_count += 1;
                     extracted_data.character_count += message.length;
-                    if let Ok(dt) = chrono::DateTime::parse_from_rfc3339(&message.timestamp) {
+                    if let Ok(dt) = chrono::NaiveDateTime::parse_from_str(
+                        &message.timestamp,
+                        "%Y-%m-%d %H:%M:%S",
+                    ) {
                         extracted_data.hours_values[dt.hour() as usize] += 1;
                     }
 
@@ -120,19 +125,25 @@ impl Parser {
 
                 if is_dm {
                     if let Some(dm_id) = dm_user_id {
-                        dm_message_counts.push((channel.id.clone(), dm_id.clone(), message_count));
+                        dm_message_counts.push(TopDM {
+                            id: channel.id.clone(),
+                            dm_user_id: dm_id.clone(),
+                            message_count,
+                        });
                     }
                 } else {
-                    let guild_name = if let Some(guild) = &channel.guild {
-                        &guild.name
+                    let (guild_name, guild_id) = if let Some(guild) = &channel.guild {
+                        (Some(guild.name.clone()), Some(guild.id.clone()))
                     } else {
-                        "Unknown server"
+                        (None, None)
                     };
-                    channel_message_counts.push((
-                        name.to_string(),
+                    channel_message_counts.push(TopChannel {
+                        id: channel.id.clone(),
+                        name: name.to_string(),
+                        guild_name,
+                        guild_id,
                         message_count,
-                        guild_name.into(),
-                    ));
+                    });
                 }
             }
         }
@@ -152,6 +163,7 @@ impl Parser {
         let mut reader = csv::Reader::from_reader(content.as_bytes());
         let mut messages = Vec::new();
         for result in reader.deserialize() {
+            self.check_cancellation_token()?;
             let record: Message = result?;
             if !record.contents.is_empty() {
                 let words = Parser::process_words(&record.contents);
@@ -213,6 +225,7 @@ impl Parser {
         let channel_regex = Regex::new(r"c?([0-9]{16,32})/$")?;
         let mut channel_ids = Vec::new();
         for i in 0..archive.len() {
+            self.check_cancellation_token()?;
             let file = archive.by_index(i)?;
             let name = file.name();
             if name.starts_with(messages_root)
@@ -240,39 +253,25 @@ impl Parser {
         &self,
         extracted_data: &mut UserData,
         word_counts: HashMap<String, u32>,
-        mut channel_message_counts: Vec<(String, u32, String)>,
-        mut dm_message_counts: Vec<(String, String, u32)>,
+        mut channel_message_counts: Vec<TopChannel>,
+        mut dm_message_counts: Vec<TopDM>,
     ) {
         extracted_data.channel_count = channel_message_counts.len() as u32;
         extracted_data.dm_channel_count = dm_message_counts.len() as u32;
         extracted_data.message_count = channel_message_counts
             .iter()
-            .map(|(_, c, _)| *c)
+            .map(|c| c.message_count)
             .sum::<u32>()
-            + dm_message_counts.iter().map(|(_, _, c)| *c).sum::<u32>();
+            + dm_message_counts
+                .iter()
+                .map(|c| c.message_count)
+                .sum::<u32>();
 
-        channel_message_counts.sort_by(|a, b| b.1.cmp(&a.1));
-        extracted_data.top_channels = channel_message_counts
-            .into_iter()
-            .take(10)
-            .map(|(name, count, guild)| TopChannel {
-                name,
-                message_count: count,
-                guild_name: Some(guild),
-            })
-            .collect();
+        channel_message_counts.sort_by(|a, b| b.message_count.cmp(&a.message_count));
+        extracted_data.top_channels = channel_message_counts.into_iter().take(10).collect();
 
-        dm_message_counts.sort_by(|a, b| b.2.cmp(&a.2));
-        extracted_data.top_dms = dm_message_counts
-            .into_iter()
-            .take(10)
-            .map(|(id, user_id, count)| TopDM {
-                id,
-                dm_user_id: user_id,
-                message_count: count,
-                // user_data: None,
-            })
-            .collect();
+        dm_message_counts.sort_by(|a, b| b.message_count.cmp(&a.message_count));
+        extracted_data.top_dms = dm_message_counts.into_iter().take(10).collect();
 
         let mut word_vec: Vec<_> = word_counts.into_iter().collect();
         word_vec.sort_by(|a, b| b.1.cmp(&a.1));

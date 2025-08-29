@@ -80,9 +80,11 @@ interface TopDM {
 }
 
 interface TopChannel {
+  id: string;
   name: string;
   messageCount: number;
   guildName: string | null;
+  guildId: string | null;
 }
 
 interface FavoriteWord {
@@ -113,6 +115,7 @@ export interface EventCount {
   joinVoiceChannel: number;
   leaveVoiceChannel: number;
   mostUsedCommands: MostUsedCommand[];
+  allEvents: number;
 }
 
 interface MostUsedCommand {

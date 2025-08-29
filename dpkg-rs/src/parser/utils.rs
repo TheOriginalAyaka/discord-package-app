@@ -6,7 +6,7 @@ use zip::ZipArchive;
 
 use crate::parser::Parser;
 
-impl Parser {
+impl<'a> Parser<'a> {
     pub(crate) fn read_file<R: Read + std::io::Seek>(
         &self,
         archive: &mut ZipArchive<R>,
@@ -41,20 +41,14 @@ impl Parser {
         }
         let mut data = content.as_bytes().to_vec();
         match simd_json::from_slice::<T>(&mut data) {
-            Ok(result) => {
-                println!("[debug] Successfully parsed with simd_json");
-                Ok(result)
-            }
+            Ok(result) => Ok(result),
             Err(e) => {
                 println!(
                     "[debug] simd_json failed: {}, falling back to serde_json",
                     e
                 );
                 match serde_json::from_str::<T>(content) {
-                    Ok(result) => {
-                        println!("[debug] Successfully parsed with serde_json");
-                        Ok(result)
-                    }
+                    Ok(result) => Ok(result),
                     Err(e2) => Err(anyhow!("Both JSON parsers failed. serde_json: {}", e2)),
                 }
             }
@@ -97,5 +91,14 @@ impl Parser {
             .ok_or_else(|| anyhow!("Could not find User folder structure"))?;
         let segments: Vec<&str> = sample.split('/').collect();
         Ok(segments[..segments.len() - 1].join("/"))
+    }
+
+    pub(crate) fn get_analytics_root(files: &[&String]) -> Result<String> {
+        let regex = Regex::new(r"analytics/events-[0-9]{4}-[0-9]{5}-of-[0-9]{5}\.json$")?;
+        let sample = files
+            .iter()
+            .find(|f| regex.is_match(f.as_str()))
+            .ok_or_else(|| anyhow!("Could not find Analytics folder structure"))?;
+        Ok(sample.to_string())
     }
 }
