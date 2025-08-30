@@ -1,6 +1,7 @@
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import * as SplashScreen from "expo-splash-screen";
+import * as SystemUI from "expo-system-ui";
 import { useEffect } from "react";
 import { DiscordProvider } from "./context/DiscordContext";
 import type { RootStackParamList } from "./navigation/types";
@@ -13,14 +14,20 @@ SplashScreen.preventAutoHideAsync();
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 function AppNavigator() {
-  const { isDark } = useTheme();
+  const { theme } = useTheme();
+
+  // set system UI with Theme hook
+  // https://docs.expo.dev/versions/latest/sdk/system-ui/
+  useEffect(() => {
+    SystemUI.setBackgroundColorAsync(theme.background);
+  }, [theme.background]);
 
   return (
     <Stack.Navigator
       screenOptions={{
         headerShown: false,
         contentStyle: {
-          backgroundColor: isDark ? "#1c1c22" : "#ffffff",
+          backgroundColor: theme.background,
         },
       }}
       initialRouteName="Welcome"

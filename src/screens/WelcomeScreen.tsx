@@ -25,11 +25,27 @@ export function WelcomeScreen() {
   const navigation = useNavigation<NavigationProp>();
   const [showLoading, setshowLoading] = useState(false);
 
+  // when screen comes into focus, this will trigger
+  // https://reactnavigation.org/docs/use-focus-effect/
   useFocusEffect(
     useCallback(() => {
-      setshowLoading(false);
+      return () => {
+        setshowLoading(false);
+      };
     }, []),
   );
+
+  // when the screen is focused (for navigation back)
+  useEffect(() => {
+    const unsubscribe = navigation.addListener("focus", () => {
+      // if we aren't actively loading and there is no data processing, reset the loading state
+      if (!isLoadingUserData) {
+        setshowLoading(false);
+      }
+    });
+
+    return unsubscribe;
+  }, [navigation, isLoadingUserData]);
 
   useEffect(() => {
     if (isLoadingUserData) {
@@ -40,6 +56,8 @@ export function WelcomeScreen() {
   useEffect(() => {
     if (data && !isLoadingUserData && showLoading) {
       const timer = setTimeout(() => {
+        // reset loading state before nav
+        setshowLoading(false);
         navigation.navigate("Overview", { data });
       }, 100);
 

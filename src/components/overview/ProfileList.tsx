@@ -79,11 +79,7 @@ export function ProfileList({
             </TText>
           </View>
 
-          <TText
-            variant="secondary"
-            weight="medium"
-            style={{ fontSize: 14, lineHeight: 20 }}
-          >
+          <TText variant="secondary" weight="medium" style={styles.rightText}>
             {data.messageCount.toLocaleString()} messages
           </TText>
         </View>
@@ -112,11 +108,7 @@ export function ProfileList({
             </TText>
           </View>
 
-          <TText
-            variant="secondary"
-            weight="medium"
-            style={{ fontSize: 14, lineHeight: 20 }}
-          >
+          <TText variant="secondary" weight="medium" style={styles.rightText}>
             {data.characterCount.toLocaleString()} characters
           </TText>
         </View>
@@ -145,11 +137,7 @@ export function ProfileList({
             </TText>
           </View>
 
-          <TText
-            variant="secondary"
-            weight="medium"
-            style={{ fontSize: 14, lineHeight: 20 }}
-          >
+          <TText variant="secondary" weight="medium" style={styles.rightText}>
             {data.guildCount.toLocaleString()} servers
           </TText>
         </View>
@@ -178,11 +166,7 @@ export function ProfileList({
             </TText>
           </View>
 
-          <TText
-            variant="secondary"
-            weight="medium"
-            style={{ fontSize: 14, lineHeight: 20 }}
-          >
+          <TText variant="secondary" weight="medium" style={styles.rightText}>
             {data.channelCount.toLocaleString()} channels
           </TText>
         </View>
@@ -211,11 +195,7 @@ export function ProfileList({
             </TText>
           </View>
 
-          <TText
-            variant="secondary"
-            weight="medium"
-            style={{ fontSize: 14, lineHeight: 20 }}
-          >
+          <TText variant="secondary" weight="medium" style={styles.rightText}>
             {data.dmChannelCount.toLocaleString()} DMs
           </TText>
         </View>
@@ -244,11 +224,7 @@ export function ProfileList({
             </TText>
           </View>
 
-          <TText
-            variant="secondary"
-            weight="medium"
-            style={{ fontSize: 14, lineHeight: 20 }}
-          >
+          <TText variant="secondary" weight="medium" style={styles.rightText}>
             {`$${(
               (data.user?.payments
                 ?.map((payment) => (payment.status === 1 ? payment.amount : 0))
@@ -314,5 +290,10 @@ const styles = StyleSheet.create({
   tableRowContent: {
     flexDirection: "row",
     alignItems: "center",
+  },
+  rightText: {
+    fontSize: 14,
+    lineHeight: 20,
+    marginLeft: 16,
   },
 });
