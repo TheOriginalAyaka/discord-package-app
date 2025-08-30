@@ -24,6 +24,12 @@ export function OverviewScreen() {
     useDiscordContext();
   const navigation = useNavigation<NavigationProp>();
 
+  useEffect(() => {
+    if (!data) {
+      navigation.navigate("Welcome");
+    }
+  }, [data, navigation]);
+
   const handleBackPress = useCallback(() => {
     if (isLoadingAnalytics) {
       Alert.alert(
@@ -101,7 +107,6 @@ export function OverviewScreen() {
   }, [navigation, isLoadingAnalytics, cancelProcessing, resetData]);
 
   if (!data) {
-    navigation.navigate("Welcome");
     return null;
   }
 
