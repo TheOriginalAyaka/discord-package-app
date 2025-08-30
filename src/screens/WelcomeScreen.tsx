@@ -1,8 +1,8 @@
-import { useNavigation } from "@react-navigation/native";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { ImageBackground } from "expo-image";
 import { StatusBar } from "expo-status-bar";
-import { useEffect, useRef } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { ActivityIndicator, StyleSheet, View } from "react-native";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import { Button, ButtonText } from "../components/ui";
@@ -14,47 +14,79 @@ type NavigationProp = NativeStackNavigationProp<RootStackParamList, "Welcome">;
 
 export function WelcomeScreen() {
   const { isDark, theme } = useTheme();
-  const { pickAndProcessFile, useMockData, data, isLoadingUserData, progress } =
-    useDiscordContext();
+  const {
+    pickAndProcessFile,
+    useMockData,
+    data,
+    isLoadingUserData,
+    progress,
+    cancelProcessing,
+  } = useDiscordContext();
   const navigation = useNavigation<NavigationProp>();
-  const hasNavigated = useRef(false);
+  const [showLoading, setshowLoading] = useState(false);
+
+  useFocusEffect(
+    useCallback(() => {
+      setshowLoading(false);
+    }, []),
+  );
 
   useEffect(() => {
-    if (data && !isLoadingUserData && !hasNavigated.current) {
-      hasNavigated.current = true;
-      requestAnimationFrame(() => {
+    if (isLoadingUserData) {
+      setshowLoading(true);
+    }
+  }, [isLoadingUserData]);
+
+  useEffect(() => {
+    if (data && !isLoadingUserData && showLoading) {
+      const timer = setTimeout(() => {
         navigation.navigate("Overview", { data });
-      });
-    }
-  }, [data, isLoadingUserData, navigation]);
+      }, 100);
 
-  useEffect(() => {
-    if (!data) {
-      hasNavigated.current = false;
+      return () => clearTimeout(timer);
     }
-  }, [data]);
+  }, [data, isLoadingUserData, showLoading, navigation]);
 
-  if (isLoadingUserData) {
+  const handleCancel = () => {
+    cancelProcessing();
+    setshowLoading(false);
+  };
+
+  if (showLoading) {
     return (
       <TView variant="background" style={{ flex: 1 }}>
         <StatusBar style={isDark ? "light" : "dark"} />
 
-        <View style={styles.loadingContent}>
-          <View style={styles.loadingContainer}>
-            <ActivityIndicator
-              size="large"
-              color={theme.accent}
-              style={styles.spinner}
-            />
+        <View style={styles.loadingContainer}>
+          <View style={styles.loadingContent}>
+            <View style={styles.loadingIconContainer}>
+              <ActivityIndicator
+                size="large"
+                color={theme.accent}
+                style={styles.spinner}
+              />
+            </View>
+
+            <TText
+              variant="primary"
+              weight="medium"
+              style={styles.progressText}
+            >
+              {!isLoadingUserData && data ? "Finalizing data..." : progress}
+            </TText>
+
+            <TText variant="muted" style={styles.hintText}>
+              {!isLoadingUserData && data
+                ? "Almost there..."
+                : "This may take a moment..."}
+            </TText>
           </View>
 
-          <TText variant="primary" weight="medium" style={styles.progressText}>
-            {progress}
-          </TText>
-
-          <TText variant="muted" style={styles.hintText}>
-            This may take a moment...
-          </TText>
+          <View style={styles.cancelButtonContainer}>
+            <Button variant="secondary" onPress={handleCancel}>
+              <ButtonText weight="semibold">Cancel</ButtonText>
+            </Button>
+          </View>
         </View>
       </TView>
     );
@@ -137,13 +169,18 @@ const styles = StyleSheet.create({
     paddingBottom: 40,
     gap: 6,
   },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: "space-between",
+    paddingHorizontal: 24,
+  },
   loadingContent: {
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
     padding: 32,
   },
-  loadingContainer: {
+  loadingIconContainer: {
     width: 72,
     height: 72,
     marginBottom: 24,
@@ -161,5 +198,8 @@ const styles = StyleSheet.create({
   hintText: {
     fontSize: 14,
     textAlign: "center",
+  },
+  cancelButtonContainer: {
+    paddingBottom: 40,
   },
 });

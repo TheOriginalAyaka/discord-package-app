@@ -30,14 +30,6 @@ export function AnalyticsScreen() {
     return null;
   }
 
-  // Calculate some summary statistics
-  const totalEvents = Object.entries(analytics)
-    .filter(([key]) => key !== "mostUsedCommands")
-    .reduce(
-      (acc, [_, value]) => acc + (typeof value === "number" ? value : 0),
-      0,
-    );
-
   const topActivities = [
     { label: "Logins", value: analytics.loginSuccessful },
     { label: "Messages", value: analytics.messageEdited },
@@ -60,7 +52,7 @@ export function AnalyticsScreen() {
             Total Events Tracked
           </TText>
           <TText variant="primary" weight="bold" style={styles.summaryValue}>
-            {totalEvents.toLocaleString()}
+            {analytics.allEvents.toLocaleString()}
           </TText>
           <TText variant="secondary" style={styles.summaryDescription}>
             Across all categories since you started using Discord
@@ -128,8 +120,6 @@ const styles = StyleSheet.create({
     justifyContent: "space-around",
     width: "100%",
     paddingTop: 12,
-    borderTopWidth: 1,
-    borderTopColor: "rgba(0,0,0,0.1)",
   },
   miniStat: {
     alignItems: "center",

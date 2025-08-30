@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
+  Animated,
   StyleSheet,
   TouchableWithoutFeedback,
   View,
@@ -30,6 +31,17 @@ export function TableRow({
   const [isPressed, setIsPressed] = useState(false);
   const { theme } = useTheme();
 
+  const animatedValue = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    Animated.timing(animatedValue, {
+      toValue: isPressed ? 1 : 0,
+      // backgroundColor cant use native driver
+      duration: 70,
+      useNativeDriver: false,
+    }).start();
+  }, [isPressed, animatedValue]);
+
   const handlePressIn = () => {
     if (!disabled) {
       setIsPressed(true);
@@ -46,6 +58,22 @@ export function TableRow({
     }
   };
 
+  const backgroundColor = animatedValue.interpolate({
+    inputRange: [0, 1],
+    outputRange: [theme.card, theme.cardPressed],
+  });
+
+  const content = (
+    <View
+      style={[
+        disabled && styles.disabled,
+        { flex: 1, flexDirection: "row", alignItems: "center" },
+      ]}
+    >
+      {children}
+    </View>
+  );
+
   if (onPress && !disabled) {
     return (
       <TouchableWithoutFeedback
@@ -53,17 +81,16 @@ export function TableRow({
         onPressOut={handlePressOut}
         onPress={handlePress}
       >
-        <View
+        <Animated.View
           style={[
             styles.tableRow,
-            { backgroundColor: isPressed ? theme.cardPressed : theme.card },
+            { backgroundColor },
             styles.singleRow,
-            disabled && styles.disabled,
             style,
           ]}
         >
-          {children}
-        </View>
+          {content}
+        </Animated.View>
       </TouchableWithoutFeedback>
     );
   }
@@ -74,11 +101,10 @@ export function TableRow({
         styles.tableRow,
         { backgroundColor: theme.card },
         styles.singleRow,
-        disabled && styles.disabled,
         style,
       ]}
     >
-      {children}
+      {content}
     </View>
   );
 }

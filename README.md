@@ -47,6 +47,12 @@ This app allows users to parse and explore Discord data packages on both iOS and
    ./build-android-lib.sh
    ```
 
+   For Android (Windows):
+
+   ```bash
+   ./build-android-lib.ps1
+   ```
+
    For iOS:
 
    ```bash

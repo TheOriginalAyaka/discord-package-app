@@ -1,6 +1,5 @@
 import { useTheme } from "./ThemeProvider";
 
-// hook for quick theme switching
 export function useThemeControls() {
   const { mode, setMode, isDark } = useTheme();
 

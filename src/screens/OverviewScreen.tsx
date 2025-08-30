@@ -1,8 +1,8 @@
-// src/screens/OverviewScreen.tsx
-import { useNavigation } from "@react-navigation/native";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { StatusBar } from "expo-status-bar";
-import { ScrollView, View } from "react-native";
+import { useCallback, useEffect } from "react";
+import { Alert, BackHandler, ScrollView, View } from "react-native";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import {
   FavChannelsList,
@@ -20,9 +20,85 @@ type NavigationProp = NativeStackNavigationProp<RootStackParamList, "Overview">;
 export function OverviewScreen() {
   const { isDark, theme } = useTheme();
   const { toggleTheme, mode } = useThemeControls();
-  const { data, analytics, isLoadingAnalytics, resetData } =
+  const { data, analytics, isLoadingAnalytics, resetData, cancelProcessing } =
     useDiscordContext();
   const navigation = useNavigation<NavigationProp>();
+
+  const handleBackPress = useCallback(() => {
+    if (isLoadingAnalytics) {
+      Alert.alert(
+        "Processing Analytics",
+        "Analytics are still being processed in the background. Do you want to stop and go back?",
+        [
+          {
+            text: "Keep Processing",
+            style: "cancel",
+          },
+          {
+            text: "Stop & Go Back",
+            style: "destructive",
+            onPress: () => {
+              cancelProcessing();
+              resetData();
+              navigation.navigate("Welcome");
+            },
+          },
+        ],
+        { cancelable: true },
+      );
+      return true;
+    }
+
+    resetData();
+    navigation.navigate("Welcome");
+    return true;
+  }, [isLoadingAnalytics, cancelProcessing, resetData, navigation]);
+
+  // hardware back button on Android
+  useFocusEffect(
+    useCallback(() => {
+      const subscription = BackHandler.addEventListener(
+        "hardwareBackPress",
+        handleBackPress,
+      );
+      return () => subscription.remove();
+    }, [handleBackPress]),
+  );
+
+  // handle navigation back action (swipe gesture on iOS)
+  useEffect(() => {
+    const unsubscribe = navigation.addListener("beforeRemove", (e) => {
+      if (!isLoadingAnalytics) {
+        return;
+      }
+
+      // prevent default behavior
+      e.preventDefault();
+
+      Alert.alert(
+        "Processing Analytics",
+        "Analytics are still being processed in the background. Do you want to stop and go back?",
+        [
+          {
+            text: "Keep Processing",
+            style: "cancel",
+          },
+          {
+            text: "Stop & Go Back",
+            style: "destructive",
+            onPress: () => {
+              cancelProcessing();
+              resetData();
+              navigation.dispatch(e.data.action);
+            },
+          },
+        ],
+        { cancelable: true },
+      );
+    });
+
+    return unsubscribe;
+  }, [navigation, isLoadingAnalytics, cancelProcessing, resetData]);
 
   if (!data) {
     navigation.navigate("Welcome");
@@ -31,13 +107,7 @@ export function OverviewScreen() {
 
   return (
     <TView variant="background" style={{ flex: 1 }}>
-      <Header
-        title="Analysis"
-        onBack={() => {
-          resetData();
-          navigation.navigate("Welcome");
-        }}
-      />
+      <Header title="Analysis" onBack={handleBackPress} />
 
       <ScrollView style={{ flex: 1 }}>
         <ProfileList

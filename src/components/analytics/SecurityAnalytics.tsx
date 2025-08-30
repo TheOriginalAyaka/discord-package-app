@@ -1,4 +1,3 @@
-// src/components/analytics/SecurityAnalytics.tsx
 import { StyleSheet, View } from "react-native";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import type { EventCount } from "@/modules/dpkg-module";
@@ -32,7 +31,7 @@ export function SecurityAnalytics({ analytics }: { analytics: EventCount }) {
       label: "Token Compromises",
       description: "Bot token security issues",
       count: analytics.botTokenCompromised || 0,
-      isWarning: true,
+      isAlert: true,
     },
   ];
 
@@ -48,8 +47,8 @@ export function SecurityAnalytics({ analytics }: { analytics: EventCount }) {
               style={[
                 styles.iconCircle,
                 {
-                  backgroundColor: item.isWarning
-                    ? "rgba(239, 68, 68, 0.2)"
+                  backgroundColor: item.isAlert
+                    ? `${theme.error}20`
                     : `${theme.primary}20`,
                 },
               ]}
@@ -57,7 +56,7 @@ export function SecurityAnalytics({ analytics }: { analytics: EventCount }) {
               <MaterialIcons
                 name={item.icon}
                 size={24}
-                color={item.isWarning ? "#EF4444" : theme.primary}
+                color={item.isAlert ? theme.error : theme.primary}
               />
             </View>
 

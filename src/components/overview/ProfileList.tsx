@@ -207,7 +207,7 @@ export function ProfileList({
               DM Channels
             </TText>
             <TText variant="secondary" style={{ fontSize: 12, lineHeight: 16 }}>
-              The amount of direct messages you have sent
+              The total number of DM channels you've created
             </TText>
           </View>
 
@@ -294,7 +294,7 @@ export function ProfileList({
                 variant="secondary"
                 style={{ fontSize: 12, lineHeight: 16 }}
               >
-                Please wait while we process your analytics
+                Please wait while we process your analytics.
               </TText>
             )}
           </View>

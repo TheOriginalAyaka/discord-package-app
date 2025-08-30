@@ -21,6 +21,7 @@ interface DiscordContextType {
   pickAndProcessFile: () => Promise<void>;
   useMockData: () => void;
   resetData: () => void;
+  cancelProcessing: () => void;
 }
 
 const DiscordContext = createContext<DiscordContextType | undefined>(undefined);
@@ -31,6 +32,15 @@ export function DiscordProvider({ children }: { children: ReactNode }) {
   const [progress, setProgress] = useState("");
   const [isLoadingUserData, setIsLoadingUserData] = useState(false);
   const [isLoadingAnalytics, setIsLoadingAnalytics] = useState(false);
+  const [mockDataTimeouts, setMockDataTimeouts] = useState<NodeJS.Timeout[]>(
+    [],
+  );
+  const [extractionId, setExtractionId] = useState<string>("");
+
+  const cancelExtraction = () => {
+    if (!extractionId) return false;
+    return dpkgModule.cancelExtraction(extractionId);
+  };
 
   useEffect(() => {
     const dataEvent = dpkgModule.addListener("onComplete", (e) => {
@@ -71,8 +81,12 @@ export function DiscordProvider({ children }: { children: ReactNode }) {
       errorEvent.remove();
       progressEvent.remove();
       analyticsEvent.remove();
+      // clear timeouts on unmount
+      mockDataTimeouts.forEach((timeout) => {
+        clearTimeout(timeout);
+      });
     };
-  }, []);
+  }, [mockDataTimeouts]);
 
   const pickAndProcessFile = async () => {
     if (isLoadingUserData || isLoadingAnalytics) {
@@ -91,8 +105,12 @@ export function DiscordProvider({ children }: { children: ReactNode }) {
       setData(undefined);
       setAnalytics(undefined);
       setProgress("Loading user data...");
-      dpkgModule.startExtraction(file.assets[0].uri.replace("file://", ""));
+      const extId = dpkgModule.startExtraction(
+        file.assets[0].uri.replace("file://", ""),
+      );
+      setExtractionId(extId);
     }
+    // no loading states if file picker cancelled
   };
 
   const useMockData = () => {
@@ -108,25 +126,50 @@ export function DiscordProvider({ children }: { children: ReactNode }) {
     setAnalytics(undefined);
     setProgress("Loading demo...");
 
-    setTimeout(() => {
+    const timeout1 = setTimeout(() => {
       setData(mockData.UserData as ExtractedData);
       setIsLoadingUserData(false);
       setIsLoadingAnalytics(true);
       setProgress("Loading analytics...");
     }, 3000);
-    setTimeout(() => {
+
+    const timeout2 = setTimeout(() => {
       setAnalytics(mockData.EventCount as EventCount);
       setIsLoadingAnalytics(false);
       setProgress("");
     }, 10000);
+
+    setMockDataTimeouts([timeout1, timeout2]);
+  };
+
+  const cancelProcessing = () => {
+    console.log("cancelling processing...");
+
+    mockDataTimeouts.forEach((timeout) => {
+      clearTimeout(timeout);
+    });
+    setMockDataTimeouts([]);
+
+    cancelExtraction();
+
+    setIsLoadingUserData(false);
+    setIsLoadingAnalytics(false);
+    setProgress("");
+    setExtractionId("");
   };
 
   const resetData = () => {
+    mockDataTimeouts.forEach((timeout) => {
+      clearTimeout(timeout);
+    });
+    setMockDataTimeouts([]);
+
     setData(undefined);
     setAnalytics(undefined);
     setProgress("");
     setIsLoadingUserData(false);
     setIsLoadingAnalytics(false);
+    setExtractionId("");
   };
 
   const value: DiscordContextType = {
@@ -138,6 +181,7 @@ export function DiscordProvider({ children }: { children: ReactNode }) {
     pickAndProcessFile,
     useMockData,
     resetData,
+    cancelProcessing,
   };
 
   return (
