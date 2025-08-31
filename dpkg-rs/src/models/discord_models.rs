@@ -1,5 +1,3 @@
-use std::collections::HashMap;
-
 use serde::{Deserialize, Deserializer};
 
 #[derive(Debug, Deserialize)]

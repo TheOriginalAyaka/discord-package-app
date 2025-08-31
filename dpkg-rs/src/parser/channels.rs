@@ -141,6 +141,7 @@ impl<'a> Parser<'a> {
                     channel_message_counts.push(TopChannel {
                         id: channel.id.clone(),
                         name: channel.name.clone(),
+                        r#type: channel.r#type.clone(),
                         guild_name,
                         guild_id,
                         message_count,
