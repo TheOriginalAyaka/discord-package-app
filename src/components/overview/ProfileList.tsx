@@ -13,12 +13,12 @@ export function ProfileList({
   data,
   analytics = undefined,
   isLoadingAnalytics = false,
-  analyticsError = null, // Add this prop
+  analyticsError = null,
 }: {
   data: ExtractedData;
   analytics: EventCount | undefined;
   isLoadingAnalytics?: boolean;
-  analyticsError?: string | null; // Add this type
+  analyticsError?: string | null;
 }) {
   const { theme } = useTheme();
   const navigation = useNavigation<NavigationProp>();
