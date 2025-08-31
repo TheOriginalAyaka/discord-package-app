@@ -36,13 +36,18 @@ export interface ExtractedData {
   user: User | null;
   topDms: TopDM[];
   topChannels: TopChannel[];
-  guildCount: number;
+  guilds: Guild[];
   dmChannelCount: number;
   channelCount: number;
   messageCount: number;
   characterCount: number;
   hoursValues: number[];
   favoriteWords: FavoriteWord[];
+}
+
+interface Guild {
+  id: string;
+  name: string;
 }
 
 interface User {

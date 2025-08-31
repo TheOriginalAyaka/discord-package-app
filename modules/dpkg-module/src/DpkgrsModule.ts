@@ -3,7 +3,7 @@ import { NativeModule, requireNativeModule } from "expo";
 import type { DpkgrsModuleEvents } from "./Dpkgrs.types";
 
 declare class DpkgrsModule extends NativeModule<DpkgrsModuleEvents> {
-  startExtraction: (path: string) => string;
+  startExtraction: (path: string) => string | null;
   cancelExtraction: (id: string) => boolean;
 }
 

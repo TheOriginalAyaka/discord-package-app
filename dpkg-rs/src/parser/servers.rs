@@ -3,7 +3,7 @@ use std::collections::HashMap;
 use std::io::Read;
 use zip::ZipArchive;
 
-use crate::models::UserData;
+use crate::models::{DGuild, UserData};
 use crate::parser::{Callback, Parser};
 
 impl<'a> Parser<'a> {
@@ -25,8 +25,11 @@ impl<'a> Parser<'a> {
             println!("[debug] Loading guild index from: {}", guild_index_path);
 
             match self.parse_json::<HashMap<String, String>>(&content) {
-                Ok(guild_index) => {
-                    extracted_data.guild_count = guild_index.len() as u32;
+                Ok(guilds_map) => {
+                    extracted_data.guilds = guilds_map
+                        .into_iter()
+                        .map(|(id, name)| DGuild { id, name })
+                        .collect()
                 }
                 Err(e) => println!("[debug] Failed to parse guild index: {}", e),
             }

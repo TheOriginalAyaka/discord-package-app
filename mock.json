@@ -127,7 +127,12 @@
       "discriminator": 0
     },
     "dmChannelCount": 309,
-    "guildCount": 48,
+    "guilds": [
+      {
+        "id": "142007603549962240",
+        "name": "test"
+      }
+    ],
     "channelCount": 541,
     "hoursValues": [
       34955, 27380, 20071, 15456, 12357, 9615, 9447, 10363, 12104, 16873, 19841,

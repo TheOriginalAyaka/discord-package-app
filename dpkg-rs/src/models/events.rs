@@ -5,7 +5,7 @@ pub struct Event {
     pub event_type: String,
 }
 
-#[derive(Debug, Deserialize, Clone, Default, uniffi::Record)]
+#[derive(Debug, Default, Clone, uniffi::Record)]
 pub struct EventCount {
     pub application_created: u32,
     pub bot_token_compromised: u32,
@@ -32,15 +32,7 @@ pub struct EventCount {
     pub all_events: u32,
 }
 
-#[derive(Debug, Deserialize, Clone, Default)]
-pub struct ApplicationCommandUsed {
-    pub application_id: String,
-    pub command_id: String,
-    pub command_name: Option<String>,
-    pub command_description: Option<String>,
-}
-
-#[derive(Debug, Deserialize, Clone, Default, uniffi::Record)]
+#[derive(Debug, Default, Clone, uniffi::Record)]
 pub struct MostUsedCommand {
     pub command_id: String,
     pub application_id: String,

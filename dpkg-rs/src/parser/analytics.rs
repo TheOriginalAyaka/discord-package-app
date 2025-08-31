@@ -6,7 +6,7 @@ use std::time::Instant;
 use sysinfo::System;
 use zip::ZipArchive;
 
-use crate::models::{ApplicationCommandUsed, Event, EventCount, MostUsedCommand};
+use crate::models::{DApplicationCommandUsed, Event, EventCount, MostUsedCommand};
 use crate::parser::{Callback, Parser};
 
 impl<'a> Parser<'a> {
@@ -109,7 +109,7 @@ impl<'a> Parser<'a> {
                         "leave_voice_channel" => counts.leave_voice_channel += 1,
                         "application_command_used" => {
                             if let Ok(command) =
-                                simd_json::from_slice::<ApplicationCommandUsed>(&mut line)
+                                simd_json::from_slice::<DApplicationCommandUsed>(&mut line)
                             {
                                 if let Some(cmd) = counts
                                     .most_used_commands

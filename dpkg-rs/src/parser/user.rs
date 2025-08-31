@@ -2,7 +2,7 @@ use anyhow::Result;
 use std::io::Read;
 use zip::ZipArchive;
 
-use crate::models::{User, UserData};
+use crate::models::{DUser, UserData};
 use crate::parser::{Callback, Parser};
 
 impl<'a> Parser<'a> {
@@ -23,7 +23,7 @@ impl<'a> Parser<'a> {
         if let Some(content) = self.read_file(archive, &user_path)? {
             println!("[debug] Loading user info from: {}", user_path);
 
-            if let Ok(user) = self.parse_json::<User>(&content) {
+            if let Ok(user) = self.parse_json::<DUser>(&content) {
                 extracted_data.user = Some(user);
             } else {
                 println!("[debug] Failed to parse user.json");

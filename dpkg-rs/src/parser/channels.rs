@@ -5,7 +5,7 @@ use std::collections::HashMap;
 use std::io::{Read, Seek};
 use zip::ZipArchive;
 
-use crate::models::{Channel, FavoriteWord, Message, ParsedMessage, TopChannel, TopDM, UserData};
+use crate::models::{DChannel, DMessage, Message, TopChannel, TopDM, UserData, WordCount};
 use crate::parser::{Callback, Parser};
 
 impl<'a> Parser<'a> {
@@ -16,7 +16,7 @@ impl<'a> Parser<'a> {
         extracted_data: &mut UserData,
         callback: &Callback,
     ) -> Result<()> {
-        let messages_index = self.load_messages_index(archive, messages_root)?;
+        // let messages_index = self.load_messages_index(archive, messages_root)?;
         let channel_ids = self.scan_channel_ids(archive, messages_root)?;
 
         callback.progress(
@@ -65,7 +65,7 @@ impl<'a> Parser<'a> {
             if let (Some(data_content), Some(messages_content)) =
                 (channel_data, channel_messages_content)
             {
-                let channel: Channel = match self.parse_json(&data_content) {
+                let channel: DChannel = match self.parse_json(&data_content) {
                     Ok(ch) => ch,
                     Err(e) => {
                         println!(
@@ -76,7 +76,7 @@ impl<'a> Parser<'a> {
                     }
                 };
 
-                let messages: Vec<ParsedMessage> = if extension == "csv" {
+                let messages: Vec<Message> = if extension == "csv" {
                     self.parse_csv(&messages_content)?
                 } else {
                     match self.parse_json_messages(&messages_content) {
@@ -88,10 +88,11 @@ impl<'a> Parser<'a> {
                     }
                 };
 
-                let name: &str = messages_index
-                    .get(&channel.id)
-                    .map(|s| s.as_str())
-                    .unwrap_or(&channel.id);
+                // let name: &str = messages_index
+                //     .get(&channel.id)
+                //     .map(|s| s.as_str())
+                //     .unwrap_or(&channel.id);
+
                 let is_dm = channel.recipients.as_ref().is_some_and(|r| r.len() == 2);
                 let dm_user_id = if is_dm {
                     channel.recipients.as_ref().and_then(|recipients| {
@@ -116,8 +117,8 @@ impl<'a> Parser<'a> {
                         extracted_data.hours_values[dt.hour() as usize] += 1;
                     }
 
-                    if let Some(words) = &message.words {
-                        for word in words.iter().filter(|w| w.len() > 5) {
+                    if !&message.words.is_empty() {
+                        for word in message.words.iter().filter(|w| w.len() > 5) {
                             *word_counts.entry(word.clone()).or_insert(0) += 1;
                         }
                     }
@@ -139,7 +140,7 @@ impl<'a> Parser<'a> {
                     };
                     channel_message_counts.push(TopChannel {
                         id: channel.id.clone(),
-                        name: name.to_string(),
+                        name: channel.name.clone(),
                         guild_name,
                         guild_id,
                         message_count,
@@ -159,29 +160,34 @@ impl<'a> Parser<'a> {
     }
 
     // Local helpers (private)
-    fn parse_csv(&self, content: &str) -> Result<Vec<ParsedMessage>> {
+    fn parse_csv(&self, content: &str) -> Result<Vec<Message>> {
         let mut reader = csv::Reader::from_reader(content.as_bytes());
         let mut messages = Vec::new();
         for result in reader.deserialize() {
             self.check_cancellation_token()?;
-            let record: Message = result?;
-            if !record.contents.is_empty() {
-                let words = Parser::process_words(&record.contents);
-                messages.push(ParsedMessage {
-                    id: record.id,
-                    timestamp: record.timestamp,
-                    length: record.contents.len() as u32,
-                    words: Some(words),
-                });
-            }
+            let record: DMessage = result?;
+
+            let words = Parser::process_words(&record.contents);
+            messages.push(Message {
+                id: record.id,
+                timestamp: record.timestamp,
+                content: record.contents.clone(),
+                attachments: record
+                    .attachments
+                    .split(' ')
+                    .map(|s| s.to_string())
+                    .collect(),
+                length: record.contents.len() as u32,
+                words,
+            });
         }
         Ok(messages)
     }
 
-    fn parse_json_messages(&self, content: &str) -> Result<Vec<ParsedMessage>> {
-        let messages: Vec<Message> = match self.parse_json(content) {
+    fn parse_json_messages(&self, content: &str) -> Result<Vec<Message>> {
+        let messages: Vec<DMessage> = match self.parse_json(content) {
             Ok(m) => m,
-            Err(_) => match self.parse_json::<Message>(content) {
+            Err(_) => match self.parse_json::<DMessage>(content) {
                 Ok(msg) => vec![msg],
                 Err(e) => return Err(e),
             },
@@ -190,32 +196,34 @@ impl<'a> Parser<'a> {
             .into_iter()
             .map(|m| {
                 let words = Parser::process_words(&m.contents);
-                ParsedMessage {
+                Message {
                     id: m.id,
+                    content: m.contents.clone(),
+                    attachments: m.attachments.split(' ').map(|s| s.to_string()).collect(),
                     timestamp: m.timestamp,
                     length: m.contents.len() as u32,
-                    words: Some(words),
+                    words,
                 }
             })
             .collect())
     }
 
-    fn load_messages_index<R: Read + Seek>(
-        &self,
-        archive: &mut ZipArchive<R>,
-        messages_root: &str,
-    ) -> Result<HashMap<String, String>> {
-        let path = format!("{}/index.json", messages_root);
-        let content = self.read_file(archive, &path)?;
-        Ok(content
-            .map(|c| {
-                self.parse_json(&c).unwrap_or_else(|e| {
-                    println!("[debug] Failed to parse messages index: {}", e);
-                    HashMap::new()
-                })
-            })
-            .unwrap_or_default())
-    }
+    // fn load_messages_index<R: Read + Seek>(
+    //     &self,
+    //     archive: &mut ZipArchive<R>,
+    //     messages_root: &str,
+    // ) -> Result<HashMap<String, String>> {
+    //     let path = format!("{}/index.json", messages_root);
+    //     let content = self.read_file(archive, &path)?;
+    //     Ok(content
+    //         .map(|c| {
+    //             self.parse_json(&c).unwrap_or_else(|e| {
+    //                 println!("[debug] Failed to parse messages index: {}", e);
+    //                 HashMap::new()
+    //             })
+    //         })
+    //         .unwrap_or_default())
+    // }
 
     fn scan_channel_ids<R: Read + Seek>(
         &self,
@@ -273,12 +281,38 @@ impl<'a> Parser<'a> {
         dm_message_counts.sort_by(|a, b| b.message_count.cmp(&a.message_count));
         extracted_data.top_dms = dm_message_counts.into_iter().take(10).collect();
 
+        let emote_regex = Regex::new(r"<(a?):([^:]+):(\d+)>");
         let mut word_vec: Vec<_> = word_counts.into_iter().collect();
         word_vec.sort_by(|a, b| b.1.cmp(&a.1));
-        extracted_data.favorite_words = word_vec
-            .into_iter()
-            .take(10)
-            .map(|(word, count)| FavoriteWord { word, count })
-            .collect();
+
+        match emote_regex {
+            Ok(ref regex) => {
+                extracted_data.favorite_emotes = word_vec
+                    .iter()
+                    .filter(|word| regex.is_match(&word.0))
+                    .take(10)
+                    .map(|(word, count)| WordCount {
+                        word: word.clone(),
+                        count: *count,
+                    })
+                    .collect();
+
+                extracted_data.favorite_words = word_vec
+                    .into_iter()
+                    .filter(|word| !regex.is_match(&word.0))
+                    .take(10)
+                    .map(|(word, count)| WordCount { word, count })
+                    .collect();
+            }
+            Err(e) => {
+                println!("[debug] Failed to compile emote regex: {}", e);
+                extracted_data.favorite_emotes = Vec::new();
+                extracted_data.favorite_words = word_vec
+                    .into_iter()
+                    .take(10)
+                    .map(|(word, count)| WordCount { word, count })
+                    .collect();
+            }
+        }
     }
 }

@@ -1,23 +1,23 @@
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Clone, Serialize, Deserialize, uniffi::Record)]
-pub struct User {
+pub struct DUser {
     pub id: String,
     pub username: String,
     pub global_name: Option<String>,
     pub discriminator: u16,
     pub avatar_hash: Option<String>,
-    pub payments: Vec<Payment>,
-    pub relationships: Vec<Relationship>,
+    pub payments: Vec<DPayment>,
+    pub relationships: Vec<DRelationship>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, uniffi::Record)]
-pub struct Relationship {
-    pub user: DiscordUser,
+pub struct DRelationship {
+    pub user: DRelationshipUser,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, uniffi::Record)]
-pub struct DiscordUser {
+pub struct DRelationshipUser {
     pub id: String,
     pub username: String,
     pub global_name: Option<String>,
@@ -26,7 +26,7 @@ pub struct DiscordUser {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, uniffi::Record)]
-pub struct Payment {
+pub struct DPayment {
     pub status: i32,
     pub currency: String,
     pub amount: i64,

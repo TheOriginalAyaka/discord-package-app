@@ -2,16 +2,13 @@ mod models;
 mod parser;
 
 uniffi::setup_scaffolding!();
-use std::collections::HashMap;
-// use jsonwebtoken::{EncodingKey, Header, encode};
-// use serde::Serialize;
 use lazy_static::lazy_static;
-use std::fs::File;
+use std::collections::HashMap;
+use std::fs::{self, File};
 use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::{Arc, Mutex};
 use std::thread;
 use uuid::Uuid;
-// use std::time::{SystemTime, UNIX_EPOCH};
 use zip::ZipArchive;
 
 use crate::models::ExtractObserver;
@@ -27,13 +24,23 @@ fn cleanup_extraction(extraction_id: &str) {
 }
 
 #[uniffi::export]
-fn start_extraction(path: String, observer: Arc<dyn ExtractObserver>) -> String {
+fn start_extraction(path: String, observer: Arc<dyn ExtractObserver>) -> Option<String> {
     let callback = Callback::new(observer);
     let extraction_id = Uuid::new_v4().to_string();
     let cancellation_token = Arc::new(AtomicBool::new(false));
 
     {
-        let mut extractions = EXTRACTIONS.lock().unwrap();
+        let mut extractions = match EXTRACTIONS.lock() {
+            Ok(e) => e,
+            Err(err) => {
+                callback.error(
+                    Step::Scaffolding,
+                    format!("Error getting extractions lock: {}", err),
+                    "Runtime error".into(),
+                );
+                return None;
+            }
+        };
         extractions.insert(extraction_id.clone(), cancellation_token.clone());
     }
 
@@ -101,9 +108,10 @@ fn start_extraction(path: String, observer: Arc<dyn ExtractObserver>) -> String 
         }
 
         cleanup_extraction(&extraction_id);
+        let _ = fs::remove_file(&path);
     });
 
-    return_id
+    Some(return_id)
 }
 
 #[uniffi::export]
@@ -170,10 +178,7 @@ mod tests {
         let (sender, receiver) = mpsc::channel();
         let observer = Arc::new(TestObserver::new("TestRun", sender));
         println!("Starting extraction");
-        let id = start_extraction(file_path.clone(), observer);
-        thread::sleep(std::time::Duration::from_secs(3));
-        let cancelled = cancel_extraction(id);
-        println!("Cancellation result: {}", cancelled);
+        let _ = start_extraction(file_path.clone(), observer);
 
         match receiver.recv_timeout(std::time::Duration::from_secs(300)) {
             Ok(_) => println!("Test completed successfully"),

@@ -138,7 +138,7 @@ export function ProfileList({
           </View>
 
           <TText variant="secondary" weight="medium" style={styles.rightText}>
-            {data.guildCount.toLocaleString()} servers
+            {data.guilds.length.toLocaleString()} servers
           </TText>
         </View>
       </TableRow>
