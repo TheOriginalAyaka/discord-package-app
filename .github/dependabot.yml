@@ -1,0 +1,13 @@
+version: 2
+updates:
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    ignore:
+      - dependency-name: "expo-*"
+
+  - package-ecosystem: "cargo"
+    directory: "/dpkg-rs"
+    schedule:
+      interval: "weekly"
