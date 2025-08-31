@@ -42,7 +42,8 @@ export interface ExtractedData {
   messageCount: number;
   characterCount: number;
   hoursValues: number[];
-  favoriteWords: FavoriteWord[];
+  favoriteWords: PhraseCount[];
+  favoriteEmotes: PhraseCount[];
 }
 
 interface Guild {
@@ -86,13 +87,13 @@ interface TopDM {
 
 interface TopChannel {
   id: string;
-  name: string;
+  name: string | null;
   messageCount: number;
   guildName: string | null;
   guildId: string | null;
 }
 
-interface FavoriteWord {
+interface PhraseCount {
   word: string;
   count: number;
 }

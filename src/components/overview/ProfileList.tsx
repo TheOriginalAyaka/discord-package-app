@@ -1,6 +1,6 @@
 import { useNavigation } from "@react-navigation/native";
 import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { Image, StyleSheet, View } from "react-native";
+import { ActivityIndicator, Image, StyleSheet, View } from "react-native";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import type { EventCount, ExtractedData } from "@/modules/dpkg-module";
 import type { RootStackParamList } from "@/src/navigation/types";
@@ -13,10 +13,12 @@ export function ProfileList({
   data,
   analytics = undefined,
   isLoadingAnalytics = false,
+  analyticsError = null, // Add this prop
 }: {
   data: ExtractedData;
   analytics: EventCount | undefined;
   isLoadingAnalytics?: boolean;
+  analyticsError?: string | null; // Add this type
 }) {
   const { theme } = useTheme();
   const navigation = useNavigation<NavigationProp>();
@@ -235,20 +237,25 @@ export function ProfileList({
       </TableRow>
       <TableRow
         onPress={() => {
-          if (!isLoadingAnalytics && analytics) {
+          if (!isLoadingAnalytics && analytics && !analyticsError) {
             navigation.navigate("Analytics", { analytics });
           }
         }}
-        disabled={isLoadingAnalytics || !analytics}
+        disabled={isLoadingAnalytics || !analytics || !!analyticsError}
       >
         <View
           style={{
             flexDirection: "row",
             alignItems: "center",
-            opacity: isLoadingAnalytics || !analytics ? 0.5 : 1,
+            opacity:
+              isLoadingAnalytics || (!analytics && !analyticsError) ? 0.5 : 1,
           }}
         >
-          <MaterialIcons name="show-chart" size={24} color={theme.primary} />
+          <MaterialIcons
+            name="show-chart"
+            size={24}
+            color={analyticsError ? theme.error : theme.primary}
+          />
 
           <View
             style={{
@@ -261,25 +268,59 @@ export function ProfileList({
             <TText
               variant="primary"
               weight="semibold"
-              style={{ fontSize: 16, lineHeight: 20 }}
+              style={{
+                fontSize: 16,
+                lineHeight: 20,
+                ...(analyticsError && { color: theme.error }),
+              }}
             >
-              {isLoadingAnalytics ? "Loading Analytics..." : "More Analytics"}
+              {isLoadingAnalytics
+                ? "Loading Analytics..."
+                : analyticsError
+                  ? "Failed to load analytics"
+                  : "More Analytics"}
             </TText>
-            {isLoadingAnalytics && (
+            {(isLoadingAnalytics || analyticsError) && (
               <TText
                 variant="secondary"
-                style={{ fontSize: 12, lineHeight: 16 }}
+                style={{
+                  fontSize: 12,
+                  lineHeight: 16,
+                  ...(analyticsError && { color: theme.error }),
+                }}
               >
-                Please wait while we process your analytics.
+                {isLoadingAnalytics
+                  ? "Please wait while we process your analytics."
+                  : analyticsError}
               </TText>
             )}
           </View>
 
-          <MaterialIcons
-            name="chevron-right"
-            size={24}
-            color={theme.secondary}
-          />
+          <View style={{ flexDirection: "row", alignItems: "center" }}>
+            {isLoadingAnalytics && (
+              <ActivityIndicator
+                size="small"
+                color={theme.secondary}
+                style={{
+                  transform: [{ scale: 0.8 }],
+                  marginRight: 8,
+                }}
+              />
+            )}
+            {analyticsError ? (
+              <MaterialIcons
+                name="error-outline"
+                size={24}
+                color={theme.error}
+              />
+            ) : (
+              <MaterialIcons
+                name="chevron-right"
+                size={24}
+                color={theme.secondary}
+              />
+            )}
+          </View>
         </View>
       </TableRow>
     </TableRowGroup>

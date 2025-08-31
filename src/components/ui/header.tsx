@@ -51,15 +51,6 @@ const styles = StyleSheet.create({
     padding: 12,
     paddingTop: 60,
     minHeight: 60,
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.3,
-    shadowRadius: 10,
-    elevation: 5,
-    zIndex: 1000,
   },
   headerTitle: {
     fontSize: 16,

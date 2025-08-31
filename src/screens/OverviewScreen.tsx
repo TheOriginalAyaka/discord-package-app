@@ -7,6 +7,7 @@ import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import {
   FavChannelsList,
   FavDmsList,
+  FavEmoteList,
   FavTextList,
   ProfileList,
 } from "@/src/components";
@@ -20,8 +21,14 @@ type NavigationProp = NativeStackNavigationProp<RootStackParamList, "Overview">;
 export function OverviewScreen() {
   const { isDark, theme } = useTheme();
   const { toggleTheme, mode } = useThemeControls();
-  const { data, analytics, isLoadingAnalytics, resetData, cancelProcessing } =
-    useDiscordContext();
+  const {
+    data,
+    analytics,
+    isLoadingAnalytics,
+    analyticsError,
+    resetData,
+    cancelProcessing,
+  } = useDiscordContext();
   const navigation = useNavigation<NavigationProp>();
 
   useEffect(() => {
@@ -119,8 +126,10 @@ export function OverviewScreen() {
           data={data}
           analytics={analytics}
           isLoadingAnalytics={isLoadingAnalytics}
+          analyticsError={analyticsError}
         />
         <FavTextList data={data} />
+        <FavEmoteList data={data} />
         <FavDmsList data={data} />
         <FavChannelsList data={data} />
 

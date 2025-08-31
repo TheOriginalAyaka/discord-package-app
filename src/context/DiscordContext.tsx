@@ -22,6 +22,7 @@ interface DiscordContextType {
   useMockData: () => void;
   resetData: () => void;
   cancelProcessing: () => void;
+  analyticsError: string | null;
 }
 
 const DiscordContext = createContext<DiscordContextType | undefined>(undefined);
@@ -35,7 +36,8 @@ export function DiscordProvider({ children }: { children: ReactNode }) {
   const [mockDataTimeouts, setMockDataTimeouts] = useState<NodeJS.Timeout[]>(
     [],
   );
-  const [extractionId, setExtractionId] = useState<string>("");
+  const [extractionId, setExtractionId] = useState<string | null>(null);
+  const [analyticsError, setAnalyticsError] = useState<string | null>(null);
 
   const cancelExtraction = () => {
     if (!extractionId) return false;
@@ -49,6 +51,7 @@ export function DiscordProvider({ children }: { children: ReactNode }) {
       setIsLoadingUserData(false);
       setIsLoadingAnalytics(true);
       setProgress("Loading analytics...");
+      setAnalyticsError(null);
     });
 
     const analyticsEvent = dpkgModule.addListener(
@@ -66,9 +69,16 @@ export function DiscordProvider({ children }: { children: ReactNode }) {
 
     const errorEvent = dpkgModule.addListener("onError", (e) => {
       console.log("error event:", e.error.message);
-      setIsLoadingUserData(false);
-      setIsLoadingAnalytics(false);
-      setProgress(`${e.error.title}: ${e.error.message}`);
+
+      if (e.error.step === "analytics") {
+        setAnalyticsError(e.error.message);
+        setIsLoadingAnalytics(false);
+        setProgress("");
+      } else {
+        setIsLoadingUserData(false);
+        setIsLoadingAnalytics(false);
+        setProgress(`${e.error.title}: ${e.error.message}`);
+      }
     });
 
     const progressEvent = dpkgModule.addListener("onProgress", (e) => {
@@ -81,7 +91,13 @@ export function DiscordProvider({ children }: { children: ReactNode }) {
       errorEvent.remove();
       progressEvent.remove();
       analyticsEvent.remove();
-      // clear timeouts on unmount
+    };
+  }, []);
+
+  // Handle timeout cleanup separately when component unmounts
+  useEffect(() => {
+    return () => {
+      // Clear any remaining timeouts on unmount
       mockDataTimeouts.forEach((timeout) => {
         clearTimeout(timeout);
       });
@@ -100,17 +116,20 @@ export function DiscordProvider({ children }: { children: ReactNode }) {
 
     if (!file.canceled && file.assets[0]) {
       console.log("uri", file.assets[0].uri);
-      setIsLoadingUserData(true);
-      setIsLoadingAnalytics(false);
-      setData(undefined);
-      setAnalytics(undefined);
-      setProgress("Loading user data...");
+
       const extId = dpkgModule.startExtraction(
         file.assets[0].uri.replace("file://", ""),
       );
-      setExtractionId(extId);
+
+      if (extId) {
+        setIsLoadingUserData(true);
+        setIsLoadingAnalytics(false);
+        setData(undefined);
+        setAnalytics(undefined);
+        setProgress("Loading user data...");
+        setExtractionId(extId);
+      }
     }
-    // no loading states if file picker cancelled
   };
 
   const useMockData = () => {
@@ -170,6 +189,7 @@ export function DiscordProvider({ children }: { children: ReactNode }) {
     setIsLoadingUserData(false);
     setIsLoadingAnalytics(false);
     setExtractionId("");
+    setAnalyticsError(null);
   };
 
   const value: DiscordContextType = {
@@ -178,6 +198,7 @@ export function DiscordProvider({ children }: { children: ReactNode }) {
     progress,
     isLoadingUserData,
     isLoadingAnalytics,
+    analyticsError,
     pickAndProcessFile,
     useMockData,
     resetData,

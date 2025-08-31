@@ -7,7 +7,17 @@ import { TableRow, TableRowGroup } from "../ui";
 export function FavChannelsList({ data }: { data: ExtractedData }) {
   const { theme } = useTheme();
 
-  if (data.topChannels.length === 0) return null;
+  if (!data.topChannels || data.topChannels.length === 0) return null;
+
+  const isUnknown = ({
+    channel,
+    server,
+  }: {
+    channel: string;
+    server: string;
+  }) => {
+    return channel === "Unknown Channel" && server === "Unknown Server";
+  };
 
   return (
     <TableRowGroup
@@ -15,15 +25,17 @@ export function FavChannelsList({ data }: { data: ExtractedData }) {
       description="The channels where you've been most active across all Discord servers."
     >
       {data.topChannels.slice(0, 5).map((channel, index) => {
-        // parse channel name
-        const channelName = channel.name
-          ? channel.name.split(" in ")[0].trim()
-          : "Unknown Channel";
-        // server name
+        const channelName = channel.name || "Unknown Channel";
         const serverName = channel.guildName || "Unknown Server";
 
         return (
-          <TableRow key={`${channel.name}-${index}`}>
+          <TableRow
+            key={`${channel.name}-${index}`}
+            disabled={isUnknown({
+              channel: channelName,
+              server: serverName,
+            })}
+          >
             <View style={styles.tableRowContent}>
               <View
                 style={[

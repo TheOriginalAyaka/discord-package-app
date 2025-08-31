@@ -94,7 +94,10 @@ export function BotCommands({ analytics }: { analytics: EventCount }) {
       </TableRow>
 
       {sortedCommands.map((command, index) => (
-        <TableRow key={`${command.commandId}-${index}`}>
+        <TableRow
+          key={`${command.commandId}-${index}`}
+          disabled={!command.commandName}
+        >
           <View style={styles.tableRowContent}>
             <View
               style={[

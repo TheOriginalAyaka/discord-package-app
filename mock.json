@@ -222,10 +222,6 @@
     "characterCount": 19011263,
     "favoriteWords": [
       {
-        "word": "<a:bocchi_glitching:1101309043500384322>",
-        "count": 75312
-      },
-      {
         "word": "bocchi",
         "count": 38531
       },
@@ -234,20 +230,12 @@
         "count": 9876
       },
       {
-        "word": "🤌🏻",
-        "count": 9543
-      },
-      {
         "word": "skill",
         "count": 7890
       },
       {
         "word": "issue",
         "count": 6543
-      },
-      {
-        "word": "<:HigoIDK:612873956608835601>",
-        "count": 5432
       },
       {
         "word": "migu",
@@ -260,6 +248,36 @@
       {
         "count": 2109,
         "word": "cat"
+      }
+    ],
+    "favoriteEmotes": [
+      {
+        "word": "<a:bocchi_glitching:1151816737281552507>",
+        "count": 38531
+      },
+      {
+        "word": "<a:BocchiShake:1144351629898952784>",
+        "count": 9876
+      },
+      {
+        "word": "<:march_2:1105443052312592434>",
+        "count": 7890
+      },
+      {
+        "word": "<a:owo_cry:1127534881379979315>",
+        "count": 6543
+      },
+      {
+        "word": "<:a_cuddle_cute_hug_kawaii_pink_te:927648944031424603>",
+        "count": 4321
+      },
+      {
+        "count": 3210,
+        "word": "<:Miku_Happy:1172316132808597546>"
+      },
+      {
+        "count": 2109,
+        "word": "<a:a_cat_cute_kawaii_neko_pout:927777902400004176>"
       }
     ]
   },

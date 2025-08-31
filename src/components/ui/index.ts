@@ -1,3 +1,3 @@
-export { TableRow, TableRowGroup } from "./TableRow";
+export { ButtonText, default as Button } from "./button";
 export { default as Header } from "./header";
-export { default as Button, ButtonText } from "./button";
+export { TableRow, TableRowGroup } from "./TableRow";

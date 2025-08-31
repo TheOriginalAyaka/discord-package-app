@@ -44,24 +44,42 @@ export function AnalyticsScreen() {
       <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
         {/* card thingy */}
         <View style={[styles.summaryCard]}>
-          <TText
-            variant="secondary"
-            weight="medium"
-            style={styles.summaryTitle}
-          >
-            Total Events Tracked
-          </TText>
-          <TText variant="primary" weight="bold" style={styles.summaryValue}>
-            {analytics.allEvents.toLocaleString()}
-          </TText>
-          <TText variant="secondary" style={styles.summaryDescription}>
-            Across all categories since you started using Discord
-          </TText>
+          <View style={{ alignItems: "center", marginBottom: 4 }}>
+            <TText
+              variant="secondary"
+              weight="medium"
+              style={{
+                fontSize: 13,
+                textTransform: "uppercase",
+                letterSpacing: 0.5,
+              }}
+            >
+              Total Events Tracked
+            </TText>
+            <TText
+              variant="primary"
+              weight="bold"
+              style={{
+                fontSize: 36,
+              }}
+            >
+              {analytics.allEvents.toLocaleString()}
+            </TText>
+            <TText
+              variant="secondary"
+              style={{
+                fontSize: 12,
+                textAlign: "center",
+              }}
+            >
+              Across all categories since you started using Discord
+            </TText>
+          </View>
 
           {/* mini stats */}
           <View style={styles.miniStats}>
             {topActivities.slice(0, 3).map((activity) => (
-              <View key={activity.label} style={styles.miniStat}>
+              <View key={activity.label} style={{ alignItems: "center" }}>
                 <TText
                   variant="primary"
                   weight="semibold"
@@ -102,26 +120,10 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     alignItems: "center",
   },
-  summaryTitle: {
-    fontSize: 13,
-    textTransform: "uppercase",
-    letterSpacing: 0.5,
-  },
-  summaryValue: {
-    fontSize: 36,
-    marginBottom: 6,
-  },
-  summaryDescription: {
-    fontSize: 12,
-    textAlign: "center",
-  },
   miniStats: {
     flexDirection: "row",
     justifyContent: "space-around",
     width: "100%",
     paddingTop: 12,
-  },
-  miniStat: {
-    alignItems: "center",
   },
 });
