@@ -1,7 +1,7 @@
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { StatusBar } from "expo-status-bar";
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import { Alert, BackHandler, ScrollView, View } from "react-native";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import {
@@ -11,7 +11,7 @@ import {
   FavTextList,
   ProfileList,
 } from "@/src/components";
-import { Header, TableRow, TableRowGroup } from "@/src/components/ui";
+import { Header, TableRow, TableRowGroup, useToast } from "@/src/components/ui";
 import { useDiscordContext } from "@/src/context/DiscordContext";
 import type { RootStackParamList } from "@/src/navigation/types";
 import { TText, TView, useTheme, useThemeControls } from "@/src/theme";
@@ -21,6 +21,7 @@ type NavigationProp = NativeStackNavigationProp<RootStackParamList, "Overview">;
 export function OverviewScreen() {
   const { isDark, theme } = useTheme();
   const { toggleTheme, mode } = useThemeControls();
+  const { showToast } = useToast();
   const {
     data,
     analytics,
@@ -31,11 +32,53 @@ export function OverviewScreen() {
   } = useDiscordContext();
   const navigation = useNavigation<NavigationProp>();
 
+  // Initialize refs with null or false to detect the initial state
+  const prevIsLoadingAnalytics = useRef<boolean | null>(null);
+  const prevAnalytics = useRef(analytics);
+  const prevAnalyticsError = useRef(analyticsError);
+
   useEffect(() => {
     if (!data) {
       navigation.navigate("Welcome");
     }
   }, [data, navigation]);
+
+  // toast
+  useEffect(() => {
+    const wasLoading = prevIsLoadingAnalytics.current;
+    const wasError = prevAnalyticsError.current;
+
+    if (wasLoading === null && isLoadingAnalytics) {
+      showToast({
+        icon: "hourglass-empty",
+        text: "Analytics are being processed...",
+      });
+    } else if (wasLoading === false && isLoadingAnalytics) {
+      showToast({
+        icon: "hourglass-empty",
+        text: "Analytics are being processed...",
+      });
+    }
+
+    if (wasLoading && !isLoadingAnalytics && analytics && !analyticsError) {
+      showToast({
+        icon: "check-circle",
+        text: "Analytics ready!",
+      });
+    }
+
+    if (!wasError && analyticsError) {
+      showToast({
+        icon: "error",
+        text: "Failed to load analytics",
+        duration: 3,
+      });
+    }
+
+    prevIsLoadingAnalytics.current = isLoadingAnalytics;
+    prevAnalytics.current = analytics;
+    prevAnalyticsError.current = analyticsError;
+  }, [isLoadingAnalytics, analytics, analyticsError, showToast]);
 
   const handleBackPress = useCallback(() => {
     if (isLoadingAnalytics) {
@@ -146,6 +189,27 @@ export function OverviewScreen() {
               <TText style={{ marginLeft: 16 }}>Theme</TText>
             </View>
             <TText variant="secondary">{mode}</TText>
+          </TableRow>
+          <TableRow
+            onPress={() => {
+              showToast({
+                icon: "info",
+                text: `Test toast ${Math.random()}`,
+                duration: 2,
+              });
+            }}
+          >
+            <View
+              style={{ flexDirection: "row", alignItems: "center", flex: 1 }}
+            >
+              <MaterialIcons name="info" size={24} color={theme.primary} />
+              <TText style={{ marginLeft: 16 }}>Show test toast</TText>
+            </View>
+            <MaterialIcons
+              name="chevron-right"
+              size={24}
+              color={theme.tertiary}
+            />
           </TableRow>
         </TableRowGroup>
 

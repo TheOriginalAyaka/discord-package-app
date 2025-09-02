@@ -3,6 +3,8 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import * as SplashScreen from "expo-splash-screen";
 import * as SystemUI from "expo-system-ui";
 import { useEffect } from "react";
+import { SafeAreaProvider } from "react-native-safe-area-context";
+import { ToastProvider } from "./components/ui";
 import { DiscordProvider } from "./context/DiscordContext";
 import type { RootStackParamList } from "./navigation/types";
 import { AnalyticsScreen, OverviewScreen, WelcomeScreen } from "./screens";
@@ -16,8 +18,6 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 function AppNavigator() {
   const { theme } = useTheme();
 
-  // set system UI with Theme hook
-  // https://docs.expo.dev/versions/latest/sdk/system-ui/
   useEffect(() => {
     SystemUI.setBackgroundColorAsync(theme.background);
   }, [theme.background]);
@@ -53,12 +53,16 @@ export default function App() {
   }
 
   return (
-    <ThemeProvider defaultMode="dark">
-      <DiscordProvider>
-        <NavigationContainer>
-          <AppNavigator />
-        </NavigationContainer>
-      </DiscordProvider>
-    </ThemeProvider>
+    <SafeAreaProvider>
+      <ThemeProvider defaultMode="dark">
+        <DiscordProvider>
+          <ToastProvider>
+            <NavigationContainer>
+              <AppNavigator />
+            </NavigationContainer>
+          </ToastProvider>
+        </DiscordProvider>
+      </ThemeProvider>
+    </SafeAreaProvider>
   );
 }
