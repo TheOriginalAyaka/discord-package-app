@@ -44,7 +44,7 @@ export default function Toast({
       Animated.sequence([
         Animated.timing(translateY, {
           toValue: overshootY,
-          duration: 120,
+          duration: 150,
           easing: Easing.out(Easing.cubic),
           useNativeDriver: true,
         }),

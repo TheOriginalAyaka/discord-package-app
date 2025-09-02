@@ -1,4 +1,3 @@
-// src/components/ui/toast/provider.tsx
 import type { ReactNode } from "react";
 import {
   createContext,
@@ -32,7 +31,6 @@ export function ToastProvider({ children }: { children: ReactNode }) {
     setActive((current) => {
       if (!current) return current;
       if (!id || id === current.id) {
-        // Clear timer when hiding
         if (dismissTimerRef.current) {
           clearTimeout(dismissTimerRef.current);
           dismissTimerRef.current = null;
@@ -57,22 +55,18 @@ export function ToastProvider({ children }: { children: ReactNode }) {
           shouldDismiss: false,
         } as Required<EnqueueOptions> & { shouldDismiss?: boolean };
 
-      // Clear any existing timer
       if (dismissTimerRef.current) {
         clearTimeout(dismissTimerRef.current);
         dismissTimerRef.current = null;
       }
 
-      // If there's an active toast, trigger its dismiss animation
       if (active) {
         setActive((current) =>
           current ? { ...current, shouldDismiss: true } : null,
         );
 
-        // After a short delay for the exit animation, show the new toast
         setTimeout(() => {
           setActive(normalized);
-          // Set up auto-dismiss timer for the new toast
           dismissTimerRef.current = setTimeout(
             () => {
               setActive((current) =>
@@ -83,11 +77,9 @@ export function ToastProvider({ children }: { children: ReactNode }) {
             },
             Math.max(0, Math.floor(normalized.duration * 1000)),
           );
-        }, 250); // Give time for exit animation
+        }, 250);
       } else {
-        // No active toast, just show the new one
         setActive(normalized);
-        // Set up auto-dismiss timer
         dismissTimerRef.current = setTimeout(
           () => {
             setActive((current) =>
@@ -120,7 +112,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
         {children}
         {active ? (
           <Toast
-            key={active.id} // Add key to force remount on replacement
+            key={active.id}
             icon={active.icon}
             text={active.text}
             src={active.src}
