@@ -1,5 +1,6 @@
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { registerDevMenuItems } from "expo-dev-menu";
 import { StatusBar } from "expo-status-bar";
 import { useCallback, useEffect, useRef } from "react";
 import { Alert, BackHandler, ScrollView, View } from "react-native";
@@ -32,10 +33,32 @@ export function OverviewScreen() {
   } = useDiscordContext();
   const navigation = useNavigation<NavigationProp>();
 
-  // Initialize refs with null or false to detect the initial state
   const prevIsLoadingAnalytics = useRef<boolean | null>(null);
   const prevAnalytics = useRef(analytics);
   const prevAnalyticsError = useRef(analyticsError);
+
+  // Register dev menu items
+  useEffect(() => {
+    const devMenuItems = [
+      {
+        name: "Show Test Toast",
+        callback: () => {
+          showToast({
+            icon: "info",
+            text: `Test toast ${Math.random()}`,
+            duration: 2,
+          });
+        },
+      },
+    ];
+
+    registerDevMenuItems(devMenuItems);
+
+    // Clean up on unmount (optional - register empty array)
+    return () => {
+      registerDevMenuItems([]);
+    };
+  }, [showToast]);
 
   useEffect(() => {
     if (!data) {
@@ -127,8 +150,6 @@ export function OverviewScreen() {
       if (!isLoadingAnalytics) {
         return;
       }
-
-      // prevent default behavior
       e.preventDefault();
 
       Alert.alert(
@@ -162,7 +183,7 @@ export function OverviewScreen() {
 
   return (
     <TView variant="background" style={{ flex: 1 }}>
-      <Header title="Analysis" onBack={handleBackPress} />
+      <Header title="Overview" onBack={handleBackPress} />
 
       <ScrollView style={{ flex: 1 }}>
         <ProfileList
@@ -189,27 +210,6 @@ export function OverviewScreen() {
               <TText style={{ marginLeft: 16 }}>Theme</TText>
             </View>
             <TText variant="secondary">{mode}</TText>
-          </TableRow>
-          <TableRow
-            onPress={() => {
-              showToast({
-                icon: "info",
-                text: `Test toast ${Math.random()}`,
-                duration: 2,
-              });
-            }}
-          >
-            <View
-              style={{ flexDirection: "row", alignItems: "center", flex: 1 }}
-            >
-              <MaterialIcons name="info" size={24} color={theme.primary} />
-              <TText style={{ marginLeft: 16 }}>Show test toast</TText>
-            </View>
-            <MaterialIcons
-              name="chevron-right"
-              size={24}
-              color={theme.tertiary}
-            />
           </TableRow>
         </TableRowGroup>
 
