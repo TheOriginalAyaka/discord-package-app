@@ -38,7 +38,22 @@
       [
         "expo-font",
         {
-          "fonts": ["./assets/fonts/ABCGintoNordUnlicensedTrial-Black.otf"]
+          "android": {
+            "fonts": [
+              {
+                "fontFamily": "ABCGintoNordUnlicensedTrial-Black",
+                "fontDefinitions": [
+                  {
+                    "path": "./assets/fonts/abc_ginto.otf",
+                    "weight": 800
+                  }
+                ]
+              }
+            ]
+          },
+          "ios": {
+            "fonts": ["./assets/fonts/abc_ginto.otf"]
+          }
         }
       ]
     ]
