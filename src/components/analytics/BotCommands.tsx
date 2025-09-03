@@ -130,7 +130,10 @@ export function BotCommands({ analytics }: { analytics: EventCount }) {
               )}
             </View>
 
-            <TText variant="secondary" style={{ fontSize: 14, lineHeight: 16, marginLeft: 16 }}>
+            <TText
+              variant="secondary"
+              style={{ fontSize: 14, lineHeight: 16, marginLeft: 16 }}
+            >
               {command.count.toLocaleString()} uses
             </TText>
           </View>

@@ -128,20 +128,18 @@ export function WelcomeScreen() {
 
         <View style={styles.buttonsContainer}>
           <Button
+            variant="secondary"
+            onPress={useMockData}
+            disabled={isLoadingUserData}
+          >
+            <ButtonText weight="semibold">View Demo</ButtonText>
+          </Button>
+          <Button
             variant="primary"
             onPress={pickAndProcessFile}
             disabled={isLoadingUserData}
           >
             <ButtonText weight="semibold">Choose Package</ButtonText>
-          </Button>
-
-          <Button
-            variant="secondary"
-            onPress={useMockData}
-            disabled={isLoadingUserData}
-            style={{ marginTop: 8 }}
-          >
-            <ButtonText weight="semibold">View Demo</ButtonText>
           </Button>
         </View>
       </View>
@@ -190,7 +188,9 @@ const styles = StyleSheet.create({
     bottom: 40,
     left: 24,
     right: 24,
-    gap: 6,
+    gap: 12,
+    marginHorizontal: 16,
+    alignItems: "center",
   },
   loadingContainer: {
     flex: 1,
