@@ -81,7 +81,6 @@ export function Surface({ children, style, ...props }: RNViewProps) {
   );
 }
 
-// uses the heavy discord branding front
 export function Title({ children, style, ...props }: RNTextProps) {
   return (
     <RNText

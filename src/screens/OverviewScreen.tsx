@@ -26,6 +26,7 @@ export function OverviewScreen() {
   const {
     data,
     analytics,
+    progress,
     isLoadingAnalytics,
     analyticsError,
     resetData,
@@ -37,7 +38,6 @@ export function OverviewScreen() {
   const prevAnalytics = useRef(analytics);
   const prevAnalyticsError = useRef(analyticsError);
 
-  // Register dev menu items
   useEffect(() => {
     const devMenuItems = [
       {
@@ -54,7 +54,6 @@ export function OverviewScreen() {
 
     registerDevMenuItems(devMenuItems);
 
-    // Clean up on unmount (optional - register empty array)
     return () => {
       registerDevMenuItems([]);
     };
@@ -71,15 +70,10 @@ export function OverviewScreen() {
     const wasLoading = prevIsLoadingAnalytics.current;
     const wasError = prevAnalyticsError.current;
 
-    if (wasLoading === null && isLoadingAnalytics) {
+    if (!wasLoading && isLoadingAnalytics) {
       showToast({
         icon: "hourglass-empty",
-        text: "Analytics are being processed...",
-      });
-    } else if (wasLoading === false && isLoadingAnalytics) {
-      showToast({
-        icon: "hourglass-empty",
-        text: "Analytics are being processed...",
+        text: "Processing analytics",
       });
     }
 
@@ -189,6 +183,7 @@ export function OverviewScreen() {
         <ProfileList
           data={data}
           analytics={analytics}
+          progress={progress}
           isLoadingAnalytics={isLoadingAnalytics}
           analyticsError={analyticsError}
         />

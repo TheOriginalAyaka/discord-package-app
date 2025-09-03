@@ -161,8 +161,8 @@ const styles = StyleSheet.create({
   toast: {
     minWidth: 120,
     minHeight: 40,
-    paddingHorizontal: 16,
-    paddingVertical: 12,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
     borderRadius: 9999,
     borderWidth: 0.5,
     justifyContent: "center",

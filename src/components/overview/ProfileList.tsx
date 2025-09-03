@@ -12,11 +12,13 @@ type NavigationProp = NativeStackNavigationProp<RootStackParamList, "Overview">;
 export function ProfileList({
   data,
   analytics = undefined,
+  progress = "",
   isLoadingAnalytics = false,
   analyticsError = null,
 }: {
   data: ExtractedData;
   analytics: EventCount | undefined;
+  progress?: string;
   isLoadingAnalytics?: boolean;
   analyticsError?: string | null;
 }) {
@@ -290,7 +292,13 @@ export function ProfileList({
                 }}
               >
                 {isLoadingAnalytics
-                  ? "Please wait while we process your analytics."
+                  ? (() => {
+                      if (!progress || progress === "")
+                        return "Please wait while we process your analytics.";
+
+                      const batchMatch = progress.match(/Processing batch \d+/);
+                      return batchMatch ? `${batchMatch[0]}...` : progress;
+                    })()
                   : analyticsError}
               </TText>
             )}

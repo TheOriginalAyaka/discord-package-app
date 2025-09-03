@@ -94,10 +94,8 @@ export function DiscordProvider({ children }: { children: ReactNode }) {
     };
   }, []);
 
-  // Handle timeout cleanup separately when component unmounts
   useEffect(() => {
     return () => {
-      // Clear any remaining timeouts on unmount
       mockDataTimeouts.forEach((timeout) => {
         clearTimeout(timeout);
       });

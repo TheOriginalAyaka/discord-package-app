@@ -121,9 +121,8 @@ export function WelcomeScreen() {
           </View>
 
           <TTitle style={styles.title}>Data Package Analyzer</TTitle>
-          <TText style={styles.subtitle}>
-            Analyze your Discord data package to understand your data and
-            improve your privacy and security.
+          <TText style={styles.subtitle} variant="primary">
+            Analyze your Discord data package and understand your data better.
           </TText>
         </View>
 
@@ -153,11 +152,14 @@ export function WelcomeScreen() {
 const styles = StyleSheet.create({
   content: {
     flex: 1,
-    justifyContent: "space-between",
     paddingHorizontal: 24,
   },
   centerSection: {
-    flex: 1,
+    position: "absolute",
+    top: 0,
+    left: 24,
+    right: 24,
+    bottom: 128,
     alignItems: "center",
     justifyContent: "center",
   },
@@ -167,7 +169,6 @@ const styles = StyleSheet.create({
     borderRadius: 40,
     alignItems: "center",
     justifyContent: "center",
-    marginBottom: 24,
   },
   title: {
     fontSize: 32,
@@ -175,16 +176,20 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     textAlign: "center",
     marginBottom: 8,
+    textTransform: "uppercase",
+    lineHeight: 36,
   },
   subtitle: {
-    fontSize: 16,
-    color: "#ffffff",
+    fontSize: 18,
     textAlign: "center",
     marginBottom: 32,
     lineHeight: 20,
   },
   buttonsContainer: {
-    paddingBottom: 40,
+    position: "absolute",
+    bottom: 40,
+    left: 24,
+    right: 24,
     gap: 6,
   },
   loadingContainer: {
