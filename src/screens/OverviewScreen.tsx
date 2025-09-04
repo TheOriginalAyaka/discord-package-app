@@ -12,7 +12,14 @@ import {
   FavTextList,
   ProfileList,
 } from "@/src/components";
-import { Header, TableRow, TableRowGroup, useToast } from "@/src/components/ui";
+import {
+  Header,
+  TableRow,
+  TableRowGroup,
+  Toggle,
+  Checkbox,
+  useToast,
+} from "@/src/components/ui";
 import { useDiscordContext } from "@/src/context/DiscordContext";
 import type { RootStackParamList } from "@/src/navigation/types";
 import { TText, TView, useTheme, useThemeControls } from "@/src/theme";
@@ -21,7 +28,7 @@ type NavigationProp = NativeStackNavigationProp<RootStackParamList, "Overview">;
 
 export function OverviewScreen() {
   const { isDark, theme } = useTheme();
-  const { toggleTheme, mode } = useThemeControls();
+  const { toggleTheme } = useThemeControls();
   const { showToast } = useToast();
   const {
     data,
@@ -204,7 +211,7 @@ export function OverviewScreen() {
               />
               <TText style={{ marginLeft: 16 }}>Theme</TText>
             </View>
-            <TText variant="secondary">{mode}</TText>
+            <Checkbox value={isDark} onValueChange={toggleTheme} />
           </TableRow>
         </TableRowGroup>
 
