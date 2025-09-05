@@ -1,4 +1,5 @@
 import { useFonts } from "expo-font";
+import { Platform } from "react-native";
 
 export const FONT_FAMILY = "ggsans";
 
@@ -41,6 +42,8 @@ export function getFontStyle(weight: keyof typeof fontWeights = "regular") {
 
   return {
     fontFamily,
-    fontWeight: fontWeights[weight],
+    ...(Platform.OS === "ios" && {
+      fontWeight: fontWeights[weight],
+    }),
   };
 }

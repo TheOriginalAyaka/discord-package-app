@@ -9,7 +9,7 @@ import {
   MessageInteractions,
   SecurityAnalytics,
   VoiceAnalytics,
-} from "@/src/components";
+} from "@/src/components/sections";
 import { Header } from "@/src/components/ui";
 import { useDiscordContext } from "@/src/context/DiscordContext";
 import type { RootStackParamList } from "@/src/navigation/types";

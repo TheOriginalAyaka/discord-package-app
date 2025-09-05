@@ -110,7 +110,8 @@ export function DiscordProvider({ children }: { children: ReactNode }) {
 
     const file = await DocumentPicker.getDocumentAsync({
       type: "application/zip",
-      copyToCacheDirectory: false,
+      // WIP: Cacheless solution for Android
+      copyToCacheDirectory: true,
     });
 
     if (!file.canceled && file.assets[0]) {

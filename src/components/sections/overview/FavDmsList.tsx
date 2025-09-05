@@ -2,8 +2,8 @@ import { useState } from "react";
 import { Image, StyleSheet, View } from "react-native";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import type { ExtractedData } from "@/modules/dpkg-module";
-import { type Theme, TText, useTheme } from "../../theme";
-import { TableRow, TableRowGroup } from "../ui";
+import { TableRow, TableRowGroup } from "@/src/components/ui";
+import { type Theme, TText, useTheme } from "@/src/theme";
 
 export function FavDmsList({ data }: { data: ExtractedData }) {
   const { theme } = useTheme();

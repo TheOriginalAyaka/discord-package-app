@@ -4,31 +4,22 @@ import { registerDevMenuItems } from "expo-dev-menu";
 import { StatusBar } from "expo-status-bar";
 import { useCallback, useEffect, useRef } from "react";
 import { Alert, BackHandler, ScrollView, View } from "react-native";
-import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import {
   FavChannelsList,
   FavDmsList,
   FavEmoteList,
   FavTextList,
   ProfileList,
-} from "@/src/components";
-import {
-  Header,
-  TableRow,
-  TableRowGroup,
-  Toggle,
-  Checkbox,
-  useToast,
-} from "@/src/components/ui";
+} from "@/src/components/sections";
+import { Header, useToast } from "@/src/components/ui";
 import { useDiscordContext } from "@/src/context/DiscordContext";
 import type { RootStackParamList } from "@/src/navigation/types";
-import { TText, TView, useTheme, useThemeControls } from "@/src/theme";
+import { TView, useTheme } from "@/src/theme";
 
 type NavigationProp = NativeStackNavigationProp<RootStackParamList, "Overview">;
 
 export function OverviewScreen() {
-  const { isDark, theme } = useTheme();
-  const { toggleTheme } = useThemeControls();
+  const { isDark } = useTheme();
   const { showToast } = useToast();
   const {
     data,
@@ -80,7 +71,7 @@ export function OverviewScreen() {
     if (!wasLoading && isLoadingAnalytics) {
       showToast({
         icon: "hourglass-empty",
-        text: "Processing analytics",
+        text: "Processing analytics...",
       });
     }
 
@@ -107,7 +98,7 @@ export function OverviewScreen() {
   const handleBackPress = useCallback(() => {
     if (isLoadingAnalytics) {
       Alert.alert(
-        "Processing Analytics",
+        "Analytics is still processing",
         "Analytics are still being processed in the background. Do you want to stop and go back?",
         [
           {
@@ -154,7 +145,7 @@ export function OverviewScreen() {
       e.preventDefault();
 
       Alert.alert(
-        "Processing Analytics",
+        "Analytics is still processing",
         "Analytics are still being processed in the background. Do you want to stop and go back?",
         [
           {
@@ -184,7 +175,12 @@ export function OverviewScreen() {
 
   return (
     <TView variant="background" style={{ flex: 1 }}>
-      <Header title="Overview" onBack={handleBackPress} />
+      <Header
+        title="Overview"
+        onBack={handleBackPress}
+        onExtra={() => navigation.navigate("Settings")}
+        extraIcon="settings"
+      />
 
       <ScrollView style={{ flex: 1 }}>
         <ProfileList
@@ -198,22 +194,6 @@ export function OverviewScreen() {
         <FavEmoteList data={data} />
         <FavDmsList data={data} />
         <FavChannelsList data={data} />
-
-        <TableRowGroup title="Settings">
-          <TableRow onPress={toggleTheme}>
-            <View
-              style={{ flexDirection: "row", alignItems: "center", flex: 1 }}
-            >
-              <MaterialIcons
-                name="brightness-6"
-                size={24}
-                color={theme.primary}
-              />
-              <TText style={{ marginLeft: 16 }}>Theme</TText>
-            </View>
-            <Checkbox value={isDark} onValueChange={toggleTheme} />
-          </TableRow>
-        </TableRowGroup>
 
         <View style={{ height: 24 }} />
       </ScrollView>

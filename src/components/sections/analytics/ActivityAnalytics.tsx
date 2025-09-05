@@ -1,49 +1,54 @@
 import { StyleSheet, View } from "react-native";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import type { EventCount } from "@/modules/dpkg-module";
-import { TText, useTheme } from "../../theme";
-import { TableRow, TableRowGroup } from "../ui";
+import { TableRow, TableRowGroup } from "@/src/components/ui";
+import { TText, useTheme } from "@/src/theme";
 
-export function MessageInteractions({ analytics }: { analytics: EventCount }) {
+export function ActivityAnalytics({ analytics }: { analytics: EventCount }) {
   const { theme } = useTheme();
 
-  const messageItems = [
+  const activityItems = [
     {
-      icon: "edit",
-      label: "Messages Edited",
-      description: "Times you've edited your messages",
-      count: analytics.messageEdited || 0,
+      icon: "login",
+      label: "Successful Logins",
+      description: "Times you've logged into Discord",
+      count: analytics.loginSuccessful || 0,
     },
     {
-      icon: "emoji-emotions",
-      label: "Reactions Added",
-      description: "Reactions you've added to messages",
-      count: analytics.addReaction || 0,
+      icon: "phone-android",
+      label: "App Opens",
+      description: "Times you've opened the Discord app",
+      count: analytics.appOpened || 0,
     },
     {
-      icon: "report",
-      label: "Messages Reported",
-      description: "Messages you've reported",
-      count: analytics.messageReported || 0,
+      icon: "notifications",
+      label: "Notifications Clicked",
+      description: "Discord notifications you've interacted with",
+      count: analytics.notificationClicked || 0,
+    },
+    {
+      icon: "email",
+      label: "Emails Opened",
+      description: "Discord emails you've opened",
+      count: analytics.emailOpened || 0,
+    },
+    {
+      icon: "portrait",
+      label: "Avatar Updates",
+      description: "Times you've changed your avatar",
+      count: analytics.userAvatarUpdated || 0,
     },
   ];
 
   return (
     <TableRowGroup
-      title="Message Interactions"
-      description="How you interact with messages on Discord"
+      title="Activity Statistics"
+      description="Your general Discord activity and engagement metrics"
     >
-      {messageItems.map((item) => (
+      {activityItems.map((item) => (
         <TableRow key={item.label}>
           <View style={styles.tableRowContent}>
-            <View
-              style={[
-                styles.iconCircle,
-                { backgroundColor: `${theme.primary}20` },
-              ]}
-            >
-              <MaterialIcons name={item.icon} size={24} color={theme.primary} />
-            </View>
+            <MaterialIcons name={item.icon} size={24} color={theme.primary} />
 
             <View style={styles.textContainer}>
               <TText
@@ -81,12 +86,5 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     flex: 1,
     marginLeft: 16,
-  },
-  iconCircle: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    justifyContent: "center",
-    alignItems: "center",
   },
 });
