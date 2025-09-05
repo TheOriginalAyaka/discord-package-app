@@ -128,7 +128,7 @@ export default function Toggle({
 
   const backgroundColor = backgroundAnim.interpolate({
     inputRange: [0, 1],
-    outputRange: [theme.secondary, theme.accent],
+    outputRange: [theme.surface, theme.accent],
   });
 
   return (
@@ -162,7 +162,7 @@ export default function Toggle({
                 },
               ]}
             >
-              <MaterialIcons name="close" size={16} color={theme.primary} />
+              <MaterialIcons name="close" size={16} color={theme.surface} />
             </Animated.View>
 
             <Animated.View

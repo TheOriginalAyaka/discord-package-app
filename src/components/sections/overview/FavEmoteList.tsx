@@ -1,7 +1,7 @@
 import { Image, StyleSheet, View } from "react-native";
 import type { ExtractedData } from "@/modules/dpkg-module";
-import { TText } from "../../theme";
-import { TableRow, TableRowGroup } from "../ui";
+import { TableRow, TableRowGroup } from "@/src/components/ui";
+import { TText } from "@/src/theme";
 
 function extractEmote(
   emojiString: string,

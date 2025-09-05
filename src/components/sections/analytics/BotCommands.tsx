@@ -2,8 +2,8 @@ import { StyleSheet, View } from "react-native";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import type { EventCount } from "@/modules/dpkg-module";
-import { TText, useTheme } from "../../theme";
-import { TableRow, TableRowGroup } from "../ui";
+import { TableRow, TableRowGroup } from "@/src/components/ui";
+import { TText, useTheme } from "@/src/theme";
 
 export function BotCommands({ analytics }: { analytics: EventCount }) {
   const { theme } = useTheme();
@@ -20,14 +20,7 @@ export function BotCommands({ analytics }: { analytics: EventCount }) {
       >
         <TableRow>
           <View style={styles.tableRowContent}>
-            <View
-              style={[
-                styles.iconCircle,
-                { backgroundColor: `${theme.primary}20` },
-              ]}
-            >
-              <MaterialIcons name="terminal" size={24} color={theme.primary} />
-            </View>
+            <MaterialIcons name="terminal" size={24} color={theme.primary} />
 
             <View style={styles.textContainer}>
               <TText
@@ -65,14 +58,7 @@ export function BotCommands({ analytics }: { analytics: EventCount }) {
     >
       <TableRow>
         <View style={styles.tableRowContent}>
-          <View
-            style={[
-              styles.iconCircle,
-              { backgroundColor: `${theme.primary}20` },
-            ]}
-          >
-            <MaterialIcons name="terminal" size={24} color={theme.primary} />
-          </View>
+          <MaterialIcons name="terminal" size={24} color={theme.primary} />
 
           <View style={styles.textContainer}>
             <TText
@@ -120,14 +106,15 @@ export function BotCommands({ analytics }: { analytics: EventCount }) {
               >
                 /{command.commandName || "Unknown Command"}
               </TText>
-              {command.commandDescription && (
-                <TText
-                  variant="secondary"
-                  style={{ fontSize: 12, lineHeight: 16 }}
-                >
-                  {command.commandDescription}
-                </TText>
-              )}
+              {command.commandDescription &&
+                command.commandDescription !== "…" && (
+                  <TText
+                    variant="secondary"
+                    style={{ fontSize: 12, lineHeight: 16 }}
+                  >
+                    {command.commandDescription}
+                  </TText>
+                )}
             </View>
 
             <TText

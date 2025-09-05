@@ -1,9 +1,8 @@
-// src/components/analytics/AdditionalEvents.tsx
 import { StyleSheet, View } from "react-native";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import type { EventCount } from "@/modules/dpkg-module";
-import { TText, useTheme } from "../../theme";
-import { TableRow, TableRowGroup } from "../ui";
+import { TableRow, TableRowGroup } from "@/src/components/ui";
+import { TText, useTheme } from "@/src/theme";
 
 export function AdditionalEvents({ analytics }: { analytics: EventCount }) {
   const { theme } = useTheme();
@@ -43,14 +42,7 @@ export function AdditionalEvents({ analytics }: { analytics: EventCount }) {
       {eventItems.map((item) => (
         <TableRow key={item.label}>
           <View style={styles.tableRowContent}>
-            <View
-              style={[
-                styles.iconCircle,
-                { backgroundColor: `${theme.primary}20` },
-              ]}
-            >
-              <MaterialIcons name={item.icon} size={24} color={theme.primary} />
-            </View>
+            <MaterialIcons name={item.icon} size={24} color={theme.primary} />
 
             <View style={styles.textContainer}>
               <TText
@@ -88,12 +80,5 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     flex: 1,
     marginLeft: 16,
-  },
-  iconCircle: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    justifyContent: "center",
-    alignItems: "center",
   },
 });

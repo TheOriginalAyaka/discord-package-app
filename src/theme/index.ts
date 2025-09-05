@@ -1,8 +1,8 @@
 export * from "./colors";
-export * from "./ThemeProvider";
 export * from "./components";
-export * from "./utils";
 export * from "./fonts";
+export * from "./ThemeProvider";
+export * from "./utils";
 
 // avoid conflicts
 export {

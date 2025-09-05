@@ -10,7 +10,7 @@ import {
   FavEmoteList,
   FavTextList,
   ProfileList,
-} from "@/src/components";
+} from "@/src/components/sections";
 import { Header, useToast } from "@/src/components/ui";
 import { useDiscordContext } from "@/src/context/DiscordContext";
 import type { RootStackParamList } from "@/src/navigation/types";
@@ -71,7 +71,7 @@ export function OverviewScreen() {
     if (!wasLoading && isLoadingAnalytics) {
       showToast({
         icon: "hourglass-empty",
-        text: "Processing analytics",
+        text: "Processing analytics...",
       });
     }
 
@@ -98,7 +98,7 @@ export function OverviewScreen() {
   const handleBackPress = useCallback(() => {
     if (isLoadingAnalytics) {
       Alert.alert(
-        "Processing Analytics",
+        "Analytics is still processing",
         "Analytics are still being processed in the background. Do you want to stop and go back?",
         [
           {
@@ -145,7 +145,7 @@ export function OverviewScreen() {
       e.preventDefault();
 
       Alert.alert(
-        "Processing Analytics",
+        "Analytics is still processing",
         "Analytics are still being processed in the background. Do you want to stop and go back?",
         [
           {
