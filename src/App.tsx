@@ -7,7 +7,12 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 import { ToastProvider } from "./components/ui";
 import { DiscordProvider } from "./context/DiscordContext";
 import type { RootStackParamList } from "./navigation/types";
-import { AnalyticsScreen, OverviewScreen, WelcomeScreen } from "./screens";
+import {
+  AnalyticsScreen,
+  OverviewScreen,
+  SettingsScreen,
+  WelcomeScreen,
+} from "./screens";
 import { ThemeProvider, useTheme } from "./theme";
 import { useCustomFonts } from "./theme/fonts";
 
@@ -35,6 +40,7 @@ function AppNavigator() {
       <Stack.Screen name="Welcome" component={WelcomeScreen} />
       <Stack.Screen name="Overview" component={OverviewScreen} />
       <Stack.Screen name="Analytics" component={AnalyticsScreen} />
+      <Stack.Screen name="Settings" component={SettingsScreen} />
     </Stack.Navigator>
   );
 }
