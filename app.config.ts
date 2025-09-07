@@ -5,6 +5,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   slug: "discord-package-app",
   name: "Discord package explorer",
   extra: {
+    ...config.extra,
     commitHash: process.env.COMMIT_HASH_SHORT,
     releaseChannel: process.env.RELEASE_CHANNEL,
   },
