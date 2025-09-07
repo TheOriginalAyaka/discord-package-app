@@ -1,6 +1,6 @@
 {
   "name": "discord-package-app",
-  "version": "0.5.4",
+  "version": "0.5.5",
   "main": "index.ts",
   "author": {
     "name": "TheOriginalAyaka"
@@ -36,7 +36,8 @@
     "react-native-safe-area-context": "5.4.0",
     "react-native-screens": "~4.11.1",
     "react-native-vector-icons": "^10.3.0",
-    "expo-clipboard": "~7.1.5"
+    "expo-clipboard": "~7.1.5",
+    "expo-constants": "~17.1.7"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",

@@ -20,6 +20,9 @@ jobs:
       - name: Setup repo
         uses: actions/checkout@v4
 
+      - name: Set short commit hash
+        run: echo "COMMIT_HASH_SHORT=${GITHUB_SHA::7}" >> $GITHUB_ENV
+
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
@@ -60,6 +63,9 @@ jobs:
 
       - name: Build the app
         run: eas build --platform ios --non-interactive --local --profile production --output ./build.ipa
+        env:
+          COMMIT_HASH_SHORT: ${{ env.COMMIT_HASH_SHORT }}
+          RELEASE_CHANNEL: ${{ inputs.release_type }}
 
       - name: Submit the build
         run: eas submit --platform ios --non-interactive --profile ${{ inputs.release_type }} --no-wait --path ./build.ipa

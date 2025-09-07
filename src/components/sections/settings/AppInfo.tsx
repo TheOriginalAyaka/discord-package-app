@@ -1,5 +1,6 @@
 import * as Application from "expo-application";
 import * as Clipboard from "expo-clipboard";
+import Constants from "expo-constants";
 import { StyleSheet, View } from "react-native";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
@@ -20,16 +21,16 @@ const appInfoData = [
     iconType: "material-community",
   },
   {
-    label: "Bundle ID",
-    value: Application.applicationId || "Unknown",
-    icon: "apps",
+    label: "Commit Hash",
+    value: Constants.expoConfig?.extra?.commitHash || "Unknown",
+    icon: "commit",
     iconType: "material",
   },
   {
-    label: "Framework",
-    value: "Expo",
-    icon: "image-filter-center-focus-weak",
-    iconType: "material-community",
+    label: "Release Channel",
+    value: Constants.expoConfig?.extra?.releaseChannel || "Unknown",
+    icon: "hub",
+    iconType: "material",
   },
 ];
 

@@ -20,6 +20,9 @@ jobs:
       - name: Setup repo
         uses: actions/checkout@v4
 
+      - name: Set short commit hash
+        run: echo "COMMIT_HASH_SHORT=${GITHUB_SHA::7}" >> $GITHUB_ENV
+
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
@@ -58,6 +61,9 @@ jobs:
 
       - name: Build the app
         run: eas build --platform android --non-interactive --local --profile production --output ./build.aab
+        env:
+          COMMIT_HASH_SHORT: ${{ env.COMMIT_HASH_SHORT }}
+          RELEASE_CHANNEL: ${{ inputs.release_type }}
 
       - name: Submit the build
         run: eas submit --platform android --non-interactive --profile ${{ inputs.release_type }} --no-wait --path ./build.aab
