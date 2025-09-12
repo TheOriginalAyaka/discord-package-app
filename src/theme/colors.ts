@@ -25,7 +25,7 @@ export const lightTheme = {
 export const darkTheme = {
   background: "#1b1d23",
   foreground: "#262730",
-  surface: "#262730",
+  surface: "#4E5058",
 
   primary: "#ffffff",
   secondary: "rgba(255, 255, 255, 0.8)",

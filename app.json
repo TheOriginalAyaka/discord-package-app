@@ -2,7 +2,7 @@
   "expo": {
     "name": "Discord package explorer",
     "slug": "discord-package-app",
-    "version": "0.5.6",
+    "version": "0.5.7",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
