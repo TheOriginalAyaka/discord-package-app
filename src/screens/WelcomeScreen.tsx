@@ -1,9 +1,13 @@
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { ImageBackground } from "expo-image";
 import { StatusBar } from "expo-status-bar";
 import { useCallback, useEffect, useState } from "react";
-import { ActivityIndicator, StyleSheet, View } from "react-native";
+import {
+  ActivityIndicator,
+  ImageBackground,
+  StyleSheet,
+  View,
+} from "react-native";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import { Button, ButtonText } from "../components/ui";
 import { useDiscordContext } from "../context/DiscordContext";
@@ -25,42 +29,29 @@ export function WelcomeScreen() {
   const navigation = useNavigation<NavigationProp>();
   const [showLoading, setshowLoading] = useState(false);
 
-  // when screen comes into focus, this will trigger
-  // https://reactnavigation.org/docs/use-focus-effect/
   useFocusEffect(
     useCallback(() => {
-      return () => {
-        setshowLoading(false);
-      };
+      return () => setshowLoading(false);
     }, []),
   );
 
-  // when the screen is focused (for navigation back)
   useEffect(() => {
     const unsubscribe = navigation.addListener("focus", () => {
-      // if we aren't actively loading and there is no data processing, reset the loading state
-      if (!isLoadingUserData) {
-        setshowLoading(false);
-      }
+      if (!isLoadingUserData) setshowLoading(false);
     });
-
     return unsubscribe;
   }, [navigation, isLoadingUserData]);
 
   useEffect(() => {
-    if (isLoadingUserData) {
-      setshowLoading(true);
-    }
+    if (isLoadingUserData) setshowLoading(true);
   }, [isLoadingUserData]);
 
   useEffect(() => {
     if (data && !isLoadingUserData && showLoading) {
       const timer = setTimeout(() => {
-        // reset loading state before nav
         setshowLoading(false);
         navigation.navigate("Overview", { data });
       }, 100);
-
       return () => clearTimeout(timer);
     }
   }, [data, isLoadingUserData, showLoading, navigation]);
@@ -74,7 +65,6 @@ export function WelcomeScreen() {
     return (
       <TView variant="background" style={{ flex: 1 }}>
         <StatusBar style={isDark ? "light" : "dark"} />
-
         <View style={styles.loadingContainer}>
           <View style={styles.loadingContent}>
             <View style={styles.loadingIconContainer}>
@@ -84,7 +74,6 @@ export function WelcomeScreen() {
                 style={styles.spinner}
               />
             </View>
-
             <TText
               variant="primary"
               weight="medium"
@@ -92,14 +81,12 @@ export function WelcomeScreen() {
             >
               {!isLoadingUserData && data ? "Finalizing data..." : progress}
             </TText>
-
             <TText variant="muted" style={styles.hintText}>
               {!isLoadingUserData && data
                 ? "Almost there..."
                 : "This may take a moment..."}
             </TText>
           </View>
-
           <View style={styles.cancelButtonContainer}>
             <Button variant="secondary" onPress={handleCancel}>
               <ButtonText weight="semibold">Cancel</ButtonText>
@@ -111,36 +98,42 @@ export function WelcomeScreen() {
   }
 
   return (
-    <ImageBackground source={require("@/assets/bg.webp")} style={{ flex: 1 }}>
+    <ImageBackground
+      source={require("@/assets/bg.webp")}
+      style={{ flex: 1 }}
+      resizeMode="cover"
+    >
       <StatusBar style={isDark ? "light" : "dark"} />
-
       <View style={styles.content}>
         <View style={styles.centerSection}>
-          <View style={[styles.iconBadge]}>
+          <View style={styles.iconBadge}>
             <MaterialIcons name="discord" size={100} color="#ffffff" />
           </View>
-
           <TTitle style={styles.title}>Data Package Analyzer</TTitle>
           <TText style={styles.subtitle} variant="primary">
             Analyze your Discord data package and understand your data better.
           </TText>
         </View>
-
-        <View style={styles.buttonsContainer}>
-          <Button
-            variant="secondary"
-            onPress={useMockData}
-            disabled={isLoadingUserData}
-          >
-            <ButtonText weight="semibold">View Demo</ButtonText>
-          </Button>
-          <Button
-            variant="primary"
-            onPress={pickAndProcessFile}
-            disabled={isLoadingUserData}
-          >
-            <ButtonText weight="semibold">Choose Package</ButtonText>
-          </Button>
+        <View style={styles.footer}>
+          <View style={styles.buttonsContainer}>
+            <Button
+              variant="secondary"
+              onPress={useMockData}
+              disabled={isLoadingUserData}
+            >
+              <ButtonText weight="semibold">View Demo</ButtonText>
+            </Button>
+            <Button
+              variant="primary"
+              onPress={pickAndProcessFile}
+              disabled={isLoadingUserData}
+            >
+              <ButtonText weight="semibold">Choose Package</ButtonText>
+            </Button>
+          </View>
+          <TText variant="muted" style={{ textAlign: "center" }}>
+            Not affiliated with Discord Inc.
+          </TText>
         </View>
       </View>
     </ImageBackground>
@@ -184,13 +177,16 @@ const styles = StyleSheet.create({
     lineHeight: 20,
   },
   buttonsContainer: {
-    position: "absolute",
-    bottom: 40,
-    left: 24,
-    right: 24,
     gap: 12,
     marginHorizontal: 16,
     alignItems: "center",
+  },
+  footer: {
+    position: "absolute",
+    bottom: 20,
+    left: 24,
+    right: 24,
+    gap: 8,
   },
   loadingContainer: {
     flex: 1,

@@ -1,4 +1,5 @@
-import { StyleSheet } from "react-native";
+import { Platform, StyleSheet, TouchableOpacity, View } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import { TText, TView, useTheme } from "@/src/theme";
 
@@ -16,28 +17,53 @@ export default function Header({
   extraIcon,
 }: HeaderProps) {
   const { theme } = useTheme();
+  const insets = useSafeAreaInsets();
+
   return (
-    <TView style={styles.header}>
-      {onBack && (
-        <MaterialIcons
-          name="arrow-back"
-          size={24}
-          color={theme.secondary}
+    <TView
+      style={[
+        styles.header,
+        {
+          paddingTop: insets.top + 12,
+          backgroundColor: theme.background,
+          ...(Platform.OS === "android"
+            ? {
+                elevation: 8,
+              }
+            : // ios
+              {
+                borderBottomWidth: StyleSheet.hairlineWidth,
+                borderBottomColor: theme.border,
+              }),
+        },
+      ]}
+    >
+      {onBack ? (
+        <TouchableOpacity
           onPress={onBack}
-        />
+          hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+          style={styles.iconButton}
+        >
+          <MaterialIcons name="arrow-back" size={24} color={theme.secondary} />
+        </TouchableOpacity>
+      ) : (
+        <View style={styles.iconButton} />
       )}
+
       <TText variant="primary" style={styles.headerTitle} weight="bold">
         {title}
       </TText>
+
       {onExtra && extraIcon ? (
-        <MaterialIcons
-          name={extraIcon}
-          size={24}
-          color={theme.secondary}
+        <TouchableOpacity
           onPress={onExtra}
-        />
+          hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+          style={styles.iconButton}
+        >
+          <MaterialIcons name={extraIcon} size={24} color={theme.secondary} />
+        </TouchableOpacity>
       ) : (
-        <TView style={{ width: 24 }} />
+        <View style={styles.iconButton} />
       )}
     </TView>
   );
@@ -48,13 +74,20 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    padding: 12,
-    paddingTop: 60,
+    paddingHorizontal: 12,
+    paddingBottom: 12,
     minHeight: 60,
   },
   headerTitle: {
-    fontSize: 16,
+    fontSize: 20,
     flex: 1,
-    textAlign: "center",
+    textAlign: "left",
+    marginLeft: 24,
+  },
+  iconButton: {
+    width: 24,
+    height: 24,
+    alignItems: "center",
+    justifyContent: "center",
   },
 });

@@ -1,5 +1,3 @@
-import { useNavigation } from "@react-navigation/native";
-import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { StatusBar } from "expo-status-bar";
 import { ScrollView, View } from "react-native";
 import {
@@ -7,24 +5,19 @@ import {
   AppInfo,
   CreditsSection,
   DeviceInfo,
+  SupportSection,
 } from "@/src/components/sections";
-import { Header } from "@/src/components/ui";
-import type { RootStackParamList } from "@/src/navigation/types";
 import { TView, useTheme } from "@/src/theme";
-
-type NavigationProp = NativeStackNavigationProp<RootStackParamList, "Settings">;
 
 export function SettingsScreen() {
   const { isDark } = useTheme();
-  const navigation = useNavigation<NavigationProp>();
 
   return (
     <TView variant="background" style={{ flex: 1 }}>
-      <Header title="Settings" onBack={() => navigation.goBack()} />
-
-      <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
+      <ScrollView style={{ flex: 1, paddingTop: 16 }}>
         <AppearanceSection />
         <CreditsSection />
+        <SupportSection />
         <AppInfo />
         <DeviceInfo />
 

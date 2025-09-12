@@ -4,7 +4,7 @@ import * as SplashScreen from "expo-splash-screen";
 import * as SystemUI from "expo-system-ui";
 import { useEffect } from "react";
 import { SafeAreaProvider } from "react-native-safe-area-context";
-import { ToastProvider } from "./components/ui";
+import { Header, ToastProvider } from "./components/ui";
 import { DiscordProvider } from "./context/DiscordContext";
 import type { RootStackParamList } from "./navigation/types";
 import {
@@ -30,17 +30,49 @@ function AppNavigator() {
   return (
     <Stack.Navigator
       screenOptions={{
-        headerShown: false,
+        // custom header
+        header: ({ navigation, route, options, back }) => {
+          if (route.name === "Welcome") return null;
+
+          return (
+            <Header
+              title={options.title ?? route.name}
+              onBack={back ? () => navigation.goBack() : undefined}
+              onExtra={
+                route.name === "Overview"
+                  ? () => navigation.navigate("Settings")
+                  : undefined
+              }
+              extraIcon={route.name === "Overview" ? "settings" : undefined}
+            />
+          );
+        },
         contentStyle: {
           backgroundColor: theme.background,
         },
       }}
       initialRouteName="Welcome"
     >
-      <Stack.Screen name="Welcome" component={WelcomeScreen} />
-      <Stack.Screen name="Overview" component={OverviewScreen} />
-      <Stack.Screen name="Analytics" component={AnalyticsScreen} />
-      <Stack.Screen name="Settings" component={SettingsScreen} />
+      <Stack.Screen
+        name="Welcome"
+        component={WelcomeScreen}
+        options={{ headerShown: false, headerBackButtonMenuEnabled: false }}
+      />
+      <Stack.Screen
+        name="Overview"
+        component={OverviewScreen}
+        options={{ title: "Overview" }}
+      />
+      <Stack.Screen
+        name="Analytics"
+        component={AnalyticsScreen}
+        options={{ title: "Analytics" }}
+      />
+      <Stack.Screen
+        name="Settings"
+        component={SettingsScreen}
+        options={{ title: "Settings" }}
+      />
     </Stack.Navigator>
   );
 }

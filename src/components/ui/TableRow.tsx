@@ -1,8 +1,8 @@
-import React, { useEffect, useRef, useState } from "react";
+import React from "react";
 import {
-  Animated,
+  Platform,
+  Pressable,
   StyleSheet,
-  TouchableWithoutFeedback,
   View,
   type ViewStyle,
 } from "react-native";
@@ -28,83 +28,51 @@ export function TableRow({
   disabled = false,
   onPress,
 }: TableRowProps) {
-  const [isPressed, setIsPressed] = useState(false);
   const { theme } = useTheme();
 
-  const animatedValue = useRef(new Animated.Value(0)).current;
-
-  useEffect(() => {
-    Animated.timing(animatedValue, {
-      toValue: isPressed ? 1 : 0,
-      // backgroundColor cant use native driver
-      duration: 70,
-      useNativeDriver: false,
-    }).start();
-  }, [isPressed, animatedValue]);
-
-  const handlePressIn = () => {
-    if (!disabled) {
-      setIsPressed(true);
-    }
-  };
-
-  const handlePressOut = () => {
-    setIsPressed(false);
-  };
-
-  const handlePress = () => {
-    if (!disabled && onPress) {
-      onPress();
-    }
-  };
-
-  const backgroundColor = animatedValue.interpolate({
-    inputRange: [0, 1],
-    outputRange: [theme.card, theme.cardPressed],
-  });
-
   const content = (
-    <View
-      style={[
-        disabled && styles.disabled,
-        { flex: 1, flexDirection: "row", alignItems: "center" },
-      ]}
-    >
+    <View style={[styles.contentWrapper, disabled && { opacity: 0.5 }]}>
       {children}
     </View>
   );
 
+  const shapeStyle = style || styles.singleRow;
+
   if (onPress && !disabled) {
+    // outer wrapper owns border radius + clipping
+    // android ripple stays inside that way
+    // discord literally just make the border radius rounded in all corners for the ripple
+    // discord, if you are reading this, fix your shit
     return (
-      <TouchableWithoutFeedback
-        onPressIn={handlePressIn}
-        onPressOut={handlePressOut}
-        onPress={handlePress}
-      >
-        <Animated.View
-          style={[
+      <View style={[shapeStyle, { overflow: "hidden" }]}>
+        <Pressable
+          onPress={onPress}
+          android_ripple={
+            Platform.OS === "android"
+              ? { color: theme.cardPressed, borderless: false }
+              : undefined
+          }
+          style={({ pressed }) => [
             styles.tableRow,
-            { backgroundColor },
-            styles.singleRow,
-            style,
+            {
+              backgroundColor:
+                Platform.OS === "ios"
+                  ? pressed
+                    ? theme.cardPressed
+                    : theme.card
+                  : theme.card,
+            },
           ]}
         >
           {content}
-        </Animated.View>
-      </TouchableWithoutFeedback>
+        </Pressable>
+      </View>
     );
   }
 
   return (
-    <View
-      style={[
-        styles.tableRow,
-        { backgroundColor: theme.card },
-        styles.singleRow,
-        style,
-      ]}
-    >
-      {content}
+    <View style={[shapeStyle, { backgroundColor: theme.card }]}>
+      <View style={styles.tableRow}>{content}</View>
     </View>
   );
 }
@@ -120,9 +88,7 @@ export function TableRowGroup({
   const totalChildren = childrenArray.length;
 
   const enhancedChildren = childrenArray.map((child, index) => {
-    if (!React.isValidElement(child)) {
-      return child;
-    }
+    if (!React.isValidElement(child)) return child;
 
     let positionStyle: ViewStyle;
     if (totalChildren === 1) {
@@ -135,6 +101,10 @@ export function TableRowGroup({
       positionStyle = { ...styles.middleRow, borderTopColor: theme.divider };
     }
 
+    if (index === 0 && (title || description)) {
+      positionStyle = { ...positionStyle, marginTop: 8 };
+    }
+
     const existingStyle = (child.props as { style?: ViewStyle | ViewStyle[] })
       ?.style;
     const combinedStyle = existingStyle
@@ -145,31 +115,33 @@ export function TableRowGroup({
 
     return React.cloneElement(
       child as React.ReactElement<{ style?: ViewStyle | ViewStyle[] }>,
-      {
-        style: combinedStyle,
-      },
+      { style: combinedStyle },
     );
   });
 
   return (
     <View style={[{ marginBottom: 24 }, style]}>
-      {title && (
-        <TText
-          variant="primary"
-          style={[styles.groupTitle, { color: theme.secondary }]}
-          weight="medium"
-        >
-          {title}
-        </TText>
-      )}
-      {description && (
-        <TText
-          variant="secondary"
-          style={[styles.groupDescription, { color: theme.tertiary }]}
-          weight="regular"
-        >
-          {description}
-        </TText>
+      {(title || description) && (
+        <View style={{ marginHorizontal: 12 }}>
+          {title && (
+            <TText
+              variant="primary"
+              style={[{ fontSize: 14 }, { color: theme.secondary }]}
+              weight="medium"
+            >
+              {title}
+            </TText>
+          )}
+          {description && (
+            <TText
+              variant="secondary"
+              style={[{ fontSize: 12 }, { color: theme.tertiary }]}
+              weight="regular"
+            >
+              {description}
+            </TText>
+          )}
+        </View>
       )}
       {enhancedChildren}
     </View>
@@ -177,24 +149,15 @@ export function TableRowGroup({
 }
 
 const styles = StyleSheet.create({
-  groupTitle: {
-    fontSize: 14,
-    marginBottom: 4,
-    marginHorizontal: 12,
-  },
-  groupDescription: {
-    fontSize: 12,
-    marginBottom: 8,
-    marginHorizontal: 12,
-  },
-  // per item
   tableRow: {
     paddingHorizontal: 12,
     paddingVertical: 12,
+    minHeight: 60,
+  },
+  contentWrapper: {
+    flex: 1,
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "flex-start",
-    minHeight: 60,
   },
   singleRow: {
     borderRadius: 16,
@@ -214,9 +177,7 @@ const styles = StyleSheet.create({
     borderRadius: 0,
     marginVertical: 0,
     marginHorizontal: 8,
-    paddingLeft: 12,
     borderTopWidth: 1,
-    borderTopColor: "rgba(0, 0, 0, 0.05)",
   },
   lastRow: {
     borderTopLeftRadius: 0,
@@ -226,11 +187,6 @@ const styles = StyleSheet.create({
     marginBottom: 1,
     marginHorizontal: 8,
     marginTop: 0,
-    paddingLeft: 12,
     borderTopWidth: 1,
-    borderTopColor: "rgba(0, 0, 0, 0.05)",
-  },
-  disabled: {
-    opacity: 0.5,
   },
 });

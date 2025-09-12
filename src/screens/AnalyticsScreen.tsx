@@ -10,7 +10,6 @@ import {
   SecurityAnalytics,
   VoiceAnalytics,
 } from "@/src/components/sections";
-import { Header } from "@/src/components/ui";
 import { useDiscordContext } from "@/src/context/DiscordContext";
 import type { RootStackParamList } from "@/src/navigation/types";
 import { TText, TView, useTheme } from "@/src/theme";
@@ -26,7 +25,7 @@ export function AnalyticsScreen() {
   const { analytics } = useDiscordContext();
 
   if (!analytics) {
-    navigation.navigate("Welcome");
+    navigation.popToTop();
     return null;
   }
 
@@ -39,9 +38,13 @@ export function AnalyticsScreen() {
 
   return (
     <TView variant="background" style={{ flex: 1 }}>
-      <Header title="Analytics" onBack={() => navigation.goBack()} />
-
-      <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
+      <ScrollView
+        style={{
+          flex: 1,
+          paddingTop: 16,
+        }}
+        showsVerticalScrollIndicator={false}
+      >
         {/* card thingy */}
         <View style={[styles.summaryCard]}>
           <View style={{ alignItems: "center", marginBottom: 4 }}>
@@ -111,12 +114,8 @@ export function AnalyticsScreen() {
 }
 
 const styles = StyleSheet.create({
-  content: {
-    flex: 1,
-  },
   summaryCard: {
     margin: 12,
-    padding: 20,
     borderRadius: 16,
     alignItems: "center",
   },

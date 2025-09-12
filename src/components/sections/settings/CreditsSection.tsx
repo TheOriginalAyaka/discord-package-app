@@ -1,22 +1,22 @@
-import { Image, Linking, StyleSheet, View } from "react-native";
-import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import { Image, StyleSheet, View } from "react-native";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import { TableRow, TableRowGroup } from "@/src/components/ui";
+import { handleLinkPress } from "@/src/lib/utils";
 import { TText, useTheme } from "@/src/theme";
 
 const developers = [
   {
-    githubUsername: "theoriginalayaka",
+    githubName: "theoriginalayaka",
     displayName: "TheOriginalAyaka",
     role: "Developer",
   },
   {
-    githubUsername: "thereallo1026",
+    githubName: "thereallo1026",
     displayName: "Thereallo",
     role: "Designer",
   },
   {
-    githubUsername: "arikatsu",
+    githubName: "arikatsu",
     displayName: "Arikatsu",
     role: "Developer",
   },
@@ -25,20 +25,16 @@ const developers = [
 export function CreditsSection() {
   const { theme } = useTheme();
 
-  const handleLinkPress = (url: string) => {
-    Linking.openURL(url);
-  };
-
   return (
     <TableRowGroup
       title="Credits"
-      description="People who made this app possible"
+      description="Creators and contributors who made this app possible"
     >
       {developers.map((dev) => (
         <TableRow
-          key={dev.githubUsername}
+          key={dev.githubName}
           onPress={() =>
-            handleLinkPress(`https://github.com/${dev.githubUsername}`)
+            handleLinkPress(`https://github.com/${dev.githubName}`)
           }
         >
           <View
@@ -49,7 +45,7 @@ export function CreditsSection() {
           >
             <Image
               source={{
-                uri: `https://wsrv.nl/?url=https://github.com/${dev.githubUsername}.png&w=80&h=80&output=webp`,
+                uri: `https://wsrv.nl/?url=https://github.com/${dev.githubName}.png&w=80&h=80&output=webp`,
               }}
               style={styles.avatar}
               resizeMode="cover"
@@ -86,42 +82,6 @@ export function CreditsSection() {
           </View>
         </TableRow>
       ))}
-
-      <TableRow
-        onPress={() =>
-          handleLinkPress(
-            "https://github.com/theoriginalayaka/discord-package-app",
-          )
-        }
-      >
-        <View
-          style={{
-            flexDirection: "row",
-            alignItems: "center",
-          }}
-        >
-          <MaterialCommunityIcons
-            name="github"
-            size={24}
-            color={theme.primary}
-          />
-
-          <View style={styles.textContainer}>
-            <TText
-              variant="primary"
-              weight="semibold"
-              style={{ fontSize: 16, lineHeight: 20 }}
-            >
-              View Source
-            </TText>
-            <TText variant="secondary" style={{ fontSize: 12, lineHeight: 16 }}>
-              theoriginalayaka/discord-package-app
-            </TText>
-          </View>
-
-          <MaterialIcons name="open-in-new" size={20} color={theme.secondary} />
-        </View>
-      </TableRow>
     </TableRowGroup>
   );
 }
