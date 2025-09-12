@@ -128,6 +128,7 @@ export function DiscordProvider({ children }: { children: ReactNode }) {
         setAnalytics(undefined);
         setProgress("Loading user data...");
         setExtractionId(extId);
+        setAnalyticsError(null);
       }
     }
   };

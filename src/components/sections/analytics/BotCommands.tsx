@@ -28,13 +28,13 @@ export function BotCommands({ analytics }: { analytics: EventCount }) {
                 weight="semibold"
                 style={{ fontSize: 16, lineHeight: 20 }}
               >
-                Total Commands Used
+                Slash Commands
               </TText>
               <TText
                 variant="secondary"
                 style={{ fontSize: 12, lineHeight: 16 }}
               >
-                All slash commands executed
+                Top commands you have used on Discord
               </TText>
             </View>
 

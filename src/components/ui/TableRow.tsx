@@ -87,20 +87,34 @@ export function TableRowGroup({
   const childrenArray = React.Children.toArray(children);
   const totalChildren = childrenArray.length;
 
+  if (!title && description) {
+    throw new Error("Description cannot be used without a title");
+  }
+
   const enhancedChildren = childrenArray.map((child, index) => {
     if (!React.isValidElement(child)) return child;
 
-    let positionStyle: ViewStyle;
-    if (totalChildren === 1) {
-      positionStyle = styles.singleRow;
-    } else if (index === 0) {
-      positionStyle = styles.firstRow;
-    } else if (index === totalChildren - 1) {
-      positionStyle = { ...styles.lastRow, borderTopColor: theme.divider };
-    } else {
-      positionStyle = { ...styles.middleRow, borderTopColor: theme.divider };
-    }
+    type RowKind = "single" | "first" | "middle" | "last";
 
+    // derive a rowKind and map it to styles
+    // keeps branching in one place and style selection in another
+    const rowKind: RowKind =
+      totalChildren === 1
+        ? "single"
+        : index === 0
+          ? "first"
+          : index === totalChildren - 1
+            ? "last"
+            : "middle";
+
+    const baseStyleByKind: Record<RowKind, ViewStyle> = {
+      single: styles.singleRow,
+      first: styles.firstRow,
+      middle: { ...styles.middleRow, borderTopColor: theme.divider },
+      last: { ...styles.lastRow, borderTopColor: theme.divider },
+    };
+
+    let positionStyle = baseStyleByKind[rowKind];
     if (index === 0 && (title || description)) {
       positionStyle = { ...positionStyle, marginTop: 8 };
     }

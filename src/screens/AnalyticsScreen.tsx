@@ -43,7 +43,6 @@ export function AnalyticsScreen() {
           flex: 1,
           paddingTop: 16,
         }}
-        showsVerticalScrollIndicator={false}
       >
         {/* card thingy */}
         <View style={[styles.summaryCard]}>
@@ -116,8 +115,8 @@ export function AnalyticsScreen() {
 const styles = StyleSheet.create({
   summaryCard: {
     margin: 12,
-    borderRadius: 16,
     alignItems: "center",
+    paddingBottom: 16,
   },
   miniStats: {
     flexDirection: "row",
