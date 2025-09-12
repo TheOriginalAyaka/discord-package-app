@@ -20,7 +20,7 @@ sysinfo = { version = "0.37.0", features = ["apple-app-store", "apple-sandbox"] 
 tokio = { version = "1.47.1", features = ["full"] }
 uniffi = { version = "0.29.4", features = ["cli"] }
 uuid = { version = "1.18.1", features = ["v4"] }
-zip = "4.6.0"
+zip = "5.1.1"
 
 [build-dependencies]
 uniffi = { version = "0.29.4", features = ["build"] }
