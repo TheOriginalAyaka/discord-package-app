@@ -1,3 +1,4 @@
+import { MaterialIcons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import {
@@ -7,7 +8,6 @@ import {
   StyleSheet,
   View,
 } from "react-native";
-import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import type { EventCount, ExtractedData } from "@/modules/dpkg-module";
 import { TableRow, TableRowGroup } from "@/src/components/ui";
 import type { RootStackParamList } from "@/src/navigation/types";
@@ -216,7 +216,7 @@ export function ProfileList({
                 variant="secondary"
                 style={{ fontSize: 12, lineHeight: 16 }}
               >
-                The amount of channels you have interacted with
+                Channels you have interacted with
               </TText>
             </View>
 

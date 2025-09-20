@@ -1,29 +1,35 @@
 {
   "expo": {
-    "name": "Discord package explorer",
+    "name": "Dispackage",
     "slug": "discord-package-app",
     "version": "0.5.7",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
-    "userInterfaceStyle": "light",
-    "newArchEnabled": true,
     "splash": {
       "image": "./assets/splash-icon.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#1B1D22"
     },
+    "userInterfaceStyle": "dark",
+    "newArchEnabled": true,
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.theoriginalayaka.dpkg",
       "appleTeamId": "LX2U7VU2K4",
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false
+      },
+      "icon": {
+        "light": "./assets/ios-light.png",
+        "dark": "./assets/ios-dark.png",
+        "tinted": "./assets/ios-tinted.png"
       }
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
+        "backgroundColor": "#5865F2",
+        "monochromeImage": "./assets/adaptive-icon-monochrome.png"
       },
       "edgeToEdgeEnabled": true,
       "package": "com.theoriginalayaka.dpkg"
@@ -33,7 +39,7 @@
         "projectId": "71f1320f-8412-4f74-a631-3106bcdd1ba5"
       }
     },
-    "owner": "theoriginalayaka",
+    "owner": "ayaka-one",
     "plugins": [
       [
         "expo-font",

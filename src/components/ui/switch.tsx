@@ -1,3 +1,4 @@
+import { MaterialIcons } from "@expo/vector-icons";
 import { useEffect, useRef } from "react";
 import {
   Animated,
@@ -7,7 +8,7 @@ import {
   View,
   type ViewStyle,
 } from "react-native";
-import MaterialIcons from "react-native-vector-icons/MaterialIcons";
+
 import { useTheme } from "@/src/theme";
 
 interface ToggleProps {

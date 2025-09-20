@@ -1,8 +1,9 @@
+import { MaterialIcons } from "@expo/vector-icons";
 import { StyleSheet, View } from "react-native";
-import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import type { EventCount } from "@/modules/dpkg-module";
 import { TableRow, TableRowGroup } from "@/src/components/ui";
 import { TText, useTheme } from "@/src/theme";
+import type { MaterialIconName } from "@/src/types";
 
 export function MessageInteractions({ analytics }: { analytics: EventCount }) {
   const { theme } = useTheme();
@@ -36,7 +37,11 @@ export function MessageInteractions({ analytics }: { analytics: EventCount }) {
       {messageItems.map((item) => (
         <TableRow key={item.label}>
           <View style={styles.tableRowContent}>
-            <MaterialIcons name={item.icon} size={24} color={theme.primary} />
+            <MaterialIcons
+              name={item.icon as MaterialIconName}
+              size={24}
+              color={theme.primary}
+            />
 
             <View style={styles.textContainer}>
               <TText

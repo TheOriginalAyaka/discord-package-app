@@ -10,7 +10,9 @@ import type { RootStackParamList } from "./navigation/types";
 import {
   AnalyticsScreen,
   OverviewScreen,
+  ProcessScreen,
   SettingsScreen,
+  StartScreen,
   WelcomeScreen,
 } from "./screens";
 import { ThemeProvider, useTheme } from "./theme";
@@ -30,9 +32,10 @@ function AppNavigator() {
   return (
     <Stack.Navigator
       screenOptions={{
-        // custom header
         header: ({ navigation, route, options, back }) => {
-          if (route.name === "Welcome") return null;
+          // disable header for screens
+          const disabled = ["Welcome", "Process"];
+          if (disabled.includes(route.name)) return null;
 
           return (
             <Header
@@ -57,6 +60,16 @@ function AppNavigator() {
         name="Welcome"
         component={WelcomeScreen}
         options={{ headerShown: false, headerBackButtonMenuEnabled: false }}
+      />
+      <Stack.Screen
+        name="Start"
+        component={StartScreen}
+        options={{ title: "Configure Package" }}
+      />
+      <Stack.Screen
+        name="Process"
+        component={ProcessScreen}
+        options={{ headerShown: false, gestureEnabled: false }}
       />
       <Stack.Screen
         name="Overview"

@@ -1,11 +1,11 @@
+import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
 import * as Application from "expo-application";
 import * as Clipboard from "expo-clipboard";
 import Constants from "expo-constants";
 import { StyleSheet, View } from "react-native";
-import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
-import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import { TableRow, TableRowGroup, useToast } from "@/src/components/ui";
 import { TText, useTheme } from "@/src/theme";
+import type { MaterialCommunityIconName, MaterialIconName } from "@/src/types";
 
 const appInfoData = [
   {
@@ -43,13 +43,19 @@ export function AppInfo() {
     if (item.iconType === "material-community") {
       return (
         <MaterialCommunityIcons
-          name={item.icon}
+          name={item.icon as MaterialCommunityIconName}
           size={24}
           color={theme.primary}
         />
       );
     }
-    return <MaterialIcons name={item.icon} size={24} color={theme.primary} />;
+    return (
+      <MaterialIcons
+        name={item.icon as MaterialIconName}
+        size={24}
+        color={theme.primary}
+      />
+    );
   };
 
   return (

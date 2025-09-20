@@ -1,6 +1,6 @@
+import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
 import { StyleSheet, View } from "react-native";
-import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
-import MaterialIcons from "react-native-vector-icons/MaterialIcons";
+
 import { TableRow, TableRowGroup } from "@/src/components/ui";
 import { handleLinkPress } from "@/src/lib/utils";
 import { TText, useTheme } from "@/src/theme";
@@ -39,7 +39,11 @@ export function SupportSection() {
 
       <TableRow onPress={() => handleLinkPress("https://thereallo.dev")}>
         <View style={styles.tableRowContent}>
-          <MaterialIcons name="discord" size={24} color={theme.primary} />
+          <MaterialIcons
+            name="discord"
+            size={24}
+            color={theme.primary}
+          />
 
           <View style={styles.textContainer}>
             <TText

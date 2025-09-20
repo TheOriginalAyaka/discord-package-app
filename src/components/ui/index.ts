@@ -1,5 +1,10 @@
 export { ButtonText, default as Button } from "./button";
-export { default as Checkbox } from "./checkbox";
+export {
+  CheckboxGroup,
+  CheckboxItem,
+  default as Checkbox,
+  useCheckboxItem,
+} from "./checkbox";
 export { default as Header } from "./header";
 export { default as Toggle } from "./switch";
 export { TableRow, TableRowGroup } from "./TableRow";

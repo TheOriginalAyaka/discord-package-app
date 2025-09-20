@@ -1,6 +1,7 @@
+import { MaterialIcons } from "@expo/vector-icons";
 import { Platform, StyleSheet, TouchableOpacity, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import MaterialIcons from "react-native-vector-icons/MaterialIcons";
+
 import { TText, TView, useTheme } from "@/src/theme";
 
 interface HeaderProps {

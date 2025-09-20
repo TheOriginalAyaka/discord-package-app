@@ -1,4 +1,3 @@
-import * as DocumentPicker from "expo-document-picker";
 import {
   createContext,
   type ReactNode,
@@ -18,7 +17,7 @@ interface DiscordContextType {
   progress: string;
   isLoadingUserData: boolean;
   isLoadingAnalytics: boolean;
-  pickAndProcessFile: () => Promise<void>;
+  processFile: (uri: string, options?: { generateAnalytics?: boolean }) => void;
   useMockData: () => void;
   resetData: () => void;
   cancelProcessing: () => void;
@@ -102,34 +101,27 @@ export function DiscordProvider({ children }: { children: ReactNode }) {
     };
   }, [mockDataTimeouts]);
 
-  const pickAndProcessFile = async () => {
+  const processFile = (
+    uri: string,
+    options?: { generateAnalytics?: boolean },
+  ) => {
     if (isLoadingUserData || isLoadingAnalytics) {
-      console.log("Already loading, skipping file pick");
+      console.log("Already processing, skipping");
       return;
     }
 
-    const file = await DocumentPicker.getDocumentAsync({
-      type: "application/zip",
-      // WIP: Cacheless solution for Android
-      copyToCacheDirectory: true,
-    });
+    console.log("Processing file:", uri, "options:", options);
 
-    if (!file.canceled && file.assets[0]) {
-      console.log("uri", file.assets[0].uri);
+    const extId = dpkgModule.startExtraction(uri.replace("file://", ""));
 
-      const extId = dpkgModule.startExtraction(
-        file.assets[0].uri.replace("file://", ""),
-      );
-
-      if (extId) {
-        setIsLoadingUserData(true);
-        setIsLoadingAnalytics(false);
-        setData(undefined);
-        setAnalytics(undefined);
-        setProgress("Loading user data...");
-        setExtractionId(extId);
-        setAnalyticsError(null);
-      }
+    if (extId) {
+      setIsLoadingUserData(true);
+      setIsLoadingAnalytics(false);
+      setData(undefined);
+      setAnalytics(undefined);
+      setProgress("Loading user data...");
+      setExtractionId(extId);
+      setAnalyticsError(null);
     }
   };
 
@@ -200,7 +192,7 @@ export function DiscordProvider({ children }: { children: ReactNode }) {
     isLoadingUserData,
     isLoadingAnalytics,
     analyticsError,
-    pickAndProcessFile,
+    processFile,
     useMockData,
     resetData,
     cancelProcessing,

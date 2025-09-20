@@ -1,101 +1,28 @@
-import { useFocusEffect, useNavigation } from "@react-navigation/native";
+import { useNavigation } from "@react-navigation/native";
 import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { StatusBar } from "expo-status-bar";
-import { useCallback, useEffect, useState } from "react";
-import {
-  ActivityIndicator,
-  ImageBackground,
-  StyleSheet,
-  View,
-} from "react-native";
-import MaterialIcons from "react-native-vector-icons/MaterialIcons";
+import { ImageBackground, StyleSheet, View } from "react-native";
+import { Logo } from "@/src/components";
 import { Button, ButtonText } from "../components/ui";
 import { useDiscordContext } from "../context/DiscordContext";
 import type { RootStackParamList } from "../navigation/types";
-import { TText, TTitle, TView, useTheme } from "../theme";
+import { TText, TTitle, useTheme } from "../theme";
 
 type NavigationProp = NativeStackNavigationProp<RootStackParamList, "Welcome">;
 
 export function WelcomeScreen() {
-  const { isDark, theme } = useTheme();
-  const {
-    pickAndProcessFile,
-    useMockData,
-    data,
-    isLoadingUserData,
-    progress,
-    cancelProcessing,
-  } = useDiscordContext();
+  const { isDark } = useTheme();
+  const { useMockData: startMockData } = useDiscordContext();
   const navigation = useNavigation<NavigationProp>();
-  const [showLoading, setshowLoading] = useState(false);
 
-  useFocusEffect(
-    useCallback(() => {
-      return () => setshowLoading(false);
-    }, []),
-  );
-
-  useEffect(() => {
-    const unsubscribe = navigation.addListener("focus", () => {
-      if (!isLoadingUserData) setshowLoading(false);
-    });
-    return unsubscribe;
-  }, [navigation, isLoadingUserData]);
-
-  useEffect(() => {
-    if (isLoadingUserData) setshowLoading(true);
-  }, [isLoadingUserData]);
-
-  useEffect(() => {
-    if (data && !isLoadingUserData && showLoading) {
-      const timer = setTimeout(() => {
-        setshowLoading(false);
-        navigation.navigate("Overview", { data });
-      }, 100);
-      return () => clearTimeout(timer);
-    }
-  }, [data, isLoadingUserData, showLoading, navigation]);
-
-  const handleCancel = () => {
-    cancelProcessing();
-    setshowLoading(false);
+  const handleDemo = () => {
+    startMockData();
+    navigation.replace("Process", { mode: "demo" });
   };
 
-  if (showLoading) {
-    return (
-      <TView variant="background" style={{ flex: 1 }}>
-        <StatusBar style={isDark ? "light" : "dark"} />
-        <View style={styles.loadingContainer}>
-          <View style={styles.loadingContent}>
-            <View style={styles.loadingIconContainer}>
-              <ActivityIndicator
-                size="large"
-                color={theme.accent}
-                style={styles.spinner}
-              />
-            </View>
-            <TText
-              variant="primary"
-              weight="medium"
-              style={styles.progressText}
-            >
-              {!isLoadingUserData && data ? "Finalizing data..." : progress}
-            </TText>
-            <TText variant="muted" style={styles.hintText}>
-              {!isLoadingUserData && data
-                ? "Almost there..."
-                : "This may take a moment..."}
-            </TText>
-          </View>
-          <View style={styles.cancelButtonContainer}>
-            <Button variant="secondary" onPress={handleCancel}>
-              <ButtonText weight="semibold">Cancel</ButtonText>
-            </Button>
-          </View>
-        </View>
-      </TView>
-    );
-  }
+  const handleChoosePackage = () => {
+    navigation.navigate("Start");
+  };
 
   return (
     <ImageBackground
@@ -107,27 +34,20 @@ export function WelcomeScreen() {
       <View style={styles.content}>
         <View style={styles.centerSection}>
           <View style={styles.iconBadge}>
-            <MaterialIcons name="discord" size={100} color="#ffffff" />
+            <Logo width={100} height={100} />
           </View>
-          <TTitle style={styles.title}>Data Package Analyzer</TTitle>
-          <TText style={styles.subtitle} variant="primary">
-            Analyze your Discord data package and understand your data better.
+          <TTitle style={styles.title}>Welcome To Dispackage</TTitle>
+          <TText style={styles.subtitle} variant="primary" weight="medium">
+            Analyze your Discord data package, get insights, and understand your
+            data better.
           </TText>
         </View>
         <View style={styles.footer}>
           <View style={styles.buttonsContainer}>
-            <Button
-              variant="secondary"
-              onPress={useMockData}
-              disabled={isLoadingUserData}
-            >
-              <ButtonText weight="semibold">View Demo</ButtonText>
+            <Button variant="secondary" onPress={handleDemo}>
+              <ButtonText weight="semibold">Try Demo</ButtonText>
             </Button>
-            <Button
-              variant="primary"
-              onPress={pickAndProcessFile}
-              disabled={isLoadingUserData}
-            >
+            <Button variant="primary" onPress={handleChoosePackage}>
               <ButtonText weight="semibold">Choose Package</ButtonText>
             </Button>
           </View>
@@ -187,38 +107,5 @@ const styles = StyleSheet.create({
     left: 24,
     right: 24,
     gap: 8,
-  },
-  loadingContainer: {
-    flex: 1,
-    justifyContent: "space-between",
-    paddingHorizontal: 24,
-  },
-  loadingContent: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-    padding: 32,
-  },
-  loadingIconContainer: {
-    width: 72,
-    height: 72,
-    marginBottom: 24,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  spinner: {
-    transform: [{ scale: 1.5 }],
-  },
-  progressText: {
-    fontSize: 16,
-    textAlign: "center",
-    marginBottom: 8,
-  },
-  hintText: {
-    fontSize: 14,
-    textAlign: "center",
-  },
-  cancelButtonContainer: {
-    paddingBottom: 40,
   },
 });

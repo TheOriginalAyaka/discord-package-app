@@ -1,5 +1,6 @@
+import { MaterialIcons } from "@expo/vector-icons";
 import { StyleSheet, View } from "react-native";
-import MaterialIcons from "react-native-vector-icons/MaterialIcons";
+
 import { TableRow, TableRowGroup, Toggle } from "@/src/components/ui";
 import { TText, useTheme, useThemeControls } from "@/src/theme";
 
