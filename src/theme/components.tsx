@@ -4,7 +4,7 @@ import {
   View as RNView,
   type ViewProps as RNViewProps,
 } from "react-native";
-import { getFontStyle } from "./fonts";
+import { FONT_FAMILY, getFontStyle } from "./fonts";
 import { useTheme } from "./ThemeProvider";
 
 type ColorVariant = "primary" | "secondary" | "tertiary" | "muted" | "accent";
@@ -40,7 +40,12 @@ export function Text({
 
   const fontStyle = getFontStyle(weight);
 
-  return <RNText style={[{ color: textColor }, fontStyle, style]} {...props} />;
+  return (
+    <RNText
+      style={[{ color: textColor, fontFamily: FONT_FAMILY }, fontStyle, style]}
+      {...props}
+    />
+  );
 }
 
 export function View({

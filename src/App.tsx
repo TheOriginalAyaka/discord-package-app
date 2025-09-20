@@ -1,6 +1,5 @@
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import * as SplashScreen from "expo-splash-screen";
 import * as SystemUI from "expo-system-ui";
 import { useEffect } from "react";
 import { SafeAreaProvider } from "react-native-safe-area-context";
@@ -16,9 +15,8 @@ import {
   WelcomeScreen,
 } from "./screens";
 import { ThemeProvider, useTheme } from "./theme";
-import { useCustomFonts } from "./theme/fonts";
 
-SplashScreen.preventAutoHideAsync();
+// rely on app.json splash, do not control it manually here
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -91,18 +89,6 @@ function AppNavigator() {
 }
 
 export default function App() {
-  const fontsLoaded = useCustomFonts();
-
-  useEffect(() => {
-    if (fontsLoaded) {
-      SplashScreen.hideAsync();
-    }
-  }, [fontsLoaded]);
-
-  if (!fontsLoaded) {
-    return null;
-  }
-
   return (
     <SafeAreaProvider>
       <ThemeProvider defaultMode="dark">

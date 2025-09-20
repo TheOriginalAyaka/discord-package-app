@@ -5,11 +5,6 @@
     "version": "0.5.7",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
-    "splash": {
-      "image": "./assets/splash-icon.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#1B1D22"
-    },
     "userInterfaceStyle": "dark",
     "newArchEnabled": true,
     "ios": {
@@ -54,11 +49,69 @@
                     "weight": 800
                   }
                 ]
+              },
+              {
+                "fontFamily": "ggsans-Regular",
+                "fontDefinitions": [
+                  {
+                    "path": "./assets/fonts/ggsans_regular.ttf",
+                    "weight": 400
+                  }
+                ]
+              },
+              {
+                "fontFamily": "ggsans-Medium",
+                "fontDefinitions": [
+                  {
+                    "path": "./assets/fonts/ggsans_medium.ttf",
+                    "weight": 500
+                  }
+                ]
+              },
+              {
+                "fontFamily": "ggsans-Semibold",
+                "fontDefinitions": [
+                  {
+                    "path": "./assets/fonts/ggsans_semibold.ttf",
+                    "weight": 600
+                  }
+                ]
+              },
+              {
+                "fontFamily": "ggsans-Bold",
+                "fontDefinitions": [
+                  {
+                    "path": "./assets/fonts/ggsans_bold.ttf",
+                    "weight": 700
+                  }
+                ]
               }
             ]
           },
           "ios": {
-            "fonts": ["./assets/fonts/abc_ginto.otf"]
+            "fonts": [
+              "./assets/fonts/abc_ginto.otf",
+              "./assets/fonts/ggsans_regular.ttf",
+              "./assets/fonts/ggsans_medium.ttf",
+              "./assets/fonts/ggsans_semibold.ttf",
+              "./assets/fonts/ggsans_bold.ttf"
+            ]
+          }
+        }
+      ],
+      [
+        "expo-splash-screen",
+        {
+          "ios": {
+            "image": "./assets/splash-icon.png",
+            "resizeMode": "contain",
+            "backgroundColor": "#1B1D22"
+          },
+          "android": {
+            "image": "./assets/splash-icon.png",
+            "resizeMode": "contain",
+            "backgroundColor": "#1B1D22",
+            "imageWidth": 150
           }
         }
       ]
