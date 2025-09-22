@@ -7,6 +7,7 @@ export type RootStackParamList = {
   Overview: { data: ExtractedData };
   Analytics: { analytics: EventCount };
   Settings: undefined;
+  Help: undefined;
 };
 
 declare global {

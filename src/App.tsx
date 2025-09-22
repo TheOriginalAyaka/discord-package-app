@@ -8,6 +8,7 @@ import { DiscordProvider } from "./context/DiscordContext";
 import type { RootStackParamList } from "./navigation/types";
 import {
   AnalyticsScreen,
+  HelpScreen,
   OverviewScreen,
   ProcessScreen,
   SettingsScreen,
@@ -42,9 +43,17 @@ function AppNavigator() {
               onExtra={
                 route.name === "Overview"
                   ? () => navigation.navigate("Settings")
-                  : undefined
+                  : route.name === "Start"
+                    ? () => navigation.navigate("Help")
+                    : undefined
               }
-              extraIcon={route.name === "Overview" ? "settings" : undefined}
+              extraIcon={
+                route.name === "Overview"
+                  ? "settings"
+                  : route.name === "Start"
+                    ? "help-outline"
+                    : undefined
+              }
             />
           );
         },
@@ -83,6 +92,11 @@ function AppNavigator() {
         name="Settings"
         component={SettingsScreen}
         options={{ title: "Settings" }}
+      />
+      <Stack.Screen
+        name="Help"
+        component={HelpScreen}
+        options={{ title: "Help" }}
       />
     </Stack.Navigator>
   );
