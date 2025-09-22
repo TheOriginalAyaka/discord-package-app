@@ -1,11 +1,5 @@
 import React from "react";
-import {
-  Platform,
-  Pressable,
-  StyleSheet,
-  View,
-  type ViewStyle,
-} from "react-native";
+import { Pressable, StyleSheet, View, type ViewStyle } from "react-native";
 import { TText, useTheme } from "@/src/theme";
 
 interface TableRowProps {
@@ -39,28 +33,21 @@ export function TableRow({
   const shapeStyle = style || styles.singleRow;
 
   if (onPress && !disabled) {
-    // outer wrapper owns border radius + clipping
-    // android ripple stays inside that way
-    // discord literally just make the border radius rounded in all corners for the ripple
-    // discord, if you are reading this, fix your shit
+    // Using iOS approach for both platforms due to SDK 54 Android ripple issues
+    // See: https://github.com/expo/expo/issues/39871
     return (
-      <View style={[shapeStyle, { overflow: "hidden" }]}>
+      <View
+        style={[
+          shapeStyle,
+          { overflow: "hidden", backgroundColor: theme.card },
+        ]}
+      >
         <Pressable
           onPress={onPress}
-          android_ripple={
-            Platform.OS === "android"
-              ? { color: theme.cardPressed, borderless: false }
-              : undefined
-          }
           style={({ pressed }) => [
             styles.tableRow,
             {
-              backgroundColor:
-                Platform.OS === "ios"
-                  ? pressed
-                    ? theme.cardPressed
-                    : theme.card
-                  : theme.card,
+              backgroundColor: pressed ? theme.cardPressed : "transparent",
             },
           ]}
         >
@@ -96,8 +83,6 @@ export function TableRowGroup({
 
     type RowKind = "single" | "first" | "middle" | "last";
 
-    // derive a rowKind and map it to styles
-    // keeps branching in one place and style selection in another
     const rowKind: RowKind =
       totalChildren === 1
         ? "single"
@@ -204,3 +189,55 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
   },
 });
+
+/*
+ * ANDROID RIPPLE IMPLEMENTATION (Currently broken in SDK 54)
+ *
+ * Once the ripple issue is fixed (https://github.com/expo/expo/issues/39871),
+ * replace the onPress handler above with this implementation:
+ *
+ * if (onPress && !disabled) {
+ *   // Outer wrapper owns border radius + clipping
+ *   // This ensures Android ripple stays inside rounded corners
+ *   // Note: overflow: "hidden" is crucial for containing the ripple
+ *   return (
+ *     <View style={[shapeStyle, { overflow: "hidden" }]}>
+ *       <Pressable
+ *         onPress={onPress}
+ *         android_ripple={
+ *           Platform.OS === "android"
+ *             ? {
+ *                 color: theme.cardPressed,
+ *                 borderless: false  // Keep ripple within bounds
+ *               }
+ *             : undefined
+ *         }
+ *         style={({ pressed }) => [
+ *           styles.tableRow,
+ *           {
+ *             backgroundColor:
+ *               Platform.OS === "ios"
+ *                 ? pressed
+ *                   ? theme.cardPressed
+ *                   : theme.card
+ *                 : theme.card,  // Android uses ripple, not backgroundColor change
+ *           },
+ *         ]}
+ *       >
+ *         {content}
+ *       </Pressable>
+ *     </View>
+ *   );
+ * }
+ *
+ * KEY POINTS FOR ANDROID RIPPLE WITH CORNER RADIUS:
+ * 1. The outer View must have the border radius styles
+ * 2. The outer View must have overflow: "hidden"
+ * 3. Use borderless: false in android_ripple to contain it
+ * 4. Don't apply border radius to the Pressable itself
+ *
+ * KNOWN ISSUES (SDK 54):
+ * - Ripple doesn't show unless foreground: true (breaks UX)
+ * - When android_ripple is present, theme changes don't trigger re-renders
+ * - Component background won't update until navigation occurs
+ */
