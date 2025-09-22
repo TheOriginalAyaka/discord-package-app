@@ -2,7 +2,9 @@ import type { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
 import type { ComponentProps } from "react";
 
 export type MaterialIconName = ComponentProps<typeof MaterialIcons>["name"];
-export type MaterialCommunityIconName = ComponentProps<typeof MaterialCommunityIcons>["name"];
+export type MaterialCommunityIconName = ComponentProps<
+  typeof MaterialCommunityIcons
+>["name"];
 
 export interface EmojiData {
   isEmoji: boolean;
