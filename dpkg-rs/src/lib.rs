@@ -15,12 +15,14 @@ use crate::models::ExtractObserver;
 use crate::parser::{Callback, Parser, Step};
 
 lazy_static! {
-    static ref EXTRACTIONS: Mutex<HashMap<String, Arc<AtomicBool>>> = Mutex::new(HashMap::new());
+    static ref EXTRACTIONS: Mutex<HashMap<String, (Arc<AtomicBool>, String)>> = Mutex::new(HashMap::new());
 }
 
 fn cleanup_extraction(extraction_id: &str) {
     let mut extractions = EXTRACTIONS.lock().unwrap();
-    extractions.remove(extraction_id);
+    if let Some((_, file_path)) = extractions.remove(extraction_id) {
+        let _ = fs::remove_file(&file_path);
+    }
 }
 
 #[uniffi::export]
@@ -41,7 +43,7 @@ fn start_extraction(path: String, observer: Arc<dyn ExtractObserver>) -> Option<
                 return None;
             }
         };
-        extractions.insert(extraction_id.clone(), cancellation_token.clone());
+        extractions.insert(extraction_id.clone(), (cancellation_token.clone(), path.clone()));
     }
 
     let return_id = extraction_id.clone();
@@ -108,7 +110,6 @@ fn start_extraction(path: String, observer: Arc<dyn ExtractObserver>) -> Option<
         }
 
         cleanup_extraction(&extraction_id);
-        let _ = fs::remove_file(&path);
     });
 
     Some(return_id)
@@ -116,9 +117,10 @@ fn start_extraction(path: String, observer: Arc<dyn ExtractObserver>) -> Option<
 
 #[uniffi::export]
 fn cancel_extraction(extraction_id: String) -> bool {
-    let extractions = EXTRACTIONS.lock().unwrap();
-    if let Some(token) = extractions.get(&extraction_id) {
+    let mut extractions = EXTRACTIONS.lock().unwrap();
+    if let Some((token, file_path)) = extractions.remove(&extraction_id) {
         token.store(true, Ordering::Relaxed);
+        let _ = fs::remove_file(&file_path);
         true
     } else {
         false
