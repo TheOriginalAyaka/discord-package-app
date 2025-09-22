@@ -1,5 +1,5 @@
 import { StatusBar } from "expo-status-bar";
-import { Alert, Pressable, ScrollView, Text, View } from "react-native";
+import { ScrollView, View } from "react-native";
 import {
   AppearanceSection,
   AppInfo,
