@@ -19,9 +19,9 @@ class DpkgrsModule : Module() {
 
     Events("onProgress", "onError", "onComplete", "onAnalyticsComplete")
 
-    Function("startExtraction") { filePath: String ->
+    Function("startExtraction") { filePath: String, processAnalytics: Boolean ->
       val observer = ExObserver(this@DpkgrsModule)
-      return@Function startExtraction(filePath, observer)
+      return@Function startExtraction(filePath, processAnalytics, observer)
     }
 
     Function("cancelExtraction") { id: String ->

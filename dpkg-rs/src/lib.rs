@@ -15,7 +15,8 @@ use crate::models::ExtractObserver;
 use crate::parser::{Callback, Parser, Step};
 
 lazy_static! {
-    static ref EXTRACTIONS: Mutex<HashMap<String, (Arc<AtomicBool>, String)>> = Mutex::new(HashMap::new());
+    static ref EXTRACTIONS: Mutex<HashMap<String, (Arc<AtomicBool>, String)>> =
+        Mutex::new(HashMap::new());
 }
 
 fn cleanup_extraction(extraction_id: &str) {
@@ -26,7 +27,11 @@ fn cleanup_extraction(extraction_id: &str) {
 }
 
 #[uniffi::export]
-fn start_extraction(path: String, observer: Arc<dyn ExtractObserver>) -> Option<String> {
+fn start_extraction(
+    path: String,
+    process_analytics: bool,
+    observer: Arc<dyn ExtractObserver>,
+) -> Option<String> {
     let callback = Callback::new(observer);
     let extraction_id = Uuid::new_v4().to_string();
     let cancellation_token = Arc::new(AtomicBool::new(false));
@@ -43,7 +48,10 @@ fn start_extraction(path: String, observer: Arc<dyn ExtractObserver>) -> Option<
                 return None;
             }
         };
-        extractions.insert(extraction_id.clone(), (cancellation_token.clone(), path.clone()));
+        extractions.insert(
+            extraction_id.clone(),
+            (cancellation_token.clone(), path.clone()),
+        );
     }
 
     let return_id = extraction_id.clone();
@@ -94,18 +102,20 @@ fn start_extraction(path: String, observer: Arc<dyn ExtractObserver>) -> Option<
             }
         }
 
-        match parser.process_analytics(&mut archive, &callback) {
-            Ok(data) => {
-                callback.analytics_complete(data);
-            }
-            Err(err) => {
-                callback.error(
-                    Step::Analytics,
-                    format!("{}", err),
-                    "Analytics processing error".into(),
-                );
-                cleanup_extraction(&extraction_id);
-                return;
+        if process_analytics {
+            match parser.process_analytics(&mut archive, &callback) {
+                Ok(data) => {
+                    callback.analytics_complete(data);
+                }
+                Err(err) => {
+                    callback.error(
+                        Step::Analytics,
+                        format!("{}", err),
+                        "Analytics processing error".into(),
+                    );
+                    cleanup_extraction(&extraction_id);
+                    return;
+                }
             }
         }
 
@@ -117,10 +127,9 @@ fn start_extraction(path: String, observer: Arc<dyn ExtractObserver>) -> Option<
 
 #[uniffi::export]
 fn cancel_extraction(extraction_id: String) -> bool {
-    let mut extractions = EXTRACTIONS.lock().unwrap();
-    if let Some((token, file_path)) = extractions.remove(&extraction_id) {
+    let extractions = EXTRACTIONS.lock().unwrap();
+    if let Some((token, _)) = extractions.get(&extraction_id) {
         token.store(true, Ordering::Relaxed);
-        let _ = fs::remove_file(&file_path);
         true
     } else {
         false
@@ -180,7 +189,7 @@ mod tests {
         let (sender, receiver) = mpsc::channel();
         let observer = Arc::new(TestObserver::new("TestRun", sender));
         println!("Starting extraction");
-        let _ = start_extraction(file_path.clone(), observer);
+        let _ = start_extraction(file_path.clone(), true, observer);
 
         match receiver.recv_timeout(std::time::Duration::from_secs(300)) {
             Ok(_) => println!("Test completed successfully"),

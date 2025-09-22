@@ -74,8 +74,6 @@ export function DiscordProvider({ children }: { children: ReactNode }) {
         setIsLoadingAnalytics(false);
         setProgress("");
         setAnalytics(undefined);
-        // stop native analytics phase asap
-        cancelExtraction();
         setExtractionId("");
         return;
       }
@@ -122,7 +120,7 @@ export function DiscordProvider({ children }: { children: ReactNode }) {
       progressEvent.remove();
       analyticsEvent.remove();
     };
-  }, [cancelExtraction, isFeatureEnabled]);
+  }, [isFeatureEnabled]);
 
   useEffect(() => {
     return () => {
@@ -147,7 +145,10 @@ export function DiscordProvider({ children }: { children: ReactNode }) {
     if (enableAnalytics) next.add("analytics");
     setEnabledFeatures(next);
 
-    const extId = dpkgModule.startExtraction(uri.replace("file://", ""));
+    const extId = dpkgModule.startExtraction(
+      uri.replace("file://", ""),
+      enableAnalytics,
+    );
 
     if (extId) {
       setIsLoadingUserData(true);
