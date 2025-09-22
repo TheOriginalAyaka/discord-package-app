@@ -1,5 +1,5 @@
 import { StatusBar } from "expo-status-bar";
-import { ScrollView, View } from "react-native";
+import { Alert, Pressable, ScrollView, Text, View } from "react-native";
 import {
   AppearanceSection,
   AppInfo,
@@ -20,6 +20,12 @@ export function SettingsScreen() {
         <SupportSection />
         <AppInfo />
         <DeviceInfo />
+
+        <Pressable style={{ padding: 16, backgroundColor: "purple" }} onPress={() => {
+          Alert.alert("Test");
+        }} android_ripple={{ color: "white", borderless: true, foreground: false }}>
+          <Text>Test</Text>
+        </Pressable>
 
         <View style={{ height: 24 }} />
       </ScrollView>

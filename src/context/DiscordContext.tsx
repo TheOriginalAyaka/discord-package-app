@@ -1,6 +1,7 @@
 import {
   createContext,
   type ReactNode,
+  useCallback,
   useContext,
   useEffect,
   useState,
@@ -22,7 +23,13 @@ interface DiscordContextType {
   resetData: () => void;
   cancelProcessing: () => void;
   analyticsError: string | null;
+  enabledFeatures: Set<Feature>;
+  setEnabledFeatures: (next: Set<Feature>) => void;
+  isFeatureEnabled: (feature: Feature) => boolean;
 }
+
+// expand soon:tm:
+export type Feature = "overview" | "analytics" | "messages";
 
 const DiscordContext = createContext<DiscordContextType | undefined>(undefined);
 
@@ -37,20 +44,44 @@ export function DiscordProvider({ children }: { children: ReactNode }) {
   );
   const [extractionId, setExtractionId] = useState<string | null>(null);
   const [analyticsError, setAnalyticsError] = useState<string | null>(null);
+  const [enabledFeatures, setEnabledFeaturesState] = useState<Set<Feature>>(
+    new Set<Feature>(["overview", "analytics"]),
+  );
 
-  const cancelExtraction = () => {
+  const isFeatureEnabled = useCallback(
+    (feature: Feature) => enabledFeatures.has(feature),
+    [enabledFeatures],
+  );
+
+  const setEnabledFeatures = useCallback((next: Set<Feature>) => {
+    setEnabledFeaturesState(new Set(next));
+  }, []);
+
+  const cancelExtraction = useCallback(() => {
     if (!extractionId) return false;
     return dpkgModule.cancelExtraction(extractionId);
-  };
+  }, [extractionId]);
 
   useEffect(() => {
     const dataEvent = dpkgModule.addListener("onComplete", (e) => {
       console.log("complete event:", JSON.stringify(e.result, null, 2));
       setData(e.result);
       setIsLoadingUserData(false);
+      setAnalyticsError(null);
+
+      if (!isFeatureEnabled("analytics")) {
+        // only process analytics when enabled
+        setIsLoadingAnalytics(false);
+        setProgress("");
+        setAnalytics(undefined);
+        // stop native analytics phase asap
+        cancelExtraction();
+        setExtractionId("");
+        return;
+      }
+
       setIsLoadingAnalytics(true);
       setProgress("Loading analytics...");
-      setAnalyticsError(null);
     });
 
     const analyticsEvent = dpkgModule.addListener(
@@ -91,7 +122,7 @@ export function DiscordProvider({ children }: { children: ReactNode }) {
       progressEvent.remove();
       analyticsEvent.remove();
     };
-  }, []);
+  }, [cancelExtraction, isFeatureEnabled]);
 
   useEffect(() => {
     return () => {
@@ -111,6 +142,10 @@ export function DiscordProvider({ children }: { children: ReactNode }) {
     }
 
     console.log("Processing file:", uri, "options:", options);
+    const enableAnalytics = options?.generateAnalytics !== false;
+    const next = new Set<Feature>(["overview"]);
+    if (enableAnalytics) next.add("analytics");
+    setEnabledFeatures(next);
 
     const extId = dpkgModule.startExtraction(uri.replace("file://", ""));
 
@@ -196,6 +231,9 @@ export function DiscordProvider({ children }: { children: ReactNode }) {
     useMockData,
     resetData,
     cancelProcessing,
+    enabledFeatures,
+    setEnabledFeatures,
+    isFeatureEnabled,
   };
 
   return (

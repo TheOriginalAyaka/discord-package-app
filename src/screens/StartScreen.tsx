@@ -14,7 +14,7 @@ import {
   TableRow,
   TableRowGroup,
 } from "../components/ui";
-import { useDiscordContext } from "../context/DiscordContext";
+import { type Feature, useDiscordContext } from "../context/DiscordContext";
 import type { RootStackParamList } from "../navigation/types";
 import { TText, TView, useTheme } from "../theme";
 
@@ -22,7 +22,7 @@ type NavigationProp = NativeStackNavigationProp<RootStackParamList, "Start">;
 
 export function StartScreen() {
   const { isDark, theme } = useTheme();
-  const { processFile } = useDiscordContext();
+  const { processFile, setEnabledFeatures } = useDiscordContext();
   const navigation = useNavigation<NavigationProp>();
 
   const [selectedFileUri, setFileUri] = useState<string | null>(null);
@@ -61,9 +61,13 @@ export function StartScreen() {
   const handleProcess = async () => {
     if (!selectedFileUri) return;
 
+    const next = new Set<Feature>(["overview"]);
+    if (selectedOptions.includes("analytics")) next.add("analytics");
+    setEnabledFeatures(next);
+
     processFile(selectedFileUri, {
-      // TODO: polished option selection API for better DX
-      generateAnalytics: selectedOptions.includes("analytics"),
+      // TODO: polished DX for toggling parsing
+      generateAnalytics: next.has("analytics"),
     });
     navigation.replace("Process", { mode: "package" });
   };
