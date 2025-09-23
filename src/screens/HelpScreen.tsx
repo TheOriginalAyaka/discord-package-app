@@ -2,6 +2,7 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { StatusBar } from "expo-status-bar";
 import { ScrollView, StyleSheet, View } from "react-native";
 import { TableRow, TableRowGroup } from "@/src/components/ui";
+import { handleLinkPress } from "@/src/lib/utils";
 import { TText, TView, useTheme } from "@/src/theme";
 
 export function HelpScreen() {
@@ -175,6 +176,38 @@ export function HelpScreen() {
                   the progress screen.
                 </TText>
               </View>
+            </View>
+          </TableRow>
+          <TableRow
+            onPress={() =>
+              handleLinkPress(
+                "https://github.com/TheOriginalAyaka/discord-package-app",
+              )
+            }
+          >
+            <View style={styles.tableRowContent}>
+              <MaterialIcons name="code" size={24} color={theme.primary} />
+              <View style={styles.textContainer}>
+                <TText
+                  variant="primary"
+                  weight="semibold"
+                  style={{ fontSize: 16, lineHeight: 20 }}
+                >
+                  Open Source
+                </TText>
+                <TText
+                  variant="secondary"
+                  style={{ fontSize: 12, lineHeight: 16 }}
+                >
+                  Both the app and Rust parser are open source on GitHub for
+                  transparency and security.
+                </TText>
+              </View>
+              <MaterialIcons
+                name="open-in-new"
+                size={20}
+                color={theme.secondary}
+              />
             </View>
           </TableRow>
         </TableRowGroup>
