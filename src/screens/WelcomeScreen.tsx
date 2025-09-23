@@ -6,12 +6,11 @@ import { Logo } from "@/src/components";
 import { Button, ButtonText } from "../components/ui";
 import { useDiscordContext } from "../context/DiscordContext";
 import type { RootStackParamList } from "../navigation/types";
-import { TText, TTitle, useTheme } from "../theme";
+import { TText, TTitle } from "../theme";
 
 type NavigationProp = NativeStackNavigationProp<RootStackParamList, "Welcome">;
 
 export function WelcomeScreen() {
-  const { isDark } = useTheme();
   const { useMockData: startMockData } = useDiscordContext();
   const navigation = useNavigation<NavigationProp>();
 
@@ -30,7 +29,7 @@ export function WelcomeScreen() {
       style={{ flex: 1 }}
       resizeMode="cover"
     >
-      <StatusBar style={isDark ? "light" : "dark"} />
+      <StatusBar style={"light"} />
       <View style={styles.content}>
         <View style={styles.centerSection}>
           <View style={styles.iconBadge}>
@@ -51,7 +50,7 @@ export function WelcomeScreen() {
               <ButtonText weight="semibold">Choose Package</ButtonText>
             </Button>
           </View>
-          <TText variant="muted" style={{ textAlign: "center" }}>
+          <TText variant="muted" style={{ textAlign: "center", color: "white", opacity: 0.8 }}>
             Not affiliated with Discord Inc.
           </TText>
         </View>
@@ -95,6 +94,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
     marginBottom: 32,
     lineHeight: 20,
+    color: "white",
   },
   buttonsContainer: {
     gap: 12,
