@@ -1,14 +1,14 @@
 import { MaterialIcons } from "@expo/vector-icons";
 import { Platform, StyleSheet, TouchableOpacity, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-
 import { TText, TView, useTheme } from "@/src/theme";
+import type { MaterialIconName } from "@/src/types";
 
 interface HeaderProps {
   title: string;
   onBack?: () => void;
   onExtra?: () => void;
-  extraIcon?: string;
+  extraIcon?: MaterialIconName;
 }
 
 export default function Header({
