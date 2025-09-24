@@ -1,5 +1,6 @@
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import * as SplashScreen from "expo-splash-screen";
 import * as SystemUI from "expo-system-ui";
 import { useEffect } from "react";
 import { SafeAreaProvider } from "react-native-safe-area-context";
@@ -17,22 +18,32 @@ import {
 } from "./screens";
 import { ThemeProvider, useTheme } from "./theme";
 
-// rely on app.json splash, do not control it manually here
+SplashScreen.preventAutoHideAsync();
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 function AppNavigator() {
-  const { theme } = useTheme();
+  const { theme, isLoading } = useTheme();
 
   useEffect(() => {
     SystemUI.setBackgroundColorAsync(theme.background);
   }, [theme.background]);
 
+  useEffect(() => {
+    if (!isLoading) {
+      SplashScreen.hideAsync();
+    }
+  }, [isLoading]);
+
+  // don't render nav until theme is ready
+  if (isLoading) {
+    return null;
+  }
+
   return (
     <Stack.Navigator
       screenOptions={{
         header: ({ navigation, route, options, back }) => {
-          // disable header for screens
           const disabled = ["Welcome", "Process"];
           if (disabled.includes(route.name)) return null;
 
