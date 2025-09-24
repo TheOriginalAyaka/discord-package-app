@@ -50,7 +50,10 @@ export function WelcomeScreen() {
               <ButtonText weight="semibold">Choose Package</ButtonText>
             </Button>
           </View>
-          <TText variant="muted" style={{ textAlign: "center", color: "white", opacity: 0.8 }}>
+          <TText
+            variant="muted"
+            style={{ textAlign: "center", color: "white", opacity: 0.8 }}
+          >
             Not affiliated with Discord Inc.
           </TText>
         </View>
