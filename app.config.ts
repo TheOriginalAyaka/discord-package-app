@@ -9,7 +9,6 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   ...config,
   slug: "discord-package-app",
   name: "Dispackage",
-  version: "0.8.0",
   ios: {
     ...config.ios,
     icon: isInternal()
