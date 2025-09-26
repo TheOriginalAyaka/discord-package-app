@@ -146,9 +146,7 @@ export function AppearanceSection() {
                 variant="secondary"
                 style={{ fontSize: 12, lineHeight: 16 }}
               >
-                {isSystemMode
-                  ? `Currently using ${actualTheme} theme`
-                  : "Automatically match your device theme settings"}
+                Automatically match your device theme settings
               </TText>
             </View>
 

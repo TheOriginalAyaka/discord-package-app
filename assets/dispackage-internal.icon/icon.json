@@ -15,6 +15,17 @@
           "name" : "dispackage-outline"
         },
         {
+          "image-name" : "aaaaAsset 2@3x.png",
+          "name" : "aaaaAsset 2@3x",
+          "position" : {
+            "scale" : 0.35,
+            "translation-in-points" : [
+              -106.32504914248872,
+              -265.12608641209584
+            ]
+          }
+        },
+        {
           "fill-specializations" : [
             {
               "appearance" : "dark",
@@ -22,14 +33,34 @@
             }
           ],
           "glass" : false,
-          "image-name" : "saaa.svg",
-          "name" : "saaa",
+          "image-name" : "outlinestripe.svg",
+          "name" : "outlinestripe",
+          "opacity-specializations" : [
+            {
+              "value" : 0.4
+            },
+            {
+              "appearance" : "tinted",
+              "value" : 0.3
+            }
+          ]
+        },
+        {
+          "fill-specializations" : [
+            {
+              "appearance" : "dark",
+              "value" : "none"
+            }
+          ],
+          "glass" : false,
+          "image-name" : "bgstripe.svg",
+          "name" : "bgstripe",
           "opacity" : 0.2
         },
         {
           "fill" : "none",
           "glass" : false,
-          "hidden" : true,
+          "hidden" : false,
           "image-name" : "rings 2.svg",
           "name" : "rings 2",
           "opacity-specializations" : [
@@ -39,32 +70,33 @@
             {
               "appearance" : "dark",
               "value" : 0.1
+            },
+            {
+              "appearance" : "tinted",
+              "value" : 0.2
             }
           ]
         },
         {
-          "fill-specializations" : [
-            {
-              "appearance" : "dark",
-              "value" : {
-                "solid" : "extended-gray:1.00000,1.00000"
-              }
-            }
-          ],
-          "glass-specializations" : [
-            {
-              "appearance" : "dark",
-              "value" : false
-            }
-          ],
-          "image-name" : "Vector.svg",
-          "name" : "Vector",
+          "fill" : "none",
+          "image-name" : "Vector 2.svg",
+          "name" : "Vector 2",
           "opacity-specializations" : [
             {
-              "appearance" : "dark",
-              "value" : 0.1
+              "value" : 0.2
+            },
+            {
+              "appearance" : "tinted",
+              "value" : 0.3
             }
-          ]
+          ],
+          "position" : {
+            "scale" : 1.1,
+            "translation-in-points" : [
+              0,
+              0
+            ]
+          }
         }
       ],
       "shadow" : {

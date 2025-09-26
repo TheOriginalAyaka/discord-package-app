@@ -15,6 +15,10 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
       ? "./assets/dispackage-internal.icon"
       : "./assets/dispackage.icon",
   },
+  android: {
+    ...config.android,
+    backgroundColor: isInternal() ? "#FBAB21" : "#5865F2",
+  },
   extra: {
     ...config.extra,
     commitHash: process.env.COMMIT_HASH_SHORT,
