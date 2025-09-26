@@ -8,7 +8,7 @@ import type {
   NativeStackScreenProps,
 } from "@react-navigation/native-stack";
 import { StatusBar } from "expo-status-bar";
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import {
   ActivityIndicator,
   Alert,
@@ -36,8 +36,10 @@ export function ProcessScreen() {
   const navigation = useNavigation<NavigationProp>();
   const route = useRoute<RouteProp>();
 
+  const isCancelledRef = useRef(false);
+
   useEffect(() => {
-    if (data && !isLoadingUserData) {
+    if (data && !isLoadingUserData && !isCancelledRef.current) {
       navigation.reset({
         index: 1,
         routes: [{ name: "Welcome" }, { name: "Overview", params: { data } }],
@@ -46,7 +48,12 @@ export function ProcessScreen() {
   }, [data, isLoadingUserData, navigation]);
 
   useEffect(() => {
-    if (!isLoadingUserData && !isLoadingAnalytics && !data) {
+    if (
+      !isLoadingUserData &&
+      !isLoadingAnalytics &&
+      !data &&
+      !isCancelledRef.current
+    ) {
       navigation.popToTop();
     }
   }, [isLoadingUserData, isLoadingAnalytics, data, navigation]);
@@ -64,12 +71,12 @@ export function ProcessScreen() {
           text: "Cancel",
           style: "destructive",
           onPress: () => {
+            isCancelledRef.current = true;
             cancelProcessing();
-            if (route.params?.mode === "demo") {
-              navigation.navigate("Welcome");
-            } else {
-              navigation.navigate("Start");
-            }
+
+            const targetScreen =
+              route.params?.mode === "demo" ? "Welcome" : "Start";
+            navigation.replace(targetScreen);
           },
         },
       ],
@@ -81,7 +88,7 @@ export function ProcessScreen() {
       const onBackPress = () => {
         if (isLoadingUserData) {
           handleCancel();
-          return true;
+          return true; // prevent default back behavior
         }
         return false;
       };
@@ -94,6 +101,12 @@ export function ProcessScreen() {
       return () => subscription.remove();
     }, [isLoadingUserData, handleCancel]),
   );
+
+  const isFinalizingData = !isLoadingUserData && data;
+  const loadingMessage = isFinalizingData ? "Finalizing data..." : progress;
+  const hintMessage = isFinalizingData
+    ? "Almost there..."
+    : "This may take a moment...";
 
   return (
     <TView variant="background" style={{ flex: 1 }}>
@@ -108,15 +121,14 @@ export function ProcessScreen() {
             />
           </View>
           <TText variant="primary" weight="medium" style={styles.progressText}>
-            {!isLoadingUserData && data ? "Finalizing data..." : progress}
+            {loadingMessage}
           </TText>
           <TText variant="muted" style={styles.hintText}>
-            {!isLoadingUserData && data
-              ? "Almost there..."
-              : "This may take a moment..."}
+            {hintMessage}
           </TText>
         </View>
       </View>
+
       {isLoadingUserData && (
         <View style={styles.cancelContainer}>
           <Button variant="secondary" onPress={handleCancel}>
