@@ -1,5 +1,12 @@
-import { useFocusEffect, useNavigation } from "@react-navigation/native";
-import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import {
+  useFocusEffect,
+  useNavigation,
+  useRoute,
+} from "@react-navigation/native";
+import type {
+  NativeStackNavigationProp,
+  NativeStackScreenProps,
+} from "@react-navigation/native-stack";
 import { StatusBar } from "expo-status-bar";
 import { useCallback, useEffect } from "react";
 import {
@@ -15,6 +22,7 @@ import type { RootStackParamList } from "../navigation/types";
 import { TText, TView, useTheme } from "../theme";
 
 type NavigationProp = NativeStackNavigationProp<RootStackParamList, "Process">;
+type RouteProp = NativeStackScreenProps<RootStackParamList, "Process">["route"];
 
 export function ProcessScreen() {
   const { isDark, theme } = useTheme();
@@ -26,6 +34,7 @@ export function ProcessScreen() {
     cancelProcessing,
   } = useDiscordContext();
   const navigation = useNavigation<NavigationProp>();
+  const route = useRoute<RouteProp>();
 
   useEffect(() => {
     if (data && !isLoadingUserData) {
@@ -56,12 +65,16 @@ export function ProcessScreen() {
           style: "destructive",
           onPress: () => {
             cancelProcessing();
-            navigation.popToTop();
+            if (route.params?.mode === "demo") {
+              navigation.navigate("Welcome");
+            } else {
+              navigation.navigate("Start");
+            }
           },
         },
       ],
     );
-  }, [cancelProcessing, navigation]);
+  }, [cancelProcessing, navigation, route.params?.mode]);
 
   useFocusEffect(
     useCallback(() => {

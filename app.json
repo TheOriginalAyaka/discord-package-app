@@ -2,7 +2,7 @@
   "expo": {
     "name": "Dispackage",
     "slug": "discord-package-app",
-    "version": "0.7.0",
+    "version": "0.8.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "automatic",
@@ -13,8 +13,7 @@
       "appleTeamId": "LX2U7VU2K4",
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false
-      },
-      "icon": "./assets/dispackage.icon"
+      }
     },
     "android": {
       "adaptiveIcon": {

@@ -1,0 +1,86 @@
+{
+  "fill" : {
+    "linear-gradient" : [
+      "display-p3:0.45098,0.82353,0.98431,1.00000",
+      "display-p3:0.23137,0.52157,0.96471,1.00000"
+    ]
+  },
+  "groups" : [
+    {
+      "layers" : [
+        {
+          "blend-mode" : "normal",
+          "fill" : "automatic",
+          "image-name" : "dispackage-outline.svg",
+          "name" : "dispackage-outline"
+        },
+        {
+          "fill-specializations" : [
+            {
+              "appearance" : "dark",
+              "value" : "none"
+            }
+          ],
+          "glass" : false,
+          "image-name" : "saaa.svg",
+          "name" : "saaa",
+          "opacity" : 0.2
+        },
+        {
+          "fill" : "none",
+          "glass" : false,
+          "hidden" : true,
+          "image-name" : "rings 2.svg",
+          "name" : "rings 2",
+          "opacity-specializations" : [
+            {
+              "value" : 0.1
+            },
+            {
+              "appearance" : "dark",
+              "value" : 0.1
+            }
+          ]
+        },
+        {
+          "fill-specializations" : [
+            {
+              "appearance" : "dark",
+              "value" : {
+                "solid" : "extended-gray:1.00000,1.00000"
+              }
+            }
+          ],
+          "glass-specializations" : [
+            {
+              "appearance" : "dark",
+              "value" : false
+            }
+          ],
+          "image-name" : "Vector.svg",
+          "name" : "Vector",
+          "opacity-specializations" : [
+            {
+              "appearance" : "dark",
+              "value" : 0.1
+            }
+          ]
+        }
+      ],
+      "shadow" : {
+        "kind" : "neutral",
+        "opacity" : 0.5
+      },
+      "translucency" : {
+        "enabled" : true,
+        "value" : 0.5
+      }
+    }
+  ],
+  "supported-platforms" : {
+    "circles" : [
+      "watchOS"
+    ],
+    "squares" : "shared"
+  }
+}
