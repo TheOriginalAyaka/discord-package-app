@@ -2,7 +2,7 @@
   "expo": {
     "name": "Dispackage",
     "slug": "discord-package-app",
-    "version": "0.8.0",
+    "version": "0.8.1",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "automatic",
@@ -46,7 +46,7 @@
                 ]
               },
               {
-                "fontFamily": "ggsans-Regular",
+                "fontFamily": "ggsans-Normal",
                 "fontDefinitions": [
                   {
                     "path": "./assets/fonts/ggsans_regular.ttf",

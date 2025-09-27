@@ -1,20 +1,18 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import Storage from "expo-native-storage";
 import type { ThemeMode } from "./colors";
-
-const THEME_MODE_KEY = "@theme_mode";
 
 export async function saveThemeMode(mode: ThemeMode): Promise<void> {
   try {
-    await AsyncStorage.setItem(THEME_MODE_KEY, mode);
+    await Storage.setItem("@theme_mode", mode);
   } catch (error) {
     console.error("Failed to save theme mode:", error);
-    // this will continue without throwing because it's not a critical error
+    // continue without throwing since it's not critical
   }
 }
 
 export async function loadThemeMode(): Promise<ThemeMode | null> {
   try {
-    const saved = await AsyncStorage.getItem(THEME_MODE_KEY);
+    const saved = await Storage.getItem("@theme_mode");
     if (saved === "light" || saved === "dark" || saved === "system") {
       return saved;
     }
