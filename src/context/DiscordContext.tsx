@@ -172,6 +172,7 @@ export function DiscordProvider({ children }: { children: ReactNode }) {
     setIsLoadingAnalytics(false);
     setData(undefined);
     setAnalytics(undefined);
+    setEnabledFeatures(new Set<Feature>(["overview", "analytics"]));
     setProgress("Loading demo...");
 
     const timeout1 = setTimeout(() => {

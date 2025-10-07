@@ -16,7 +16,7 @@ export function WelcomeScreen() {
 
   const handleDemo = () => {
     startMockData();
-    navigation.replace("Process", { mode: "demo" });
+    navigation.navigate("Process", { mode: "demo" });
   };
 
   const handleChoosePackage = () => {

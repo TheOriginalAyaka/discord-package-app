@@ -69,7 +69,7 @@ export function StartScreen() {
       // TODO: polished DX for toggling parsing
       generateAnalytics: next.has("analytics"),
     });
-    navigation.replace("Process", { mode: "package" });
+    navigation.navigate("Process", { mode: "package" });
   };
 
   return (

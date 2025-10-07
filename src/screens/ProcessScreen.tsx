@@ -1,12 +1,5 @@
-import {
-  useFocusEffect,
-  useNavigation,
-  useRoute,
-} from "@react-navigation/native";
-import type {
-  NativeStackNavigationProp,
-  NativeStackScreenProps,
-} from "@react-navigation/native-stack";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
+import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { StatusBar } from "expo-status-bar";
 import { useCallback, useEffect, useRef } from "react";
 import {
@@ -22,7 +15,6 @@ import type { RootStackParamList } from "../navigation/types";
 import { TText, TView, useTheme } from "../theme";
 
 type NavigationProp = NativeStackNavigationProp<RootStackParamList, "Process">;
-type RouteProp = NativeStackScreenProps<RootStackParamList, "Process">["route"];
 
 export function ProcessScreen() {
   const { isDark, theme } = useTheme();
@@ -34,7 +26,6 @@ export function ProcessScreen() {
     cancelProcessing,
   } = useDiscordContext();
   const navigation = useNavigation<NavigationProp>();
-  const route = useRoute<RouteProp>();
 
   const isCancelledRef = useRef(false);
 
@@ -74,14 +65,12 @@ export function ProcessScreen() {
             isCancelledRef.current = true;
             cancelProcessing();
 
-            const targetScreen =
-              route.params?.mode === "demo" ? "Welcome" : "Start";
-            navigation.replace(targetScreen);
+            navigation.popToTop();
           },
         },
       ],
     );
-  }, [cancelProcessing, navigation, route.params?.mode]);
+  }, [cancelProcessing, navigation]);
 
   useFocusEffect(
     useCallback(() => {
