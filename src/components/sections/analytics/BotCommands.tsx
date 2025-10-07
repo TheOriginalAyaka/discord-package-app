@@ -1,6 +1,6 @@
+import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
 import { StyleSheet, View } from "react-native";
-import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
-import MaterialIcons from "react-native-vector-icons/MaterialIcons";
+
 import type { EventCount } from "@/modules/dpkg-module";
 import { TableRow, TableRowGroup } from "@/src/components/ui";
 import { TText, useTheme } from "@/src/theme";

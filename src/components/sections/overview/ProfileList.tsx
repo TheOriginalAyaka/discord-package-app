@@ -1,3 +1,4 @@
+import { MaterialIcons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import {
@@ -7,7 +8,6 @@ import {
   StyleSheet,
   View,
 } from "react-native";
-import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import type { EventCount, ExtractedData } from "@/modules/dpkg-module";
 import { TableRow, TableRowGroup } from "@/src/components/ui";
 import type { RootStackParamList } from "@/src/navigation/types";
@@ -21,12 +21,14 @@ export function ProfileList({
   progress = "",
   isLoadingAnalytics = false,
   analyticsError = null,
+  isAnalyticsEnabled = true,
 }: {
   data: ExtractedData;
   analytics: EventCount | undefined;
   progress?: string;
   isLoadingAnalytics?: boolean;
   analyticsError?: string | null;
+  isAnalyticsEnabled?: boolean;
 }) {
   const { theme } = useTheme();
   const navigation = useNavigation<NavigationProp>();
@@ -216,7 +218,7 @@ export function ProfileList({
                 variant="secondary"
                 style={{ fontSize: 12, lineHeight: 16 }}
               >
-                The amount of channels you have interacted with
+                Channels you have interacted with
               </TText>
             </View>
 
@@ -295,101 +297,105 @@ export function ProfileList({
             </TText>
           </View>
         </TableRow>
-        <TableRow
-          onPress={() => {
-            if (!isLoadingAnalytics && analytics && !analyticsError) {
-              navigation.navigate("Analytics", { analytics });
-            }
-          }}
-          disabled={isLoadingAnalytics || !analytics || !!analyticsError}
-        >
-          <View
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-              opacity:
-                isLoadingAnalytics || (!analytics && !analyticsError) ? 0.5 : 1,
+        {isAnalyticsEnabled && (
+          <TableRow
+            onPress={() => {
+              if (!isLoadingAnalytics && analytics && !analyticsError) {
+                navigation.navigate("Analytics", { analytics });
+              }
             }}
+            disabled={isLoadingAnalytics || !analytics || !!analyticsError}
           >
-            <MaterialIcons
-              name="show-chart"
-              size={24}
-              color={analyticsError ? theme.error : theme.primary}
-            />
-
             <View
               style={{
-                flexDirection: "column",
-                justifyContent: "center",
-                flex: 1,
-                marginLeft: 16,
+                flexDirection: "row",
+                alignItems: "center",
+                opacity:
+                  isLoadingAnalytics || (!analytics && !analyticsError)
+                    ? 0.5
+                    : 1,
               }}
             >
-              <TText
-                variant="primary"
-                weight="semibold"
+              <MaterialIcons
+                name="show-chart"
+                size={24}
+                color={analyticsError ? theme.error : theme.primary}
+              />
+
+              <View
                 style={{
-                  fontSize: 16,
-                  lineHeight: 20,
-                  ...(analyticsError && { color: theme.error }),
+                  flexDirection: "column",
+                  justifyContent: "center",
+                  flex: 1,
+                  marginLeft: 16,
                 }}
               >
-                {isLoadingAnalytics
-                  ? "Loading Analytics..."
-                  : analyticsError
-                    ? "Failed to load analytics"
-                    : "More Analytics"}
-              </TText>
-              {(isLoadingAnalytics || analyticsError) && (
                 <TText
-                  variant="secondary"
+                  variant="primary"
+                  weight="semibold"
                   style={{
-                    fontSize: 12,
-                    lineHeight: 16,
+                    fontSize: 16,
+                    lineHeight: 20,
                     ...(analyticsError && { color: theme.error }),
                   }}
                 >
                   {isLoadingAnalytics
-                    ? (() => {
-                        if (!progress || progress === "")
-                          return "Please wait while we process your analytics.";
-
-                        const batchMatch =
-                          progress.match(/Processing batch \d+/);
-                        return batchMatch ? `${batchMatch[0]}...` : progress;
-                      })()
-                    : analyticsError}
+                    ? "Loading Analytics..."
+                    : analyticsError
+                      ? "Failed to load analytics"
+                      : "More Analytics"}
                 </TText>
-              )}
-            </View>
+                {(isLoadingAnalytics || analyticsError) && (
+                  <TText
+                    variant="secondary"
+                    style={{
+                      fontSize: 12,
+                      lineHeight: 16,
+                      ...(analyticsError && { color: theme.error }),
+                    }}
+                  >
+                    {isLoadingAnalytics
+                      ? (() => {
+                          if (!progress || progress === "")
+                            return "Please wait while we process your analytics.";
 
-            <View style={{ flexDirection: "row", alignItems: "center" }}>
-              {isLoadingAnalytics && (
-                <ActivityIndicator
-                  size="small"
-                  color={theme.secondary}
-                  style={{
-                    transform: [{ scale: 0.8 }],
-                    marginRight: 8,
-                  }}
-                />
-              )}
-              {analyticsError ? (
-                <MaterialIcons
-                  name="error-outline"
-                  size={24}
-                  color={theme.error}
-                />
-              ) : (
-                <MaterialIcons
-                  name="chevron-right"
-                  size={24}
-                  color={theme.secondary}
-                />
-              )}
+                          const batchMatch =
+                            progress.match(/Processing batch \d+/);
+                          return batchMatch ? `${batchMatch[0]}...` : progress;
+                        })()
+                      : analyticsError}
+                  </TText>
+                )}
+              </View>
+
+              <View style={{ flexDirection: "row", alignItems: "center" }}>
+                {isLoadingAnalytics && (
+                  <ActivityIndicator
+                    size="small"
+                    color={theme.secondary}
+                    style={{
+                      transform: [{ scale: 0.8 }],
+                      marginRight: 8,
+                    }}
+                  />
+                )}
+                {analyticsError ? (
+                  <MaterialIcons
+                    name="error-outline"
+                    size={24}
+                    color={theme.error}
+                  />
+                ) : (
+                  <MaterialIcons
+                    name="chevron-right"
+                    size={24}
+                    color={theme.secondary}
+                  />
+                )}
+              </View>
             </View>
-          </View>
-        </TableRow>
+          </TableRow>
+        )}
       </TableRowGroup>
     </View>
   );

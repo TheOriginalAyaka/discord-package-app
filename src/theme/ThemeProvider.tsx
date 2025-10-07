@@ -1,13 +1,17 @@
 import type React from "react";
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import { useColorScheme } from "react-native";
 import { darkTheme, lightTheme, type Theme, type ThemeMode } from "./colors";
+import { loadThemeMode, saveThemeMode } from "./storage";
 
 interface ThemeContextType {
   theme: Theme;
   mode: ThemeMode;
-  setMode: (mode: ThemeMode) => void;
+  actualTheme: "light" | "dark";
+  systemTheme: "light" | "dark" | null;
+  isLoading: boolean;
   isDark: boolean;
+  setMode: (mode: ThemeMode) => void;
 }
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
@@ -19,21 +23,42 @@ interface ThemeProviderProps {
 
 export function ThemeProvider({
   children,
-  defaultMode = "system",
+  defaultMode = "dark",
 }: ThemeProviderProps) {
   const systemColorScheme = useColorScheme();
-  const [mode, setMode] = useState<ThemeMode>(defaultMode);
+  const [mode, setModeState] = useState<ThemeMode>(defaultMode);
+  const [isLoading, setIsLoading] = useState(true);
 
-  const isDark =
-    mode === "system" ? systemColorScheme === "dark" : mode === "dark";
+  // Expo treats null as light
+  const systemTheme = systemColorScheme || "light";
 
-  const theme: Theme = isDark ? darkTheme : lightTheme;
+  const actualTheme = mode === "system" ? systemTheme : mode;
+  const isDark = actualTheme === "dark";
+  const theme = isDark ? darkTheme : lightTheme;
+
+  // load saved theme preference on mount (if there is one)
+  useEffect(() => {
+    loadThemeMode().then((savedMode) => {
+      if (savedMode) {
+        setModeState(savedMode);
+      }
+      setIsLoading(false);
+    });
+  }, []);
+
+  const setMode = async (newMode: ThemeMode) => {
+    setModeState(newMode);
+    await saveThemeMode(newMode);
+  };
 
   const value: ThemeContextType = {
     theme,
     mode,
-    setMode,
+    actualTheme,
+    systemTheme,
+    isLoading,
     isDark,
+    setMode,
   };
 
   return (

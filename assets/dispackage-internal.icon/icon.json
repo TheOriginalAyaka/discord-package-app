@@ -1,0 +1,110 @@
+{
+  "fill": {
+    "linear-gradient": [
+      "display-p3:0.45098,0.82353,0.98431,1.00000",
+      "display-p3:0.23137,0.52157,0.96471,1.00000"
+    ]
+  },
+  "groups": [
+    {
+      "layers": [
+        {
+          "blend-mode": "normal",
+          "fill": "automatic",
+          "image-name": "dispackage-outline.svg",
+          "name": "dispackage-outline"
+        },
+        {
+          "image-name": "aaaaAsset 2@3x.png",
+          "name": "aaaaAsset 2@3x",
+          "position": {
+            "scale": 0.35,
+            "translation-in-points": [-106.32504914248872, -265.12608641209584]
+          }
+        },
+        {
+          "fill-specializations": [
+            {
+              "appearance": "dark",
+              "value": "none"
+            }
+          ],
+          "glass": false,
+          "image-name": "outlinestripe.svg",
+          "name": "outlinestripe",
+          "opacity-specializations": [
+            {
+              "value": 0.4
+            },
+            {
+              "appearance": "tinted",
+              "value": 0.3
+            }
+          ]
+        },
+        {
+          "fill-specializations": [
+            {
+              "appearance": "dark",
+              "value": "none"
+            }
+          ],
+          "glass": false,
+          "image-name": "bgstripe.svg",
+          "name": "bgstripe",
+          "opacity": 0.2
+        },
+        {
+          "fill": "none",
+          "glass": false,
+          "hidden": false,
+          "image-name": "rings 2.svg",
+          "name": "rings 2",
+          "opacity-specializations": [
+            {
+              "value": 0.1
+            },
+            {
+              "appearance": "dark",
+              "value": 0.1
+            },
+            {
+              "appearance": "tinted",
+              "value": 0.2
+            }
+          ]
+        },
+        {
+          "fill": "none",
+          "image-name": "Vector 2.svg",
+          "name": "Vector 2",
+          "opacity-specializations": [
+            {
+              "value": 0.2
+            },
+            {
+              "appearance": "tinted",
+              "value": 0.3
+            }
+          ],
+          "position": {
+            "scale": 1.1,
+            "translation-in-points": [0, 0]
+          }
+        }
+      ],
+      "shadow": {
+        "kind": "neutral",
+        "opacity": 0.5
+      },
+      "translucency": {
+        "enabled": true,
+        "value": 0.5
+      }
+    }
+  ],
+  "supported-platforms": {
+    "circles": ["watchOS"],
+    "squares": "shared"
+  }
+}

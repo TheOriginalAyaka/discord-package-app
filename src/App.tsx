@@ -9,30 +9,43 @@ import { DiscordProvider } from "./context/DiscordContext";
 import type { RootStackParamList } from "./navigation/types";
 import {
   AnalyticsScreen,
+  HelpScreen,
   OverviewScreen,
+  ProcessScreen,
   SettingsScreen,
+  StartScreen,
   WelcomeScreen,
 } from "./screens";
 import { ThemeProvider, useTheme } from "./theme";
-import { useCustomFonts } from "./theme/fonts";
 
 SplashScreen.preventAutoHideAsync();
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 function AppNavigator() {
-  const { theme } = useTheme();
+  const { theme, isLoading } = useTheme();
 
   useEffect(() => {
     SystemUI.setBackgroundColorAsync(theme.background);
   }, [theme.background]);
 
+  useEffect(() => {
+    if (!isLoading) {
+      SplashScreen.hideAsync();
+    }
+  }, [isLoading]);
+
+  // don't render nav until theme is ready
+  if (isLoading) {
+    return null;
+  }
+
   return (
     <Stack.Navigator
       screenOptions={{
-        // custom header
         header: ({ navigation, route, options, back }) => {
-          if (route.name === "Welcome") return null;
+          const disabled = ["Welcome", "Process"];
+          if (disabled.includes(route.name)) return null;
 
           return (
             <Header
@@ -41,9 +54,17 @@ function AppNavigator() {
               onExtra={
                 route.name === "Overview"
                   ? () => navigation.navigate("Settings")
-                  : undefined
+                  : route.name === "Start"
+                    ? () => navigation.navigate("Help")
+                    : undefined
               }
-              extraIcon={route.name === "Overview" ? "settings" : undefined}
+              extraIcon={
+                route.name === "Overview"
+                  ? "settings"
+                  : route.name === "Start"
+                    ? "help-outline"
+                    : undefined
+              }
             />
           );
         },
@@ -57,6 +78,16 @@ function AppNavigator() {
         name="Welcome"
         component={WelcomeScreen}
         options={{ headerShown: false, headerBackButtonMenuEnabled: false }}
+      />
+      <Stack.Screen
+        name="Start"
+        component={StartScreen}
+        options={{ title: "Configure Package" }}
+      />
+      <Stack.Screen
+        name="Process"
+        component={ProcessScreen}
+        options={{ headerShown: false, gestureEnabled: false }}
       />
       <Stack.Screen
         name="Overview"
@@ -73,23 +104,16 @@ function AppNavigator() {
         component={SettingsScreen}
         options={{ title: "Settings" }}
       />
+      <Stack.Screen
+        name="Help"
+        component={HelpScreen}
+        options={{ title: "Help" }}
+      />
     </Stack.Navigator>
   );
 }
 
 export default function App() {
-  const fontsLoaded = useCustomFonts();
-
-  useEffect(() => {
-    if (fontsLoaded) {
-      SplashScreen.hideAsync();
-    }
-  }, [fontsLoaded]);
-
-  if (!fontsLoaded) {
-    return null;
-  }
-
   return (
     <SafeAreaProvider>
       <ThemeProvider defaultMode="dark">

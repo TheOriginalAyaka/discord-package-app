@@ -21,5 +21,9 @@
   "editor.codeActionsOnSave": {
     "source.organizeImports.biome": "explicit",
     "source.fixAll.biome": "explicit"
-  }
+  },
+  "[rust]": {
+    "editor.defaultFormatter": "rust-lang.rust-analyzer"
+  },
+  "cmake.sourceDirectory": "/Users/tiffanymit/Projects/Main/discord-package-app/node_modules/react-native/ReactCommon/reactperflogger"
 }

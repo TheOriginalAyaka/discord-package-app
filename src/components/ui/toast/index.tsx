@@ -1,8 +1,16 @@
+import { MaterialIcons } from "@expo/vector-icons";
 import { Image } from "expo-image";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import {
+  type ComponentProps,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { Animated, Easing, StyleSheet, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import MaterialIcons from "react-native-vector-icons/MaterialIcons";
+
 import { TText, useTheme } from "@/src/theme";
 
 export interface ToastProps {
@@ -125,7 +133,7 @@ export default function Toast({
           {/* icon or image */}
           {icon ? (
             <MaterialIcons
-              name={icon}
+              name={icon as ComponentProps<typeof MaterialIcons>["name"]}
               size={20}
               color={theme.primary}
               style={{

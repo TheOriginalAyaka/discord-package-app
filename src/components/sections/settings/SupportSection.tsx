@@ -1,15 +1,43 @@
+import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
+import { useNavigation } from "@react-navigation/native";
+import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { StyleSheet, View } from "react-native";
-import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
-import MaterialIcons from "react-native-vector-icons/MaterialIcons";
+
 import { TableRow, TableRowGroup } from "@/src/components/ui";
 import { handleLinkPress } from "@/src/lib/utils";
+import type { RootStackParamList } from "@/src/navigation/types";
 import { TText, useTheme } from "@/src/theme";
+
+type NavigationProp = NativeStackNavigationProp<RootStackParamList, "Settings">;
 
 export function SupportSection() {
   const { theme } = useTheme();
+  const navigation = useNavigation<NavigationProp>();
 
   return (
     <TableRowGroup title="Support">
+      <TableRow onPress={() => navigation.navigate("Help")}>
+        <View style={styles.tableRowContent}>
+          <MaterialIcons name="help-outline" size={24} color={theme.primary} />
+
+          <View style={styles.textContainer}>
+            <TText
+              variant="primary"
+              weight="semibold"
+              style={{ fontSize: 16, lineHeight: 20 }}
+            >
+              Get Help
+            </TText>
+          </View>
+
+          <MaterialIcons
+            name="chevron-right"
+            size={20}
+            color={theme.secondary}
+          />
+        </View>
+      </TableRow>
+
       <TableRow
         onPress={() =>
           handleLinkPress(

@@ -27,6 +27,7 @@ export function OverviewScreen() {
     isLoadingAnalytics,
     analyticsError,
     cancelProcessing,
+    isFeatureEnabled,
   } = useDiscordContext();
   const navigation = useNavigation<NavigationProp>();
 
@@ -97,6 +98,7 @@ export function OverviewScreen() {
           progress={progress}
           isLoadingAnalytics={isLoadingAnalytics}
           analyticsError={analyticsError}
+          isAnalyticsEnabled={isFeatureEnabled("analytics")}
         />
         <FavTextList data={data} />
         <FavEmoteList data={data} />

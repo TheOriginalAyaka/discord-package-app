@@ -1,7 +1,7 @@
 import { useTheme } from "./ThemeProvider";
 
 export function useThemeControls() {
-  const { mode, setMode, isDark } = useTheme();
+  const { mode, actualTheme, systemTheme, isDark, setMode } = useTheme();
 
   const toggleTheme = () => {
     setMode(isDark ? "light" : "dark");
@@ -13,6 +13,8 @@ export function useThemeControls() {
 
   return {
     mode,
+    actualTheme,
+    systemTheme,
     isDark,
     toggleTheme,
     setLightMode,

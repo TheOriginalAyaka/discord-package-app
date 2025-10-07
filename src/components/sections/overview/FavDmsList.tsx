@@ -1,6 +1,7 @@
+import { MaterialIcons } from "@expo/vector-icons";
 import { useState } from "react";
 import { Image, StyleSheet, View } from "react-native";
-import MaterialIcons from "react-native-vector-icons/MaterialIcons";
+
 import type { ExtractedData } from "@/modules/dpkg-module";
 import { TableRow, TableRowGroup } from "@/src/components/ui";
 import { type Theme, TText, useTheme } from "@/src/theme";

@@ -1,7 +1,7 @@
-import * as DocumentPicker from "expo-document-picker";
 import {
   createContext,
   type ReactNode,
+  useCallback,
   useContext,
   useEffect,
   useState,
@@ -18,12 +18,18 @@ interface DiscordContextType {
   progress: string;
   isLoadingUserData: boolean;
   isLoadingAnalytics: boolean;
-  pickAndProcessFile: () => Promise<void>;
+  processFile: (uri: string, options?: { generateAnalytics?: boolean }) => void;
   useMockData: () => void;
   resetData: () => void;
   cancelProcessing: () => void;
   analyticsError: string | null;
+  enabledFeatures: Set<Feature>;
+  setEnabledFeatures: (next: Set<Feature>) => void;
+  isFeatureEnabled: (feature: Feature) => boolean;
 }
+
+// expand soon:tm:
+export type Feature = "overview" | "analytics" | "messages";
 
 const DiscordContext = createContext<DiscordContextType | undefined>(undefined);
 
@@ -38,20 +44,42 @@ export function DiscordProvider({ children }: { children: ReactNode }) {
   );
   const [extractionId, setExtractionId] = useState<string | null>(null);
   const [analyticsError, setAnalyticsError] = useState<string | null>(null);
+  const [enabledFeatures, setEnabledFeaturesState] = useState<Set<Feature>>(
+    new Set<Feature>(["overview", "analytics"]),
+  );
 
-  const cancelExtraction = () => {
+  const isFeatureEnabled = useCallback(
+    (feature: Feature) => enabledFeatures.has(feature),
+    [enabledFeatures],
+  );
+
+  const setEnabledFeatures = useCallback((next: Set<Feature>) => {
+    setEnabledFeaturesState(new Set(next));
+  }, []);
+
+  const cancelExtraction = useCallback(() => {
     if (!extractionId) return false;
     return dpkgModule.cancelExtraction(extractionId);
-  };
+  }, [extractionId]);
 
   useEffect(() => {
     const dataEvent = dpkgModule.addListener("onComplete", (e) => {
       console.log("complete event:", JSON.stringify(e.result, null, 2));
       setData(e.result);
       setIsLoadingUserData(false);
+      setAnalyticsError(null);
+
+      if (!isFeatureEnabled("analytics")) {
+        // only process analytics when enabled
+        setIsLoadingAnalytics(false);
+        setProgress("");
+        setAnalytics(undefined);
+        setExtractionId("");
+        return;
+      }
+
       setIsLoadingAnalytics(true);
       setProgress("Loading analytics...");
-      setAnalyticsError(null);
     });
 
     const analyticsEvent = dpkgModule.addListener(
@@ -92,7 +120,7 @@ export function DiscordProvider({ children }: { children: ReactNode }) {
       progressEvent.remove();
       analyticsEvent.remove();
     };
-  }, []);
+  }, [isFeatureEnabled]);
 
   useEffect(() => {
     return () => {
@@ -102,34 +130,34 @@ export function DiscordProvider({ children }: { children: ReactNode }) {
     };
   }, [mockDataTimeouts]);
 
-  const pickAndProcessFile = async () => {
+  const processFile = (
+    uri: string,
+    options?: { generateAnalytics?: boolean },
+  ) => {
     if (isLoadingUserData || isLoadingAnalytics) {
-      console.log("Already loading, skipping file pick");
+      console.log("Already processing, skipping");
       return;
     }
 
-    const file = await DocumentPicker.getDocumentAsync({
-      type: "application/zip",
-      // WIP: Cacheless solution for Android
-      copyToCacheDirectory: true,
-    });
+    console.log("Processing file:", uri, "options:", options);
+    const enableAnalytics = options?.generateAnalytics !== false;
+    const next = new Set<Feature>(["overview"]);
+    if (enableAnalytics) next.add("analytics");
+    setEnabledFeatures(next);
 
-    if (!file.canceled && file.assets[0]) {
-      console.log("uri", file.assets[0].uri);
+    const extId = dpkgModule.startExtraction(
+      uri.replace("file://", ""),
+      enableAnalytics,
+    );
 
-      const extId = dpkgModule.startExtraction(
-        file.assets[0].uri.replace("file://", ""),
-      );
-
-      if (extId) {
-        setIsLoadingUserData(true);
-        setIsLoadingAnalytics(false);
-        setData(undefined);
-        setAnalytics(undefined);
-        setProgress("Loading user data...");
-        setExtractionId(extId);
-        setAnalyticsError(null);
-      }
+    if (extId) {
+      setIsLoadingUserData(true);
+      setIsLoadingAnalytics(false);
+      setData(undefined);
+      setAnalytics(undefined);
+      setProgress("Loading user data...");
+      setExtractionId(extId);
+      setAnalyticsError(null);
     }
   };
 
@@ -144,6 +172,7 @@ export function DiscordProvider({ children }: { children: ReactNode }) {
     setIsLoadingAnalytics(false);
     setData(undefined);
     setAnalytics(undefined);
+    setEnabledFeatures(new Set<Feature>(["overview", "analytics"]));
     setProgress("Loading demo...");
 
     const timeout1 = setTimeout(() => {
@@ -200,10 +229,13 @@ export function DiscordProvider({ children }: { children: ReactNode }) {
     isLoadingUserData,
     isLoadingAnalytics,
     analyticsError,
-    pickAndProcessFile,
+    processFile,
     useMockData,
     resetData,
     cancelProcessing,
+    enabledFeatures,
+    setEnabledFeatures,
+    isFeatureEnabled,
   };
 
   return (

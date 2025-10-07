@@ -1,9 +1,10 @@
+import { MaterialIcons } from "@expo/vector-icons";
 import * as Clipboard from "expo-clipboard";
 import * as Device from "expo-device";
 import { Platform, StyleSheet, View } from "react-native";
-import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import { TableRow, TableRowGroup, useToast } from "@/src/components/ui";
 import { TText, useTheme } from "@/src/theme";
+import type { MaterialIconName } from "@/src/types";
 
 const deviceModel = Device.modelName || "Unknown";
 const osVersion = `${Device.osName} ${Device.osVersion}`;
@@ -27,7 +28,7 @@ const deviceInfoData = [
           label: "Device Name",
           value: Device.deviceName || "Unknown",
           icon: "label",
-        },
+        } as const,
       ]
     : []),
 ];
@@ -55,7 +56,11 @@ export function DeviceInfo() {
               alignItems: "center",
             }}
           >
-            <MaterialIcons name={item.icon} size={24} color={theme.primary} />
+            <MaterialIcons
+              name={item.icon as MaterialIconName}
+              size={24}
+              color={theme.primary}
+            />
 
             <TText variant="primary" weight="semibold" style={styles.labelText}>
               {item.label}
