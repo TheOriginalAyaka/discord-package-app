@@ -78,8 +78,9 @@ export function HelpScreen() {
                   variant="secondary"
                   style={{ fontSize: 12, lineHeight: 16 }}
                 >
-                  User Settings → Privacy & Safety → Request all of my Data.
-                  You'll receive an email when it's ready.
+                  Settings → Data & Privacy → Request Data. Select all data
+                  types in the modal and submit. You'll receive an email when
+                  ready.
                 </TText>
               </View>
             </View>
@@ -99,8 +100,8 @@ export function HelpScreen() {
                   variant="secondary"
                   style={{ fontSize: 12, lineHeight: 16 }}
                 >
-                  Same path as Web in the desktop app. Download the ZIP when
-                  available.
+                  Same as Web. Check all options (Account, Activity, Messages,
+                  Servers, etc.) before submitting your request.
                 </TText>
               </View>
             </View>
@@ -124,8 +125,9 @@ export function HelpScreen() {
                   variant="secondary"
                   style={{ fontSize: 12, lineHeight: 16 }}
                 >
-                  Settings → Privacy & Safety → Request Data. Save the ZIP to
-                  your files when ready.
+                  Settings → Data & Privacy → Request all of my data. Select all
+                  data types in the page and submit your request. You'll receive
+                  an email when ready.
                 </TText>
               </View>
             </View>
