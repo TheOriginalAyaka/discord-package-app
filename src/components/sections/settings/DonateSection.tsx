@@ -10,7 +10,7 @@ export function DonateSection() {
   return (
     <TableRowGroup
       title="Support the App"
-      description="If this app helped you, consider supporting development via donations!"
+      description="If this app helped you, consider supporting development through voluntary donations!"
     >
       <TableRow
         onPress={() => handleLinkPress("https://ko-fi.com/theoriginalayaka")}

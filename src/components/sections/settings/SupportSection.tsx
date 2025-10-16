@@ -39,6 +39,29 @@ export function SupportSection() {
       </TableRow>
 
       <TableRow
+        onPress={() => handleLinkPress("https://dispackage.ayaka.one/privacy")}
+      >
+        <View style={styles.tableRowContent}>
+          <MaterialIcons name="privacy-tip" size={24} color={theme.primary} />
+
+          <View style={styles.textContainer}>
+            <TText
+              variant="primary"
+              weight="semibold"
+              style={{ fontSize: 16, lineHeight: 20 }}
+            >
+              Privacy Policy
+            </TText>
+            <TText variant="secondary" style={{ fontSize: 12, lineHeight: 16 }}>
+              All data processing happens on-device
+            </TText>
+          </View>
+
+          <MaterialIcons name="open-in-new" size={20} color={theme.secondary} />
+        </View>
+      </TableRow>
+
+      <TableRow
         onPress={() =>
           handleLinkPress(
             "https://github.com/theoriginalayaka/discord-package-app/issues",
