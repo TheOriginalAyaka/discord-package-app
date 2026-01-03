@@ -107,7 +107,7 @@
           "user": {
             "globalName": "Satou",
             "discriminator": "0",
-            "username": "cuny.",
+            "username": "theoriginalayaka",
             "avatar": "e23995730bb01949e82f6d067f0e1d82",
             "id": "675108484341301275"
           }
@@ -116,7 +116,7 @@
           "user": {
             "globalName": "lo",
             "discriminator": "0",
-            "username": "cnuy.",
+            "username": "thereallo",
             "avatar": "038f8ff97881ea5a1ab55dc0dc9f68d3",
             "id": "454920881177624576"
           }
@@ -226,7 +226,7 @@
         "count": 38531
       },
       {
-        "word": "aaaa",
+        "word": "messages",
         "count": 9876
       },
       {
@@ -252,7 +252,7 @@
     ],
     "favoriteEmotes": [
       {
-        "word": "<a:bocchi_glitching:1151816737281552507>",
+        "word": "<a:bocchi:1151816737281552507>",
         "count": 38531
       },
       {
@@ -260,7 +260,7 @@
         "count": 9876
       },
       {
-        "word": "<:march_2:1105443052312592434>",
+        "word": "<:MarchCry:1105443052312592434>",
         "count": 7890
       },
       {
@@ -268,7 +268,7 @@
         "count": 6543
       },
       {
-        "word": "<:a_cuddle_cute_hug_kawaii_pink_te:927648944031424603>",
+        "word": "<:CatCuddle:927648944031424603>",
         "count": 4321
       },
       {
@@ -277,7 +277,7 @@
       },
       {
         "count": 2109,
-        "word": "<a:a_cat_cute_kawaii_neko_pout:927777902400004176>"
+        "word": "<a:NekoPout:927777902400004176>"
       }
     ]
   },
