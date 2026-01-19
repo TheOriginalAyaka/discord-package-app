@@ -19,7 +19,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     ...config.android,
     adaptiveIcon: {
       ...config.android?.adaptiveIcon,
-      backgroundColor: isInternal() ? "#C99032" : "#5865F2",
+      backgroundColor: isInternal() ? "#EFB332" : "#5865F2",
     },
   },
   extra: {
