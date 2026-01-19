@@ -212,7 +212,7 @@ export default function Checkbox({
             },
           ]}
         >
-          <MaterialIcons name="check" size={16} color={theme.primary} />
+          <MaterialIcons name="check" size={16} color="#ffffff" />
         </Animated.View>
       </Animated.View>
     </TouchableWithoutFeedback>
