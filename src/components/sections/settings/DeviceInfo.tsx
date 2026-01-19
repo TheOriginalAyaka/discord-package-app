@@ -1,4 +1,5 @@
 import { MaterialIcons } from "@expo/vector-icons";
+import { triggerNotification } from "@renegades/react-native-tickle";
 import * as Clipboard from "expo-clipboard";
 import * as Device from "expo-device";
 import { Platform, StyleSheet, View } from "react-native";
@@ -21,7 +22,6 @@ const deviceInfoData = [
     value: osVersion,
     icon: "settings",
   },
-  // idk why i did this i just wanted to check device name only if it's ios
   ...(Platform.OS === "ios"
     ? [
         {
@@ -48,6 +48,7 @@ export function DeviceInfo() {
               icon: "copy-all",
               text: "Copied to clipboard",
             });
+            triggerNotification("success");
           }}
         >
           <View

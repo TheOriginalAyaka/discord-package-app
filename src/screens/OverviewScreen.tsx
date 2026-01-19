@@ -1,5 +1,6 @@
 import { useNavigation, usePreventRemove } from "@react-navigation/native";
 import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { triggerNotification } from "@renegades/react-native-tickle";
 import { StatusBar } from "expo-status-bar";
 import { useEffect, useRef } from "react";
 import { Alert, ScrollView, View } from "react-native";
@@ -52,6 +53,7 @@ export function OverviewScreen() {
     }
     if (wasLoading && !isLoadingAnalytics && analytics && !analyticsError) {
       showToast({ icon: "check-circle", text: "Analytics ready!" });
+      triggerNotification("success");
     }
     if (!wasError && analyticsError) {
       showToast({

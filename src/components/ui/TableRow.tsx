@@ -1,3 +1,4 @@
+import { triggerSelection } from "@renegades/react-native-tickle";
 import React from "react";
 import { Pressable, StyleSheet, View, type ViewStyle } from "react-native";
 import { TText, useTheme } from "@/src/theme";
@@ -7,6 +8,7 @@ interface TableRowProps {
   style?: ViewStyle;
   disabled?: boolean;
   onPress?: () => void;
+  haptic?: boolean;
 }
 
 interface TableRowGroupProps {
@@ -21,8 +23,16 @@ export function TableRow({
   style,
   disabled = false,
   onPress,
+  haptic = true,
 }: TableRowProps) {
   const { theme } = useTheme();
+
+  const handlePress = () => {
+    if (onPress && !disabled) {
+      if (haptic) triggerSelection();
+      onPress();
+    }
+  };
 
   const content = (
     <View style={[styles.contentWrapper, disabled && { opacity: 0.5 }]}>
@@ -43,7 +53,7 @@ export function TableRow({
         ]}
       >
         <Pressable
-          onPress={onPress}
+          onPress={handlePress}
           style={({ pressed }) => [
             styles.tableRow,
             {

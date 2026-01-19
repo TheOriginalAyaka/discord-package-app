@@ -1,3 +1,4 @@
+import { triggerSelection } from "@renegades/react-native-tickle";
 import {
   createContext,
   type ReactNode,
@@ -15,7 +16,6 @@ import {
   View,
   type ViewStyle,
 } from "react-native";
-
 import { TText, useTheme } from "@/src/theme";
 
 // context for button text color
@@ -131,7 +131,12 @@ export default function Button({
   return (
     <TouchableOpacity
       onPress={disabled ? undefined : onPress}
-      onPressIn={() => !disabled && setIsPressed(true)}
+      onPressIn={() => {
+        if (!disabled) {
+          setIsPressed(true);
+          triggerSelection();
+        }
+      }}
       onPressOut={() => setIsPressed(false)}
       style={[styles.button, style]}
       activeOpacity={1}

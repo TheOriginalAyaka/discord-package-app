@@ -1,4 +1,5 @@
 import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
+import { triggerNotification } from "@renegades/react-native-tickle";
 import * as Application from "expo-application";
 import * as Clipboard from "expo-clipboard";
 import Constants from "expo-constants";
@@ -69,6 +70,7 @@ export function AppInfo() {
               icon: "copy-all",
               text: "Copied to clipboard",
             });
+            triggerNotification("success");
           }}
         >
           <View

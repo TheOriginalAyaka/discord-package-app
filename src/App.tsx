@@ -1,5 +1,6 @@
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { HapticProvider } from "@renegades/react-native-tickle";
 import * as SplashScreen from "expo-splash-screen";
 import * as SystemUI from "expo-system-ui";
 import { useEffect } from "react";
@@ -115,16 +116,18 @@ function AppNavigator() {
 
 export default function App() {
   return (
-    <SafeAreaProvider>
-      <ThemeProvider defaultMode="dark">
-        <DiscordProvider>
-          <ToastProvider>
-            <NavigationContainer>
-              <AppNavigator />
-            </NavigationContainer>
-          </ToastProvider>
-        </DiscordProvider>
-      </ThemeProvider>
-    </SafeAreaProvider>
+    <HapticProvider>
+      <SafeAreaProvider>
+        <ThemeProvider defaultMode="dark">
+          <DiscordProvider>
+            <ToastProvider>
+              <NavigationContainer>
+                <AppNavigator />
+              </NavigationContainer>
+            </ToastProvider>
+          </DiscordProvider>
+        </ThemeProvider>
+      </SafeAreaProvider>
+    </HapticProvider>
   );
 }
