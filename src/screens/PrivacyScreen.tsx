@@ -94,7 +94,11 @@ export function PrivacyScreen() {
         >
           <TableRow>
             <View style={styles.tableRowContent}>
-              <MaterialIcons name="folder-zip" size={24} color={theme.primary} />
+              <MaterialIcons
+                name="folder-zip"
+                size={24}
+                color={theme.primary}
+              />
               <View style={styles.textContainer}>
                 <TText
                   variant="primary"
@@ -177,7 +181,11 @@ export function PrivacyScreen() {
             }
           >
             <View style={styles.tableRowContent}>
-              <MaterialIcons name="description" size={24} color={theme.primary} />
+              <MaterialIcons
+                name="description"
+                size={24}
+                color={theme.primary}
+              />
               <View style={styles.textContainer}>
                 <TText
                   variant="primary"
