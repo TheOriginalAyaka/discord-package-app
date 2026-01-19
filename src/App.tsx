@@ -12,6 +12,7 @@ import {
   AnalyticsScreen,
   HelpScreen,
   OverviewScreen,
+  PrivacyScreen,
   ProcessScreen,
   SettingsScreen,
   StartScreen,
@@ -109,6 +110,11 @@ function AppNavigator() {
         name="Help"
         component={HelpScreen}
         options={{ title: "Help" }}
+      />
+      <Stack.Screen
+        name="Privacy"
+        component={PrivacyScreen}
+        options={{ title: "Privacy" }}
       />
     </Stack.Navigator>
   );

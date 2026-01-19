@@ -8,6 +8,7 @@ export type RootStackParamList = {
   Analytics: { analytics: EventCount };
   Settings: undefined;
   Help: undefined;
+  Privacy: undefined;
 };
 
 declare global {

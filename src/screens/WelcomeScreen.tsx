@@ -1,7 +1,13 @@
+import { MaterialIcons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { StatusBar } from "expo-status-bar";
-import { ImageBackground, StyleSheet, View } from "react-native";
+import {
+  ImageBackground,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { Logo } from "@/src/components";
 import { Button, ButtonText } from "../components/ui";
 import { useDiscordContext } from "../context/DiscordContext";
@@ -31,6 +37,28 @@ export function WelcomeScreen() {
     >
       <StatusBar style={"light"} />
       <View style={styles.content}>
+        <View style={styles.topBar}>
+          <TouchableOpacity
+            style={styles.topBarButton}
+            onPress={() => navigation.navigate("Settings")}
+            activeOpacity={0.7}
+          >
+            <MaterialIcons name="settings" size={20} color="white" />
+            <TText style={styles.topBarText} weight="medium">
+              Settings
+            </TText>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.topBarButton}
+            onPress={() => navigation.navigate("Privacy")}
+            activeOpacity={0.7}
+          >
+            <MaterialIcons name="privacy-tip" size={20} color="white" />
+            <TText style={styles.topBarText} weight="medium">
+              Privacy
+            </TText>
+          </TouchableOpacity>
+        </View>
         <View style={styles.centerSection}>
           <View style={styles.iconBadge}>
             <Logo width={100} height={100} />
@@ -66,6 +94,25 @@ const styles = StyleSheet.create({
   content: {
     flex: 1,
     paddingHorizontal: 24,
+  },
+  topBar: {
+    flexDirection: "row",
+    justifyContent: "flex-end",
+    paddingTop: 56,
+    gap: 16,
+  },
+  topBarButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 4,
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    backgroundColor: "rgba(255, 255, 255, 0.15)",
+    borderRadius: 20,
+  },
+  topBarText: {
+    color: "white",
+    fontSize: 14,
   },
   centerSection: {
     position: "absolute",
