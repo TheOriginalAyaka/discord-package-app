@@ -6,6 +6,7 @@ import {
   CreditsSection,
   DeviceInfo,
   DonateSection,
+  LegalSection,
   SupportSection,
 } from "@/src/components/sections";
 import { TView, useTheme } from "@/src/theme";
@@ -22,6 +23,7 @@ export function SettingsScreen() {
         <SupportSection />
         <AppInfo />
         <DeviceInfo />
+        <LegalSection />
 
         <View style={{ height: 24 }} />
       </ScrollView>
