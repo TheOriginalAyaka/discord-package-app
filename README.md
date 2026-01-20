@@ -73,3 +73,7 @@ Run on specific platforms:
 npm run android    # Android
 npm run ios        # iOS
 ```
+
+## Licensing
+
+The code in this project is licensed under the MIT License. However, all brand assets, logos, and trademarks located in the /assets directory are All Rights Reserved and may not be reused without explicit permission.

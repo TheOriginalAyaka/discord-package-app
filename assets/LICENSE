@@ -1,0 +1,56 @@
+ASSETS LICENSE AND USAGE TERMS
+
+Copyright (c) 2026 Thereallo. All rights reserved.
+
+This directory contains proprietary brand assets and third-party resources that
+are not licensed under the MIT License of the project.
+
+---
+
+1. BRAND ASSETS
+
+All logos, icons, images, illustrations, design files, and other branding
+materials contained in this directory (the "Brand Assets") are the exclusive
+property of Thereallo.
+
+Unless expressly authorized in writing by Thereallo, you may NOT:
+
+- Use the Brand Assets in derivative works.
+- Copy, modify, distribute, or redistribute the Brand Assets.
+- Use the Brand Assets in commercial products or for commercial purposes.
+- Use the Brand Assets in a way that implies endorsement, partnership, or
+  affiliation with Thereallo or Dispackage.
+- Sell, sublicense, or otherwise transfer the Brand Assets.
+
+You may use the Brand Assets solely for internal development and evaluation
+when working with the associated open-source software.
+
+Any other use requires prior explicit written permission from Thereallo.
+
+---
+
+2. THIRD-PARTY FONTS AND ASSETS
+
+Some files in this directory, including those under the `fonts/` subdirectory,
+are provided by third parties and are licensed under their own terms.
+
+Those third-party licenses apply instead of this document and govern your use,
+distribution, modification, and embedding rights.
+
+Thereallo does not grant any rights to third-party assets beyond what is allowed
+by their respective licenses, and you are responsible for complying with those
+terms.
+
+---
+
+3. NO TRADEMARK LICENSE
+
+Nothing in this repository grants any license or right to use Thereallo or
+Dispackage trademarks, service marks, trade dress, logos, or branding, whether
+registered or unregistered, except as expressly permitted in writing by
+Thereallo.
+
+---
+
+For licensing inquiries, please contact us through the official support
+channels.
