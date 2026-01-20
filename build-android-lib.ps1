@@ -34,7 +34,7 @@ for ($i = 0; $i -lt $android_targets.Length; $i++) {
 }
 
 Write-Host "Generating Kotlin bindings (using aarch64 build)..." -ForegroundColor Yellow
-cargo run --features=uniffi/cli --bin uniffi-bindgen generate --library "target/aarch64-linux-android/release/libdpkg_rs.so" --out-dir "generated/kotlin/" --language kotlin
+cargo run --features=uniffi/cli --bin uniffi-bindgen generate --out-dir "generated/kotlin/" --language kotlin "target/aarch64-linux-android/release/libdpkg_rs.so"
 
 Write-Host "Copying Kotlin bindings..." -ForegroundColor Yellow
 Copy-Item -Recurse -Force "generated/kotlin/*" "../modules/dpkg-module/android/src/main/java/"
