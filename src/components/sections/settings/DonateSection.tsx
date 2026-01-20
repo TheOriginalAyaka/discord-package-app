@@ -35,7 +35,7 @@ export function DonateSection() {
               weight="semibold"
               style={{ fontSize: 16, lineHeight: 20 }}
             >
-              Buy me a coffee
+              Ko-fi
             </TText>
             <TText variant="secondary" style={{ fontSize: 12, lineHeight: 16 }}>
               theoriginalayaka

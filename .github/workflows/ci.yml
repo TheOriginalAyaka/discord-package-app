@@ -41,3 +41,18 @@ jobs:
 
     - name: Run Rust tests
       run: cd dpkg-rs && cargo test
+
+    - name: Cache cargo-ndk
+      uses: actions/cache@v4
+      with:
+        path: ~/.cargo/bin/cargo-ndk
+        key: ${{ runner.os }}-cargo-ndk
+
+    - name: Add Android target
+      run: rustup target add aarch64-linux-android
+
+    - name: Install cargo-ndk
+      run: command -v cargo-ndk >/dev/null 2>&1 || cargo install cargo-ndk
+
+    - name: "Build the lib"
+      run: ./build-android-lib.sh arm64-v8a

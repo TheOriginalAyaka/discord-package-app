@@ -3,7 +3,7 @@
 IOS_VERSION="15.1"
 
 echo "Building dpkg-rs for iOS..."
-cd dpkg-rs
+cd dpkg-rs || exit 1
 
 echo "Building library for aarch64-apple-ios..."
 IPHONEOS_DEPLOYMENT_TARGET=$IOS_VERSION cargo build --release --target aarch64-apple-ios --lib

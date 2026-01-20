@@ -2,7 +2,7 @@ import type { ConfigContext, ExpoConfig } from "expo/config";
 
 const isInternal = (): boolean => {
   const releaseChannel = process.env.RELEASE_CHANNEL;
-  return releaseChannel === "internal" || releaseChannel === "beta";
+  return releaseChannel !== "production";
 };
 
 export default ({ config }: ConfigContext): ExpoConfig => ({

@@ -63,7 +63,6 @@ target/
 **/ios/Pods/
 
 # Generated native libraries and bindings
-generated/
 **/generated/
 **/ios/lib/
 **/android/**/jniLibs/
@@ -74,7 +73,9 @@ generated/
 # Build outputs
 build/
 **/build/
-dist/
 
 # jenv
 .java-version
+
+# IDEA
+.idea/
