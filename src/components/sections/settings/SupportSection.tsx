@@ -65,7 +65,11 @@ export function SupportSection() {
         </View>
       </TableRow>
 
-      <TableRow onPress={() => handleLinkPress("https://thereallo.dev")}>
+      <TableRow
+        onPress={() =>
+          handleLinkPress("https://dispackage.thereallo.dev/redirect/discord")
+        }
+      >
         <View style={styles.tableRowContent}>
           <MaterialIcons name="discord" size={24} color={theme.primary} />
 
@@ -88,9 +92,7 @@ export function SupportSection() {
 
       <TableRow
         onPress={() =>
-          handleLinkPress(
-            "https://github.com/theoriginalayaka/discord-package-app",
-          )
+          handleLinkPress("https://dispackage.thereallo.dev/redirect/github")
         }
       >
         <View style={styles.tableRowContent}>
@@ -109,7 +111,7 @@ export function SupportSection() {
               View Source
             </TText>
             <TText variant="secondary" style={{ fontSize: 12, lineHeight: 16 }}>
-              theoriginalayaka/discord-package-app
+              TheOriginalAyaka/discord-package-app
             </TText>
           </View>
 
