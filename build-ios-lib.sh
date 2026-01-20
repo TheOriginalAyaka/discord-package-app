@@ -9,7 +9,7 @@ echo "Building library for aarch64-apple-ios..."
 IPHONEOS_DEPLOYMENT_TARGET=$IOS_VERSION cargo build --release --target aarch64-apple-ios --lib
 
 echo "Generating Swift bindings..."
-cargo run --features=uniffi/cli --bin uniffi-bindgen generate --library target/aarch64-apple-ios/release/libdpkg_rs.dylib --out-dir generated/swift/ --language swift
+cargo run --features=uniffi/cli --bin uniffi-bindgen generate --out-dir generated/swift/ --language swift target/aarch64-apple-ios/release/libdpkg_rs.dylib
 
 echo "Creating dirs..."
 mkdir -p ../modules/dpkg-module/ios/lib/

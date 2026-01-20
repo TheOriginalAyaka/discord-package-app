@@ -26,7 +26,7 @@ for i in "${!android_targets[@]}"; do
 done
 
 echo "Generating Kotlin bindings (using aarch64 build)..."
-cargo run --features=uniffi/cli --bin uniffi-bindgen generate --library target/aarch64-linux-android/release/libdpkg_rs.so --out-dir generated/kotlin/ --language kotlin
+cargo run --features=uniffi/cli --bin uniffi-bindgen generate --out-dir generated/kotlin/ --language kotlin target/aarch64-linux-android/release/libdpkg_rs.so
 
 echo "Copying Kotlin bindings..."
 cp -r generated/kotlin/* ../modules/dpkg-module/android/src/main/java/
