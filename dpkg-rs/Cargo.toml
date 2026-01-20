@@ -18,12 +18,12 @@ serde_json = "1.0.149"
 simd-json = "0.17.0"
 sysinfo = { version = "0.37.2", features = ["apple-app-store", "apple-sandbox"] }
 tokio = { version = "1.49.0", features = ["full"] }
-uniffi = { version = "0.30.0", features = ["cli"] }
+uniffi = { version = "0.31.0", features = ["cli"] }
 uuid = { version = "1.18.1", features = ["v4"] }
 zip = "6.0.0"
 
 [build-dependencies]
-uniffi = { version = "0.30.0", features = ["build"] }
+uniffi = { version = "0.31.0", features = ["build"] }
 
 [lib]
 crate-type = ["staticlib", "cdylib"]
