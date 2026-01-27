@@ -56,15 +56,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "a23eb6b1614318a8071c9b2521f36b424b2c83db5eb3a0fead4a6c0809af6e61"
 
 [[package]]
-name = "arbitrary"
-version = "1.4.2"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "c3d036a3c4ab069c7b410a2ce876bd74808d2d0888a82667669f8e783a898bf1"
-dependencies = [
- "derive_arbitrary",
-]
-
-[[package]]
 name = "askama"
 version = "0.14.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -434,9 +425,9 @@ dependencies = [
 
 [[package]]
 name = "deflate64"
-version = "0.1.9"
+version = "0.1.10"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "da692b8d1080ea3045efaab14434d40468c3d8657e42abddfffca87b428f4c1b"
+checksum = "26bf8fc351c5ed29b5c2f0cbbac1b209b74f60ecd62e675a998df72c49af5204"
 
 [[package]]
 name = "der"
@@ -456,17 +447,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "9c9e6a11ca8224451684bc0d7d5a7adbf8f2fd6887261a1cfc3c0432f9d4068e"
 dependencies = [
  "powerfmt",
-]
-
-[[package]]
-name = "derive_arbitrary"
-version = "1.4.2"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "1e567bd82dcff979e4b03460c307b3cdc9e96fde3d73bed1496d2bc75d9dd62a"
-dependencies = [
- "proc-macro2",
- "quote",
- "syn",
 ]
 
 [[package]]
@@ -671,9 +651,11 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "26145e563e54f2cadc477553f1ec5ee650b00862f0a58bcd12cbdc5f0ea2d2f4"
 dependencies = [
  "cfg-if",
+ "js-sys",
  "libc",
  "r-efi",
  "wasi 0.14.2+wasi-0.2.4",
+ "wasm-bindgen",
 ]
 
 [[package]]
@@ -908,9 +890,9 @@ checksum = "13dc2df351e3202783a1fe0d44375f7295ffb4049267b0f3018346dc122a1d94"
 
 [[package]]
 name = "lzma-rust2"
-version = "0.13.0"
+version = "0.15.7"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "c60a23ffb90d527e23192f1246b14746e2f7f071cb84476dd879071696c18a4a"
+checksum = "1670343e58806300d87950e3401e820b519b9384281bbabfb15e3636689ffd69"
 dependencies = [
  "crc",
  "sha2",
@@ -1192,9 +1174,9 @@ checksum = "439ee305def115ba05938db6eb1644ff94165c5ab5e9420d1c1bcedbba909391"
 
 [[package]]
 name = "ppmd-rust"
-version = "1.2.1"
+version = "1.4.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "c834641d8ad1b348c9ee86dec3b9840d805acd5f24daa5f90c788951a52ff59b"
+checksum = "efca4c95a19a79d1c98f791f10aebd5c1363b473244630bb7dbde1dc98455a24"
 
 [[package]]
 name = "ppv-lite86"
@@ -1739,6 +1721,7 @@ checksum = "8a7619e19bc266e0f9c5e6686659d394bc57973859340060a69221e57dbc0c40"
 dependencies = [
  "deranged",
  "itoa",
+ "js-sys",
  "num-conv",
  "powerfmt",
  "serde",
@@ -1828,6 +1811,12 @@ name = "toml_writer"
 version = "1.0.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "df8b2b54733674ad286d16267dcfc7a71ed5c776e4ac7aa3c3e2561f7c637bf2"
+
+[[package]]
+name = "typed-path"
+version = "0.12.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "e43ffa54726cdc9ea78392023ffe9fe9cf9ac779e1c6fcb0d23f9862e3879d20"
 
 [[package]]
 name = "typenum"
@@ -2440,17 +2429,17 @@ dependencies = [
 
 [[package]]
 name = "zip"
-version = "6.0.0"
+version = "7.2.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "eb2a05c7c36fde6c09b08576c9f7fb4cda705990f73b58fe011abf7dfb24168b"
+checksum = "c42e33efc22a0650c311c2ef19115ce232583abbe80850bc8b66509ebef02de0"
 dependencies = [
  "aes",
- "arbitrary",
  "bzip2",
  "constant_time_eq",
  "crc32fast",
  "deflate64",
  "flate2",
+ "generic-array",
  "getrandom 0.3.3",
  "hmac",
  "indexmap",
@@ -2460,6 +2449,7 @@ dependencies = [
  "ppmd-rust",
  "sha1",
  "time",
+ "typed-path",
  "zeroize",
  "zopfli",
  "zstd",
