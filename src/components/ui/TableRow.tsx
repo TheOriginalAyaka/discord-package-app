@@ -136,7 +136,7 @@ export function TableRowGroup({
             <TText
               variant="primary"
               style={[{ fontSize: 14 }, { color: theme.secondary }]}
-              weight="medium"
+              weight="semibold"
             >
               {title}
             </TText>
@@ -179,13 +179,13 @@ const styles = StyleSheet.create({
     borderBottomLeftRadius: 0,
     borderBottomRightRadius: 0,
     marginTop: 1,
-    marginHorizontal: 8,
+    marginHorizontal: 14,
     marginBottom: 0,
   },
   middleRow: {
     borderRadius: 0,
     marginVertical: 0,
-    marginHorizontal: 8,
+    marginHorizontal: 14,
     borderTopWidth: 1,
   },
   lastRow: {
@@ -194,7 +194,7 @@ const styles = StyleSheet.create({
     borderBottomLeftRadius: 16,
     borderBottomRightRadius: 16,
     marginBottom: 1,
-    marginHorizontal: 8,
+    marginHorizontal: 14,
     marginTop: 0,
     borderTopWidth: 1,
   },
@@ -203,7 +203,7 @@ const styles = StyleSheet.create({
 /*
  * ANDROID RIPPLE IMPLEMENTATION (Currently broken in SDK 54)
  *
- * Once the ripple issue is fixed (https://github.com/expo/expo/issues/39871),
+ * Once the ripple issue is fixed (https://github.com/facebook/react-native/issues/52939),
  * replace the onPress handler above with this implementation:
  *
  * if (onPress && !disabled) {
