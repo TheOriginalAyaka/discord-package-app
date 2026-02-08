@@ -14,9 +14,15 @@ interface NavbarProps {
   tabs: TabConfig[];
   activeTab: string;
   onTabPress: (tabId: string) => void;
+  onTabLongPress?: (tabId: string) => void;
 }
 
-export default function Navbar({ tabs, activeTab, onTabPress }: NavbarProps) {
+export default function Navbar({
+  tabs,
+  activeTab,
+  onTabPress,
+  onTabLongPress,
+}: NavbarProps) {
   const { theme } = useTheme();
 
   return (
@@ -39,8 +45,13 @@ export default function Navbar({ tabs, activeTab, onTabPress }: NavbarProps) {
         return (
           <TouchableOpacity
             key={tab.id}
+            accessibilityRole="button"
+            accessibilityState={isActive ? { selected: true } : {}}
             style={styles.tab}
             onPress={() => onTabPress(tab.id)}
+            onLongPress={
+              onTabLongPress ? () => onTabLongPress(tab.id) : undefined
+            }
             activeOpacity={0.7}
             disabled={isDisabled}
           >
@@ -65,7 +76,7 @@ export default function Navbar({ tabs, activeTab, onTabPress }: NavbarProps) {
   );
 }
 
-export type { TabConfig };
+export type { NavbarProps, TabConfig };
 
 const styles = StyleSheet.create({
   container: {
@@ -84,13 +95,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     position: "relative",
-  },
-  activeIndicator: {
-    position: "absolute",
-    top: -8,
-    width: 32,
-    height: 3,
-    borderRadius: 2,
   },
   label: {
     fontSize: 10,

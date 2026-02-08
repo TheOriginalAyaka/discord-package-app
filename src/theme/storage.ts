@@ -1,18 +1,18 @@
 import Storage from "expo-native-storage";
 import type { ThemeMode } from "./colors";
 
-export async function saveThemeMode(mode: ThemeMode): Promise<void> {
+export function saveThemeMode(mode: ThemeMode): void {
   try {
-    await Storage.setItem("@theme_mode", mode);
+    Storage.setItemSync("@theme_mode", mode);
   } catch (error) {
     console.error("Failed to save theme mode:", error);
     // continue without throwing since it's not critical
   }
 }
 
-export async function loadThemeMode(): Promise<ThemeMode | null> {
+export function loadThemeMode(): ThemeMode | null {
   try {
-    const saved = await Storage.getItem("@theme_mode");
+    const saved = Storage.getItemSync("@theme_mode");
     if (saved === "light" || saved === "dark" || saved === "system") {
       return saved;
     }

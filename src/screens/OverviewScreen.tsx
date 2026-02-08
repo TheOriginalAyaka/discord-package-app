@@ -11,12 +11,12 @@ import {
   FavTextList,
   ProfileList,
 } from "@/src/components/sections";
-import { Navbar, useToast } from "@/src/components/ui";
+import { useToast } from "@/src/components/ui";
 import { useDiscordContext } from "@/src/context/DiscordContext";
 import type { RootStackParamList } from "@/src/navigation/types";
 import { TView, useTheme } from "@/src/theme";
 
-type NavigationProp = NativeStackNavigationProp<RootStackParamList, "Overview">;
+type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
 export function OverviewScreen() {
   const { isDark } = useTheme();
@@ -108,22 +108,6 @@ export function OverviewScreen() {
         <FavChannelsList data={data} />
         <View style={{ height: 24 }} />
       </ScrollView>
-      <Navbar
-        tabs={[
-          { id: "home", label: "Home", icon: "home" },
-          {
-            id: "analytics",
-            label: "Analytics",
-            icon: "show-chart",
-            disabled:
-              isFeatureEnabled("analytics") &&
-              (isLoadingAnalytics || (!analytics && !analyticsError)),
-          },
-          { id: "settings", label: "Settings", icon: "settings" },
-        ]}
-        activeTab="home"
-        onTabPress={() => {}}
-      />
       <StatusBar style={isDark ? "light" : "dark"} />
     </TView>
   );

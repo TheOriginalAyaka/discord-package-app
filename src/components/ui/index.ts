@@ -6,7 +6,7 @@ export {
   useCheckboxItem,
 } from "./checkbox";
 export { default as Header } from "./header";
-export type { TabConfig } from "./navbar";
+export type { NavbarProps, TabConfig } from "./navbar";
 export { default as Navbar } from "./navbar";
 export {
   default as Radio,

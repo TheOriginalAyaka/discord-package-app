@@ -1,10 +1,17 @@
-import type { EventCount, ExtractedData } from "@/modules/dpkg-module";
+import type { NavigatorScreenParams } from "@react-navigation/native";
+import type { EventCount } from "@/modules/dpkg-module";
+
+export type MainTabParamList = {
+  Overview: undefined;
+  Messages: undefined;
+  Settings: undefined;
+};
 
 export type RootStackParamList = {
   Welcome: undefined;
   Start: undefined;
   Process: { mode: "demo" | "package" };
-  Overview: { data: ExtractedData };
+  MainScreen: NavigatorScreenParams<MainTabParamList>;
   Analytics: { analytics: EventCount };
   Settings: undefined;
   Help: undefined;

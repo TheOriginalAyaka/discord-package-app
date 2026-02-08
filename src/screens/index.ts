@@ -1,5 +1,6 @@
 export { AnalyticsScreen } from "./AnalyticsScreen";
 export { HelpScreen } from "./HelpScreen";
+export { MessagesScreen } from "./MessagesScreen";
 export { OverviewScreen } from "./OverviewScreen";
 export { PrivacyScreen } from "./PrivacyScreen";
 export { ProcessScreen } from "./ProcessScreen";

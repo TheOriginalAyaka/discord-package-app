@@ -1,4 +1,7 @@
-import { NavigationContainer } from "@react-navigation/native";
+import {
+  getFocusedRouteNameFromRoute,
+  NavigationContainer,
+} from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { HapticProvider } from "@renegades/react-native-tickle";
 import * as SplashScreen from "expo-splash-screen";
@@ -7,11 +10,11 @@ import { useEffect } from "react";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { Header, ToastProvider } from "./components/ui";
 import { DiscordProvider } from "./context/DiscordContext";
+import MainScreenNavigator from "./navigation/MainScreenNavigator";
 import type { RootStackParamList } from "./navigation/types";
 import {
   AnalyticsScreen,
   HelpScreen,
-  OverviewScreen,
   PrivacyScreen,
   ProcessScreen,
   SettingsScreen,
@@ -23,6 +26,12 @@ import { ThemeProvider, useTheme } from "./theme";
 SplashScreen.preventAutoHideAsync();
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
+
+const tabTitles: Record<string, string> = {
+  Overview: "Overview",
+  Messages: "Messages",
+  Settings: "Settings",
+};
 
 function AppNavigator() {
   const { theme, isLoading } = useTheme();
@@ -49,24 +58,23 @@ function AppNavigator() {
           const disabled = ["Welcome", "Process"];
           if (disabled.includes(route.name)) return null;
 
+          let title = options.title ?? route.name;
+
+          if (route.name === "MainScreen") {
+            const focusedRoute = getFocusedRouteNameFromRoute(route);
+            title = tabTitles[focusedRoute ?? "Overview"] ?? "Overview";
+          }
+
           return (
             <Header
-              title={options.title ?? route.name}
+              title={title}
               onBack={back ? () => navigation.goBack() : undefined}
               onExtra={
-                route.name === "Overview"
-                  ? () => navigation.navigate("Settings")
-                  : route.name === "Start"
-                    ? () => navigation.navigate("Help")
-                    : undefined
+                route.name === "Start"
+                  ? () => navigation.navigate("Help")
+                  : undefined
               }
-              extraIcon={
-                route.name === "Overview"
-                  ? "settings"
-                  : route.name === "Start"
-                    ? "help-outline"
-                    : undefined
-              }
+              extraIcon={route.name === "Start" ? "help-outline" : undefined}
             />
           );
         },
@@ -92,8 +100,8 @@ function AppNavigator() {
         options={{ headerShown: false, gestureEnabled: false }}
       />
       <Stack.Screen
-        name="Overview"
-        component={OverviewScreen}
+        name="MainScreen"
+        component={MainScreenNavigator}
         options={{ title: "Overview" }}
       />
       <Stack.Screen

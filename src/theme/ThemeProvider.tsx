@@ -36,19 +36,17 @@ export function ThemeProvider({
   const isDark = actualTheme === "dark";
   const theme = isDark ? darkTheme : lightTheme;
 
-  // load saved theme preference on mount (if there is one)
   useEffect(() => {
-    loadThemeMode().then((savedMode) => {
-      if (savedMode) {
-        setModeState(savedMode);
-      }
-      setIsLoading(false);
-    });
+    const savedMode = loadThemeMode();
+    if (savedMode) {
+      setModeState(savedMode);
+    }
+    setIsLoading(false);
   }, []);
 
-  const setMode = async (newMode: ThemeMode) => {
+  const setMode = (newMode: ThemeMode) => {
     setModeState(newMode);
-    await saveThemeMode(newMode);
+    saveThemeMode(newMode);
   };
 
   const value: ThemeContextType = {

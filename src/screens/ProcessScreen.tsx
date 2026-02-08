@@ -33,7 +33,10 @@ export function ProcessScreen() {
     if (data && !isLoadingUserData && !isCancelledRef.current) {
       navigation.reset({
         index: 1,
-        routes: [{ name: "Welcome" }, { name: "Overview", params: { data } }],
+        routes: [
+          { name: "Welcome" },
+          { name: "MainScreen", params: { screen: "Overview" } },
+        ],
       });
     }
   }, [data, isLoadingUserData, navigation]);
